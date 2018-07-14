@@ -1,6 +1,6 @@
 require "metanorma-cli/version"
 
 module Metanorma
-  #module CLI
-  #end
+  module CLI
+  end
 end
