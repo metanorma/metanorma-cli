@@ -1,4 +1,4 @@
-# metanorma-cli
+= metanorma-cli
 Command line script for Metanorma
 
 image:https://img.shields.io/gem/v/metanorma-cli.svg["Gem Version", link="https://rubygems.org/gems/metanorma-cli"]
