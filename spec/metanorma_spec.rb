@@ -1,10 +1,6 @@
 require_relative "spec_helper"
 
 RSpec.describe Metanorma do
-  it "has a version number" do
-    expect(Metanorma::VERSION).not_to be nil
-  end
-
   it "processes an asciidoc ISO document" do
     File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_BLANK_HDR) }
     system "rm -f test.xml test.html test.alt.html test.doc"

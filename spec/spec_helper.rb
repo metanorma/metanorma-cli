@@ -1,5 +1,4 @@
 require "bundler/setup"
-require "metanorma"
 require "equivalent-xml"
 require "rspec-command"
 
