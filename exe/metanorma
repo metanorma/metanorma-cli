@@ -39,7 +39,7 @@ opt_parser = OptionParser.new do |opts|
 
   opts.on(
     '-x',
-    '--extensions EXT1,EXT2,...',
+    '--extensions EXT1,EXT2,... | all',
     Array,
     "Type of extension to generate per type: #{registry.output_formats}\n"
   ) { |v| options[:extension_keys] = v.map(&:to_sym) }
@@ -111,6 +111,8 @@ if options[:require]
     require r
   end
 end
+
+options[:extension_keys] = nil if options[:extension_keys] == [:all]
 
 case options[:format]
 when :asciidoc
