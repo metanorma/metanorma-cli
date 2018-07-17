@@ -74,6 +74,12 @@ end
 
 opt_parser.parse!(ARGV)
 
+if options[:require]
+  options[:require].each do |r|
+    require r
+  end
+end
+
 if options[:version]
   case options[:format]
   when :asciidoc
@@ -106,12 +112,6 @@ unless options[:filename]
   exit 0
 end
 
-if options[:require]
-  options[:require].each do |r|
-    require r
-  end
-end
-
 options[:extension_keys] = nil if options[:extension_keys] == [:all]
 
 case options[:format]
@@ -126,7 +126,7 @@ when :asciidoc
     else
       warn "[metanorma] Error: #{e} format is not supported for this standard"
     end
-    memo 
+    memo
   end
   exit 0 if extensions.empty?
 
