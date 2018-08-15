@@ -6,13 +6,15 @@ require "metanorma"
 registry = Metanorma::Registry.instance
 
 supported_gem_paths = [
-  "asciidoctor-rfc",
-  "asciidoctor-iso",
-  "asciidoctor-gb",
-  "asciidoctor-csd",
-  "asciidoctor-csand",
-  "asciidoctor-m3d",
-  "asciidoctor-rsd"
+  "metanorma-rfc",
+  "metanorma-iso",
+  "metanorma-gb",
+  "metanorma-csd",
+  "metanorma-csand",
+  "metanorma-m3d",
+  "metanorma-rsd"
+  "metanorma-acme"
+  "metanorma-standoc"
 ]
 
 puts "[metanorma] detecting backends:"
