@@ -72,6 +72,6 @@ end
 
 RSpec.describe "gives version information" do
   command "metanorma -v -t iso"
-  its(:stdout) { is_expected.to match(/Asciidoctor::ISO \d/) }
+  its(:stdout) { is_expected.to match(/Metanorma::ISO \d/) }
 end
 
