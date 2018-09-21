@@ -42,6 +42,17 @@ RSpec.describe Metanorma do
     expect(html).to include "font-family: header-font;"
     expect(html).to include "font-family: monospace-font;"
   end
+
+  it "wraps HTML output" do
+    File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_CONFIGURED_HDR) }
+    system "rm -f test.xml test.html test.alt.html test.doc"
+    system "rm -r test test.alt"
+    system "metanorma -w -t iso test.adoc"
+    expect(File.exist?("test/test.html")).to be true
+    expect(File.directory?("test/test_images")).to be true
+    expect(File.exist?("test.alt/test.alt.html")).to be true
+    expect(File.directory?("test.alt/test.alt_images")).to be true
+  end
 end
 
 

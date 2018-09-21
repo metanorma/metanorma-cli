@@ -67,6 +67,12 @@ opt_parser = OptionParser.new do |opts|
     "Print version of code (accompanied with -t)",
   ) { options[:version] = true }
 
+  opts.on(
+    '-w',
+    '--wrapper',
+    'Create wrapper folder for HTML output'
+  ) { options[:wrapper] = true }
+
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts
     exit
@@ -139,6 +145,12 @@ when :asciidoc
     file_extension = processor.output_formats[ext]
     outfilename = options[:filename].sub(/\.[^.]+$/, ".#{file_extension}")
     processor.output(isodoc, outfilename, ext, isodoc_options)
+    if options[:wrapper] and /html$/.match file_extension
+      outfilename = outfilename.sub(/\.html$/, "")
+      system "mkdir -p #{outfilename}"
+      system "mv #{outfilename}.html #{outfilename}"
+      system "mv #{outfilename}_images #{outfilename}"
+    end
   end
 end
 
