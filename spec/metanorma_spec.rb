@@ -53,6 +53,16 @@ RSpec.describe Metanorma do
     expect(File.exist?("test.alt/test.alt.html")).to be true
     expect(File.directory?("test.alt/test.alt_images")).to be true
   end
+
+  it "data64 encodes images" do
+    File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_CONFIGURED_HDR) }
+    system "rm -f test.xml test.html test.alt.html test.doc"
+    system "rm -r test test.alt"
+    system "metanorma -d -t iso test.adoc"
+    expect(File.exist?("test.html")).to be true
+    html = File.read("test.html")
+    expect(html).to include "data64"
+  end
 end
 
 
