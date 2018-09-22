@@ -60,8 +60,8 @@ RSpec.describe Metanorma do
     system "rm -r test test.alt"
     system "metanorma -d -t iso test.adoc"
     expect(File.exist?("test.html")).to be true
-    html = File.read("test.html")
-    expect(html).to include "data64"
+    html = File.read("test.html", encoding: "utf-8")
+    expect(html).to include "data:image"
   end
 end
 
