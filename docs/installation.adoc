@@ -1,4 +1,4 @@
-= Installing Metanorma CLI
+= Installation
 
 The `metanorma` command-line executable gets installed via a Ruby gem.
 Depending on your use case, you may need to install Puppeteer Node package.
