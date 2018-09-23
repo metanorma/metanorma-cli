@@ -16,10 +16,7 @@ If you are going to generate PDFs from HTML (which applies to CalConnect Standar
 you will also need to install the https://github.com/GoogleChrome/puppeteer[Puppeteer] Node library:
 
 * Ensure you have Node at least 7.6.0:
-
-  * https://nodejs.org/en/download/
-  * On macOS you should be able to `brew install node`
-
+** https://nodejs.org/en/download/
+** On macOS you should be able to `brew install node`
 * Ensure you have NPM: https://docs.npmjs.com/getting-started/installing-node
-
-* Install Puppeteer: `npm install -g --save --save-exact puppeteer`
+* Install Puppeteer globally in your system: `npm install -g --save --save-exact puppeteer`
