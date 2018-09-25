@@ -2,6 +2,7 @@
 
 require "optparse"
 require "metanorma"
+require "fileutils"
 
 registry = Metanorma::Registry.instance
 
@@ -155,9 +156,9 @@ when :asciidoc
     processor.output(isodoc, outfilename, ext, isodoc_options)
     if options[:wrapper] and /html$/.match file_extension
       outfilename = outfilename.sub(/\.html$/, "")
-      system "mkdir -p #{outfilename}"
-      system "mv #{outfilename}.html #{outfilename}"
-      system "mv #{outfilename}_images #{outfilename}"
+      FileUtils.mkdir_p outfilename
+      FileUtils.mv "#{outfilename}.html", outfilename
+      FileUtils.mv "#{outfilename}_images" outfilename
     end
   end
 end
