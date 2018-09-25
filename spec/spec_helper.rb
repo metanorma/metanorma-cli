@@ -1,6 +1,7 @@
 require "bundler/setup"
 require "equivalent-xml"
 require "rspec-command"
+require "fileutils"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

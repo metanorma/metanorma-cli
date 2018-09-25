@@ -3,7 +3,7 @@ require_relative "spec_helper"
 RSpec.describe Metanorma do
   it "processes an asciidoc ISO document" do
     File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_BLANK_HDR) }
-    system "rm -f test.xml test.html test.alt.html test.doc"
+    FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
     system "metanorma -t iso test.adoc"
     expect(File.exist?("test.xml")).to be true
     expect(File.exist?("test.doc")).to be true
@@ -13,7 +13,7 @@ RSpec.describe Metanorma do
 
   it "processes all extensions of an asciidoc ISO document" do
     File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_BLANK_HDR) }
-    system "rm -f test.xml test.html test.alt.html test.doc"
+    FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
     system "metanorma -t iso -x all test.adoc"
     expect(File.exist?("test.xml")).to be true
     expect(File.exist?("test.doc")).to be true
@@ -23,7 +23,7 @@ RSpec.describe Metanorma do
 
   it "processes specific extensions of an asciidoc ISO document" do
     File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_BLANK_HDR) }
-    system "rm -f test.xml test.html test.alt.html test.doc"
+    FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
     system "metanorma -t iso -x xml,doc test.adoc"
     expect(File.exist?("test.xml")).to be true
     expect(File.exist?("test.doc")).to be true
@@ -35,7 +35,7 @@ RSpec.describe Metanorma do
 
   it "extracts isodoc options from asciidoc file" do
     File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_CONFIGURED_HDR) }
-    system "rm -f test.xml test.html test.alt.html test.doc"
+    FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
     system "metanorma -t iso -x html test.adoc"
     html = File.read("test.html")
     expect(html).to include "font-family: body-font;"
@@ -45,8 +45,8 @@ RSpec.describe Metanorma do
 
   it "wraps HTML output" do
     File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_CONFIGURED_HDR) }
-    system "rm -f test.xml test.html test.alt.html test.doc"
-    system "rm -r test test.alt"
+    FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
+    FileUtils.rm_rf %w(test test.alt)
     system "metanorma -w -t iso test.adoc"
     expect(File.exist?("test/test.html")).to be true
     expect(File.directory?("test/test_images")).to be true
@@ -56,8 +56,8 @@ RSpec.describe Metanorma do
 
   it "data64 encodes images" do
     File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_CONFIGURED_HDR) }
-    system "rm -f test.xml test.html test.alt.html test.doc"
-    system "rm -r test test.alt"
+    FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
+    FileUtils.rm_rf %w(test test.alt)
     system "metanorma -d -t iso test.adoc"
     expect(File.exist?("test.html")).to be true
     html = File.read("test.html", encoding: "utf-8")
