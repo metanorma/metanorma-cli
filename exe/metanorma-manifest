@@ -1,0 +1,146 @@
+#!/usr/bin/env ruby
+
+require "yaml"
+require "optparse"
+require "metanorma"
+require "uuidtools"
+
+registry = Metanorma::Registry.instance
+supported_gem_paths = [
+  "asciidoctor-rfc",
+  "metanorma-iso",
+  "metanorma-gb",
+  "metanorma-csd",
+  "metanorma-csand",
+  "metanorma-m3d",
+  "metanorma-rsd",
+  "metanorma-acme",
+  "metanorma-standoc",
+]
+
+puts "[metanorma] detecting backends:"
+supported_gem_paths.each do |backend|
+  begin
+    puts backend
+    require backend
+  rescue LoadError
+    puts "[metanorma] backend #{backend} not present"
+  end
+end
+puts
+
+def uuid()
+  UUIDTools::UUID.random_create
+end
+
+def extract_documents(m)
+  return [] unless m and m["sections"]
+  ret = []
+  m["sections"].each do |s|
+    ret << s if s["file"]
+    ret << extract_documents(s) if s["sections"]
+  end
+  ret.flatten
+end
+
+def hyperlink(link)
+  return unless link
+  link.sub(/\.adoc(?=$|#)/, ".html")
+end
+
+def iterate(sections)
+  return "" unless sections
+  ret = ""
+  Array(sections).each do |m|
+    ret+= "<clause id='#{uuid}'>\n"
+    title = m["title"] && m["number"] ? "#{m['number']}. #{m['title']}" : ( m["number"] || m["title"] || "&mdash;" )
+    file = hyperlink(m["file"])
+    title = "<link target='#{file}'>#{title}</link>" if file
+    ret+= "<title>#{title}</title>\n"
+    ret+= "<p>#{m['description']}</p>\n" if m["description"]
+    ret+= "<p align='right'>#{m['revdate']}</p>\n" if m["revdate"]
+    ret += iterate(m["sections"])
+    ret+= "</clause>\n"
+  end
+  ret
+end
+
+options = {}
+opt_parser = OptionParser.new do |opts|
+  opts.banner += " <file>"
+  opts.on(
+    '-t',
+    '--type TYPE',
+    "Type of standard to generate"
+  ) { |v| options[:type] = v.to_sym }
+
+    opts.on(
+    '-r',
+    '--require LIBRARY',
+    'Require LIBRARY prior to execution'
+  ) { |v|
+    options[:require] ||= []
+    options[:require] << v
+  }
+
+
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+end
+opt_parser.parse!(ARGV)
+options[:filename] = ARGV.pop
+
+if options[:require]
+  options[:require].each do |r|
+    require r
+  end
+end
+
+
+manifest = YAML.load_file(ARGV.pop)
+
+documents = extract_documents(manifest)
+
+# TODO real lookup of namespaces and root elements
+
+out = <<~END
+<#{options[:type]}-standard xmlns="http://riboseinc.com/isoxml">
+<bibdata type="standard">
+  <title>#{manifest["title"]}</title>
+END
+
+# TODO leave in anchor references?
+#
+documents.each do |d|
+  out += <<~END
+  <relation type="partOf">
+    <bibdata type="standard">
+      <title>#{d['title']}</title>
+      <docidentifier>#{d['number']}</docidentifier>
+      <abstract>#{d['description']}</abstract>
+    </bibdata>
+  </relation>
+  END
+end
+
+out += <<~END
+</bibdata>
+<sections>
+END
+
+out+=iterate(manifest["sections"])
+
+out+= <<~END
+</sections>
+<#{options[:type]}-standard>
+END
+    outfilename = options[:filename].sub(/\.[^.]+$/, ".xml")
+    File.open(outfilename, "w") { |f| f.write out }
+
+  processor = registry.find_processor(options[:type].to_sym)
+  ext = :html
+    file_extension = "html" || processor.output_formats[ext] 
+    outfilename = options[:filename].sub(/\.[^.]+$/, ".#{file_extension}")
+    processor.output(out, outfilename, ext, {suppressheadingnumbers: true})
