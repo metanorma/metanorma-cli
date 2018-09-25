@@ -1,0 +1,24 @@
+title: CalConnect Index
+sections:
+  - tc: TC IOPTEST
+    number: CD 0403
+    type: Report
+    title: July 2004 CalConnect Interoperability Test Report V1.0
+    stage: Published
+    revdate: 2004-07-30
+    file: http://calconnect.org/pubdocs/CD0403%20July%202004%20CalConnect%20Interoperability%20Test%20Report%20V1.0.pdf
+  - tc: CALCONNECT
+    number: CD 0404
+    type: Report
+    title: Report on Roundtable I
+    stage: Published
+    revdate: 2004-09-25
+    file: http://calconnect.org/pubdocs/roundtable1rpt.pdf
+  - tc: TC CALDAV
+    number: CD 0507
+    type: Recommendation
+    title: CalDAV Use Cases V1.0
+    stage: Published
+    revdate: 2005-09-26
+    file: http://calconnect.org/pubdocs/CD0507%20CalDAV%20Use%20Cases%20V1.0.pdf
+

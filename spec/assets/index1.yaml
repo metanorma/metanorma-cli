@@ -1,0 +1,50 @@
+title: Guidelines
+sections:
+  - number: Part I
+    title: Licensing
+    sections:
+      - number: I.1
+        title: Guidelines on Application for Approval as Trustees and Application for Approval as Controllers of Approved Trustees
+        file: guidelines_I1.adoc
+        revdate: 2014-10-17
+        description: I.1 description.
+        sections:
+          - number: Annex A
+            file: guidelines_I1A.adoc
+          - number: Annex B
+            file: guidelines_I1B.adoc
+          - number: Annex C
+            file: guidelines_I1C.adoc
+      - number: I.2
+        title: Guidelines on Application for Registration of Provident Fund Schemes
+        file: guidelines_I2.adoc
+        description: I.2 description.
+        sections:
+          - number: Clause 1
+            file: guidelines_I1A.adoc#clause1
+          - number: Clause 2
+            file: guidelines_I1A.adoc#clause2
+      - number: I.3
+        title: Guidelines on Custodians
+        file: guidelines_I3.adoc
+        description: I.3 description.
+      - number: I.4
+        title: Guidelines on Eligible Insurers
+        file: guidelines_I4.adoc
+      - number: I.5
+        title: Guidelines on Application for Approval of Constituent Funds
+        file: guidelines_I5.adoc
+  - number: Part II
+    title: Reporting Requirements
+    sections:
+      - number: II.1
+        title: Guidelines on Monthly Returns of Registered Schemes
+        file: guidelines_II1.adoc  
+        description: II.1 description.
+      - number: II.2
+        title: Guidelines on Monthly Returns of Approved Pooled Investment Funds being Capital Preservation Funds
+        file: guidelines_II2.adoc  
+      - number: II.3
+        title: Guidelines on Quarterly Statistical Returns of Registered Schemes
+        file: guidelines_II3.adoc  
+  
