@@ -58,6 +58,7 @@ def iterate(sections, options)
     ret+= "<clause id='#{uuid}'>\n"
     title = m["title"] && m["number"] ? "#{m['number']}. #{m['title']}" : ( m["number"] || m["title"] || "&mdash;" )
     ret+= "<title>#{title}</title>\n"
+    ret+= "<p>#{m["type"]}</p>\n" if m["type"]
     if m["file"]
       ret += "<p>"
       file = hyperlink(m["file"], "html")
@@ -73,7 +74,17 @@ def iterate(sections, options)
       ret += "</p>\n"
     end
     ret+= "<p>#{m['description']}</p>\n" if m["description"]
-    ret+= "<p align='right'>#{m['revdate']}</p>\n" if m["revdate"]
+    if m["revdate"]
+      if m["status"]
+        ret+= "<p>STAGE: #{m["status"]} (#{m['revdate']})</p>\n"
+      else
+        ret+= "<p align='right'>#{m['revdate']}</p>\n"
+      end
+    else
+      if m["status"]
+        ret+= "<p>STAGE: #{m["status"]}</p>\n"
+      end
+    end
     ret += iterate(m["sections"], options)
     ret+= "</clause>\n"
   end
@@ -161,4 +172,6 @@ processor = registry.find_processor(options[:type].to_sym)
 ext = :html
 file_extension = "html" || processor.output_formats[ext] 
 outfilename = options[:filename].sub(/\.[^.]+$/, ".#{file_extension}")
-processor.output(out, outfilename, ext, {suppressheadingnumbers: true})
+isodoc_options = { suppressheadingnumbers: true }
+isodoc_options[:htmlstylesheet] = manifest["htmlstylesheet"] if manifest["htmlstylesheet"]
+processor.output(out, outfilename, ext, isodoc_options)
