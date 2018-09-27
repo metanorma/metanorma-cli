@@ -31,6 +31,7 @@ ASCIIDOC_CONFIGURED_HDR = <<~"HDR"
       = Document title
       Author
       :docfile: test.adoc
+      :docnumber: 123
       :nodoc:
       :novalid:
       :no-isobib:

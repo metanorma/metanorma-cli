@@ -1,5 +1,5 @@
 title: CalConnect Index
-htmlstylesheet: spec/assets/csd-manifest-index/style.css
+htmlstylesheet: spec/assets/style.css
 sections:
   - tc: TC IOPTEST
     number: CD 0403
