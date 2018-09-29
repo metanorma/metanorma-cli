@@ -83,8 +83,8 @@ opt_parser = OptionParser.new do |opts|
 
   opts.on(
     '-R',
-    '--relaton DIRECTORY',
-    'Export Relaton XML for document to separate directory'
+    '--relaton FILENAME',
+    'Export Relaton XML for document to nominated filename'
   ) { |v| options[:relaton] = v }
 
   opts.on_tail("-h", "--help", "Show this message") do
@@ -157,9 +157,10 @@ when :asciidoc
   if options[:relaton]
     xml = Nokogiri::XML(isodoc)
     bibdata = xml.at("//xmlns:bibdata")
-    docid = bibdata&.at("./xmlns:docidentifier")&.text || options[:filename]
-    outname = docid.sub(/^\s+/, "").sub(/\s+$/, "").gsub(/\s+/, "-") + ".xml"
-    File.open("#{options[:relaton]}/#{outname}", "w:UTF-8") { |f| f.write bibdata.to_xml }
+    require "byebug"; byebug
+    #docid = bibdata&.at("./xmlns:docidentifier")&.text || options[:filename]
+    #outname = docid.sub(/^\s+/, "").sub(/\s+$/, "").gsub(/\s+/, "-") + ".xml"
+    File.open(options[:relaton], "w:UTF-8") { |f| f.write bibdata.to_xml }
   end
   isodoc_options = processor.extract_options(file)
   isodoc_options[:datauriimage] = true if options[:datauriimage]

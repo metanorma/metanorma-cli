@@ -67,11 +67,10 @@ RSpec.describe Metanorma do
   it "exports bibdata" do
     File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_CONFIGURED_HDR) }
     FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
-    FileUtils.mkdir_p "testrelaton"
-    FileUtils.rm_f "testrelaton/ISO-123.xml"
-    system "metanorma -R testrelaton -t iso test.adoc"
-    expect(File.exist?("testrelaton/ISO-123.xml")).to be true
-    xml = File.read("testrelaton/ISO-123.xml", encoding: "utf-8")
+    FileUtils.rm_f "testrelaton.xml"
+    system "metanorma -R testrelaton.xml -t iso test.adoc"
+    expect(File.exist?("testrelaton.xml")).to be true
+    xml = File.read("testrelaton.xml", encoding: "utf-8")
     expect(xml).to include %(<bibdata type="article">)
   end
 end
