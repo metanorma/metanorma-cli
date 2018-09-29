@@ -1,0 +1,9 @@
+---
+sections:
+- name: Introduction
+  items:
+    - installation
+    - usage
+---
+
+= Navigation

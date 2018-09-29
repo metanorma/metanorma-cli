@@ -1,0 +1,22 @@
+= Installation
+
+The `metanorma` command-line executable gets installed via a Ruby gem.
+Depending on your use case, you may need to install Puppeteer Node package.
+
+== Installing the Metanorma CLI gem
+
+[source,console]
+----
+gem install metanorma-cli
+----
+
+== Installing Puppeteer
+
+If you are going to generate PDFs from HTML (which applies to CalConnect Standard Documents),
+you will also need to install the https://github.com/GoogleChrome/puppeteer[Puppeteer] Node library:
+
+* Ensure you have Node at least 7.6.0:
+** https://nodejs.org/en/download/
+** On macOS you should be able to `brew install node`
+* Ensure you have NPM: https://docs.npmjs.com/getting-started/installing-node
+* Install Puppeteer globally in your system: `npm install -g --save --save-exact puppeteer`
