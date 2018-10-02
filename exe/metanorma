@@ -154,14 +154,16 @@ when :asciidoc
 
   file = File.read(options[:filename], encoding: "utf-8")
   isodoc = processor.input_to_isodoc(file)
+
   if options[:relaton]
     xml = Nokogiri::XML(isodoc)
     bibdata = xml.at("//xmlns:bibdata")
-    require "byebug"; byebug
+    # require "byebug"; byebug
     #docid = bibdata&.at("./xmlns:docidentifier")&.text || options[:filename]
     #outname = docid.sub(/^\s+/, "").sub(/\s+$/, "").gsub(/\s+/, "-") + ".xml"
     File.open(options[:relaton], "w:UTF-8") { |f| f.write bibdata.to_xml }
   end
+
   isodoc_options = processor.extract_options(file)
   isodoc_options[:datauriimage] = true if options[:datauriimage]
   extensions.each do |ext|
