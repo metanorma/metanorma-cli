@@ -83,7 +83,7 @@ end
 
 RSpec.describe "warns when bogus standard type requested" do
   command "metanorma -t bogus_format a.adoc"
-  its(:stdout) { is_expected.to include "bogus_format is not a supported standard type" }
+  its(:stdout) { is_expected.to include "bogus_format is not a default standard type" }
 end
 
 RSpec.describe "warns when bogus format requested" do
