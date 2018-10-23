@@ -178,9 +178,9 @@ when :asciidoc
     File.open(options[:relaton], "w:UTF-8") { |f| f.write bibdata.to_xml }
   end
 
-  isodoc_options = processor.extract_options(file)
-  isodoc_options[:datauriimage] = true if options[:datauriimage]
   extensions.each do |ext|
+    isodoc_options = processor.extract_options(file)
+    isodoc_options[:datauriimage] = true if options[:datauriimage]
     file_extension = processor.output_formats[ext]
     outfilename = options[:filename].sub(/\.[^.]+$/, ".#{file_extension}")
     processor.output(isodoc, outfilename, ext, isodoc_options)
