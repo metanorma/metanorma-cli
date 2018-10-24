@@ -167,7 +167,7 @@ when :asciidoc
   exit 0 if extensions.empty?
 
   file = File.read(options[:filename], encoding: "utf-8")
-  isodoc = processor.input_to_isodoc(file)
+  isodoc = processor.input_to_isodoc(file, options[:filename])
 
   if options[:relaton]
     xml = Nokogiri::XML(isodoc)
