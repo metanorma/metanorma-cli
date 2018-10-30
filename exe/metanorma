@@ -186,7 +186,7 @@ when :asciidoc
 
   if options[:relaton]
     xml = Nokogiri::XML(isodoc)
-    bibdata = xml.at("//xmlns:bibdata")
+    bibdata = xml.at("//bibdata") || xml.at("//xmlns:bibdata")
     # require "byebug"; byebug
     #docid = bibdata&.at("./xmlns:docidentifier")&.text || options[:filename]
     #outname = docid.sub(/^\s+/, "").sub(/\s+$/, "").gsub(/\s+/, "-") + ".xml"
