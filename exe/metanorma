@@ -148,6 +148,7 @@ unless options[:filename]
   exit 0
 end
 
+filename = options[:filename]
 options[:extension_keys] = nil if options[:extension_keys] == [:all]
 
 case options[:format]
@@ -160,14 +161,28 @@ when :asciidoc
     if processor.output_formats[e]
       memo << e
     else
-      warn "[metanorma] Error: #{e} format is not supported for this standard"
+      warn "[metanorma] Error: #{e} format is not supported for this standard."
     end
     memo
   end
   exit 0 if extensions.empty?
 
-  file = File.read(options[:filename], encoding: "utf-8")
-  isodoc = processor.input_to_isodoc(file, options[:filename])
+  file, isodoc = case extname = File.extname(filename)
+  when ".adoc"
+    puts "[metanorma] Processing: Asciidoctor input."
+    file = File.read(filename, encoding: "utf-8")
+    [file, processor.input_to_isodoc(file, filename)]
+  when ".xml"
+    puts "[metanorma] Processing: Metanorma XML input."
+
+    # TODO NN: this is a hack -- we should provide/bridge the
+    # document attributes in Metanorma XML
+
+    ["", File.read(filename, encoding: "utf-8")]
+  else
+    warn "[metanorma] Error: file extension #{extname} is not supported."
+    exit 1
+  end
 
   if options[:relaton]
     xml = Nokogiri::XML(isodoc)
@@ -191,5 +206,8 @@ when :asciidoc
       FileUtils.mv "#{outfilename}_images", outfilename
     end
   end
+else
+  warn "[metanorma] Error: output format (#{options[:format]}) not supported."
+  exit 1
 end
 
