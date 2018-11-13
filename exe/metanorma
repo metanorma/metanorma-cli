@@ -17,6 +17,8 @@ supported_gem_paths = [
   "metanorma-rsd",
   "metanorma-acme",
   "metanorma-standoc",
+  "metanorma-unece",
+  "metanorma-mpfd",
 ]
 
 puts "[metanorma] detecting backends:"

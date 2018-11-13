@@ -42,6 +42,8 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'metanorma-m3d', "~> 1.0.6"
   spec.add_runtime_dependency 'metanorma-acme', "~> 1.0.1"
   spec.add_runtime_dependency 'metanorma-standoc', "~> 1.0.6"
+  spec.add_runtime_dependency 'metanorma-mpfd', "~> 0.1.0"
+  spec.add_runtime_dependency 'metanorma-unece', "~> 0.0.1"
   spec.add_runtime_dependency 'isodoc', "~> 0.9.0"
   spec.add_runtime_dependency 'metanorma', "~> 0.3.0"
   spec.add_runtime_dependency 'nokogiri'
