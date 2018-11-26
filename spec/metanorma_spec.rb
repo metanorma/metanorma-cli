@@ -1,6 +1,18 @@
 require_relative "spec_helper"
 
 RSpec.describe Metanorma do
+  it "processes metanorma options inside Asciidoc" do
+    File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_PREAMBLE_HDR) }
+    FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
+    system "metanorma test.adoc"
+    expect(File.exist?("test.xml")).to be true
+    expect(File.exist?("test.doc")).to be false
+    expect(File.exist?("test.html")).to be true
+    expect(File.exist?("test.alt.html")).to be false
+    xml = File.read("test.xml")
+    expect(xml).to include "</iso-standard>"
+  end
+
   it "processes an asciidoc ISO document" do
     File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_BLANK_HDR) }
     FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
@@ -77,6 +89,7 @@ end
 
 
 RSpec.describe "warns when no standard type provided" do
+  file "test.adoc", ASCIIDOC_CONFIGURED_HDR
   command "metanorma test.adoc"
   its(:stdout) { is_expected.to include "Please specify a standard type" }
 end

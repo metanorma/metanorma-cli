@@ -27,6 +27,18 @@ ASCIIDOC_BLANK_HDR = <<~"HDR"
 
 HDR
 
+ASCIIDOC_PREAMBLE_HDR = <<~"HDR"
+      = Document title
+      Author
+      :docfile: test.adoc
+      :nodoc:
+      :novalid:
+      :no-isobib:
+      :mn-document-class: iso
+      :mn-output-extensions: xml,html
+
+HDR
+
 ASCIIDOC_CONFIGURED_HDR = <<~"HDR"
       = Document title
       Author

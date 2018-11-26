@@ -115,6 +115,13 @@ end
 
 options[:filename] = ARGV.pop
 
+unless options[:filename]
+  puts "[metanorma] Error: Need to specify a file to process."
+  exit 0
+end
+
+filename = options[:filename]
+options[:type] ||= registry&.find_processor(:iso)&.extract_metanorma_options(File.read(filename, encoding: "utf-8"))[:type]&.to_sym
 standard_type = options[:type]
 unless standard_type
   puts "[metanorma] Error: Please specify a standard type."
@@ -145,12 +152,8 @@ unless options[:format] == :asciidoc
   exit 0
 end
 
-unless options[:filename]
-  puts "[metanorma] Error: Need to specify a file to process."
-  exit 0
-end
-
-filename = options[:filename]
+options[:extension_keys] ||= registry&.find_processor(:iso)&.
+  extract_metanorma_options(File.read(filename, encoding: "utf-8"))[:extensions]&.split(/,[ ]*/)&.map(&:to_sym)
 options[:extension_keys] = nil if options[:extension_keys] == [:all]
 
 case options[:format]
@@ -170,21 +173,21 @@ when :asciidoc
   exit 0 if extensions.empty?
 
   file, isodoc = case extname = File.extname(filename)
-  when ".adoc"
-    puts "[metanorma] Processing: Asciidoctor input."
-    file = File.read(filename, encoding: "utf-8")
-    [file, processor.input_to_isodoc(file, filename)]
-  when ".xml"
-    puts "[metanorma] Processing: Metanorma XML input."
+                 when ".adoc"
+                   puts "[metanorma] Processing: Asciidoctor input."
+                   file = File.read(filename, encoding: "utf-8")
+                   [file, processor.input_to_isodoc(file, filename)]
+                 when ".xml"
+                   puts "[metanorma] Processing: Metanorma XML input."
 
-    # TODO NN: this is a hack -- we should provide/bridge the
-    # document attributes in Metanorma XML
+                   # TODO NN: this is a hack -- we should provide/bridge the
+                   # document attributes in Metanorma XML
 
-    ["", File.read(filename, encoding: "utf-8")]
-  else
-    warn "[metanorma] Error: file extension #{extname} is not supported."
-    exit 1
-  end
+                   ["", File.read(filename, encoding: "utf-8")]
+                 else
+                   warn "[metanorma] Error: file extension #{extname} is not supported."
+                   exit 1
+                 end
 
   if options[:relaton]
     xml = Nokogiri::XML(isodoc)
