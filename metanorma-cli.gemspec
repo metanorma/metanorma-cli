@@ -34,7 +34,7 @@ Gem::Specification.new do |spec|
 
 
   spec.add_runtime_dependency 'metanorma-iso', "~> 1.0.6"
-  spec.add_runtime_dependency 'asciidoctor-rfc', "~> 0.9.0"
+  spec.add_runtime_dependency 'metanorma-ietf', "~> 1.0"
   spec.add_runtime_dependency 'metanorma-gb', "~> 1.0.5"
   spec.add_runtime_dependency 'metanorma-csd', "~> 1.0.5"
   spec.add_runtime_dependency 'metanorma-csand', "~> 1.0.5"

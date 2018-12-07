@@ -7,20 +7,9 @@ require "uuidtools"
 require "uri"
 
 registry = Metanorma::Registry.instance
-supported_gem_paths = [
-  "asciidoctor-rfc",
-  "metanorma-iso",
-  "metanorma-gb",
-  "metanorma-csd",
-  "metanorma-csand",
-  "metanorma-m3d",
-  "metanorma-rsd",
-  "metanorma-acme",
-  "metanorma-standoc",
-]
 
 puts "[metanorma] detecting backends:"
-supported_gem_paths.each do |backend|
+Metanorma::CLI::SUPPORTED_GEMS.each do |backend|
   begin
     puts backend
     require backend
@@ -170,7 +159,7 @@ File.open(outfilename, "w") { |f| f.write out }
 
 processor = registry.find_processor(options[:type].to_sym)
 ext = :html
-file_extension = "html" || processor.output_formats[ext] 
+file_extension = "html" || processor.output_formats[ext]
 outfilename = options[:filename].sub(/\.[^.]+$/, ".#{file_extension}")
 isodoc_options = { suppressheadingnumbers: true }
 isodoc_options[:htmlstylesheet] = manifest["htmlstylesheet"] if manifest["htmlstylesheet"]

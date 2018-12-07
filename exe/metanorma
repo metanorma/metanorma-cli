@@ -4,25 +4,12 @@ require "optparse"
 require "metanorma"
 require "fileutils"
 require "nokogiri"
+require "metanorma-cli"
 
 registry = Metanorma::Registry.instance
 
-supported_gem_paths = [
-  "asciidoctor-rfc",
-  "metanorma-iso",
-  "metanorma-gb",
-  "metanorma-csd",
-  "metanorma-csand",
-  "metanorma-m3d",
-  "metanorma-rsd",
-  "metanorma-acme",
-  "metanorma-standoc",
-  "metanorma-unece",
-  "metanorma-mpfd",
-]
-
 puts "[metanorma] detecting backends:"
-supported_gem_paths.each do |backend|
+Metanorma::CLI::SUPPORTED_GEMS.each do |backend|
   begin
     # puts backend
     require backend
@@ -40,20 +27,36 @@ opt_parser = OptionParser.new do |opts|
   opts.on(
     '-t',
     '--type TYPE',
-    "Type of standard to generate: #{registry.supported_backends.join(", ")}"
+    registry.supported_backends,
+    "Type of standard to generate",
+    "#{registry.supported_backends}"
   ) { |v| options[:type] = v.to_sym }
+
+  output_formats = registry.output_formats.inject([]) do |acc, (processor, formats)|
+    str = "* #{processor.to_s}: "
+
+    formats.each_pair do |type, ext|
+      str << "['#{type.to_s}': #{ext.to_s}] "
+    end
+
+    acc << str
+  end
 
   opts.on(
     '-x',
-    '--extensions EXT1,EXT2,... | all',
+    "--extensions all | EXT,...",
     Array,
-    "Type of extension to generate per type: #{registry.output_formats}\n"
+    "Document extensions available per type (type, ['filetype': ext])",
+    *output_formats
   ) { |v| options[:extension_keys] = v.map(&:to_sym) }
 
+  input_formats = [:asciidoc]
   opts.on(
     '-f',
     '--format FORMAT',
-    'Format of source file: asciidoc (current default, only format supported)'
+    input_formats,
+    'Format of source file',
+    "#{input_formats}",
   ) { |v| options[:format] = v.to_sym }
 
   opts.on(
