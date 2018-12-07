@@ -27,7 +27,7 @@ opt_parser = OptionParser.new do |opts|
   opts.on(
     '-t',
     '--type TYPE',
-    registry.supported_backends,
+    String,
     "Type of standard to generate",
     "#{registry.supported_backends}"
   ) { |v| options[:type] = v.to_sym }
@@ -54,7 +54,7 @@ opt_parser = OptionParser.new do |opts|
   opts.on(
     '-f',
     '--format FORMAT',
-    input_formats,
+    String,
     'Format of source file',
     "#{input_formats}",
   ) { |v| options[:format] = v.to_sym }
