@@ -95,17 +95,20 @@ RSpec.describe "warns when no standard type provided" do
 end
 
 RSpec.describe "warns when bogus standard type requested" do
-  command "metanorma -t bogus_format a.adoc"
+  file "test.adoc", ASCIIDOC_CONFIGURED_HDR
+  command "metanorma -t bogus_format test.adoc"
   its(:stdout) { is_expected.to include "bogus_format is not a default standard type" }
 end
 
 RSpec.describe "warns when bogus format requested" do
-  command "metanorma -t iso -f bogus_format a.adoc"
+  file "test.adoc", ASCIIDOC_CONFIGURED_HDR
+  command "metanorma -t iso -f bogus_format test.adoc"
   its(:stdout) { is_expected.to include "Only source file format currently supported is 'asciidoc'" }
 end
 
 RSpec.describe "warns when bogus extension requested" do
-  command "metanorma -t iso -x bogus_format a.adoc"
+  file "test.adoc", ASCIIDOC_CONFIGURED_HDR
+  command "metanorma -t iso -x bogus_format test.adoc"
   its(:stderr) { is_expected.to include "bogus_format format is not supported for this standard" }
 end
 

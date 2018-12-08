@@ -101,11 +101,13 @@ end
 
 opt_parser.parse!(ARGV)
 
+=begin
 if options[:require]
   options[:require].each do |r|
     require r
   end
 end
+=end
 
 if options[:version]
   case options[:format]
@@ -124,6 +126,8 @@ unless options[:filename]
 end
 
 filename = options[:filename]
+
+=begin
 options[:type] ||= registry&.find_processor(:iso)&.extract_metanorma_options(File.read(filename, encoding: "utf-8"))[:type]&.to_sym
 standard_type = options[:type]
 unless standard_type
@@ -131,7 +135,9 @@ unless standard_type
   puts opt_parser.help
   exit 0
 end
+=end
 
+=begin
 unless registry.supported_backends.include? standard_type
   puts "[metanorma] Warning: #{standard_type} is not a default standard type."
   puts "[metanorma] Info: Attempting to load `metanorma-#{standard_type}` gem for standard type `#{standard_type}`."
@@ -149,16 +155,22 @@ unless registry.supported_backends.include? standard_type
     exit 0
   end
 end
+=end
 
+=begin
 unless options[:format] == :asciidoc
   puts "[metanorma] Error: Only source file format currently supported is 'asciidoc'."
   exit 0
 end
+=end
 
+=begin
 options[:extension_keys] ||= registry&.find_processor(:iso)&.
   extract_metanorma_options(File.read(filename, encoding: "utf-8"))[:extensions]&.split(/,[ ]*/)&.map(&:to_sym)
 options[:extension_keys] = nil if options[:extension_keys] == [:all]
+=end
 
+=begin
 case options[:format]
 when :asciidoc
   processor = registry.find_processor(options[:type].to_sym)
@@ -195,7 +207,6 @@ when :asciidoc
   if options[:relaton]
     xml = Nokogiri::XML(isodoc)
     bibdata = xml.at("//bibdata") || xml.at("//xmlns:bibdata")
-    # require "byebug"; byebug
     #docid = bibdata&.at("./xmlns:docidentifier")&.text || options[:filename]
     #outname = docid.sub(/^\s+/, "").sub(/\s+$/, "").gsub(/\s+/, "-") + ".xml"
     File.open(options[:relaton], "w:UTF-8") { |f| f.write bibdata.to_xml }
@@ -218,4 +229,6 @@ else
   warn "[metanorma] Error: output format (#{options[:format]}) not supported."
   exit 1
 end
+=end
 
+Metanorma::Compile.new().compile(filename, options)
