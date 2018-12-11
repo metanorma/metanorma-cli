@@ -109,7 +109,7 @@ end
 RSpec.describe "warns when bogus extension requested" do
   file "test.adoc", ASCIIDOC_CONFIGURED_HDR
   command "metanorma -t iso -x bogus_format test.adoc"
-  its(:stderr) { is_expected.to include "bogus_format format is not supported for this standard" }
+  its(:stdout) { is_expected.to include "bogus_format format is not supported for this standard" }
 end
 
 RSpec.describe "warns when no file provided" do
