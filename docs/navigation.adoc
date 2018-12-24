@@ -1,9 +1,9 @@
 ---
-sections:
-- name: Introduction
+items:
+- title: Introduction
   items:
-    - installation
-    - usage
+    - { title: Installation, path: installation/ }
+    - { title: Usage, path: usage/ }
 ---
 
 = Navigation
