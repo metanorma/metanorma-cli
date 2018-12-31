@@ -14,9 +14,8 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/riboseinc/metanorma"
   spec.license       = "BSD-2-Clause"
 
-  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
-    f.match(%r{^(test|spec|features)/})
-  end
+  spec.files         = Dir['**/*'].reject { |f| f.match(%r{^(test|spec|features|.git)/}) }
+
   spec.extra_rdoc_files = %w[README.adoc LICENSE]
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
