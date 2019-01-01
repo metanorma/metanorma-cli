@@ -1,17 +1,17 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "metanorma-cli/version"
+require "metanorma/cli/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "metanorma-cli"
-  spec.version       = Metanorma::CLI::VERSION
+  spec.version       = Metanorma::Cli::VERSION
   spec.authors       = ['Ribose Inc.']
   spec.email         = ['open.source@ribose.com']
 
   spec.summary       = %q{Metanorma is the standard of standards; the metanorma gem allows you to create any standard document type supported by Metanorma.}
   spec.description   = %q{Executable to process any Metanorma standard.}
-  spec.homepage      = "https://github.com/riboseinc/metanorma"
+  spec.homepage      = "https://www.metanorma.com"
   spec.license       = "BSD-2-Clause"
 
   spec.files         = Dir['**/*'].reject { |f| f.match(%r{^(test|spec|features|.git)/}) }

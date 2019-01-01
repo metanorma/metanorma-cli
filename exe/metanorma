@@ -7,17 +7,7 @@ require "nokogiri"
 require "metanorma-cli"
 
 registry = Metanorma::Registry.instance
-
-puts "[metanorma] detecting backends:"
-Metanorma::CLI::SUPPORTED_GEMS.each do |backend|
-  begin
-    # puts backend
-    require backend
-  rescue LoadError
-    puts "[metanorma] Error: backend #{backend} not present"
-  end
-end
-# puts
+Metanorma::Cli.load_flavors
 
 options = {
   format: :asciidoc

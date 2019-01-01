@@ -5,23 +5,14 @@ require "optparse"
 require "metanorma"
 require "uuidtools"
 require "uri"
+require "metanorma-cli"
 
 registry = Metanorma::Registry.instance
-
-puts "[metanorma] detecting backends:"
-Metanorma::CLI::SUPPORTED_GEMS.each do |backend|
-  begin
-    puts backend
-    require backend
-  rescue LoadError
-    puts "[metanorma] backend #{backend} not present"
-  end
-end
-puts
+Metanorma::Cli.load_flavors
 
 options = {}
 
-def uuid()
+def uuid
   UUIDTools::UUID.random_create
 end
 
