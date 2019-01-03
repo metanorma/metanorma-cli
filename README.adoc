@@ -4,6 +4,93 @@ Command line script for Metanorma
 image:https://img.shields.io/gem/v/metanorma-cli.svg["Gem Version", link="https://rubygems.org/gems/metanorma-cli"]
 image:https://img.shields.io/travis/riboseinc/metanorma-cli/master.svg["Build Status", link="https://travis-ci.org/riboseinc/metanorma-cli"]
 image:https://codeclimate.com/github/riboseinc/metanorma-cli/badges/gpa.svg["Code Climate", link="https://codeclimate.com/github/riboseinc/metanorma-cli"]
+image:https://ci.appveyor.com/api/projects/status/vqo2221uwcaov8kx?svg=true["Build Status", link="https://ci.appveyor.com/project/ribose/metanorma-cli"]
 
 
 Refer https://github.com/riboseinc/metanorma
+
+== install on windows
+
+`metanorma-cli` have transitive dependency on https://github.com/glejeune/ruby-xslt[`ruby-xslt`]. And `ruby-xslt` in its turn depends on the native libraries: `libxml2` and `libxslt`.
+
+It's not a problem to build this gem for `Linux` or `OSX` because these native libraries already presented (or easily can be installed with package manager). But on `Windows` it becomes tricky. Formally you need to:
+
+ * Get native libraries (`libxml2` and `libxslt`) compiled for your architecture (`x86` or `x64`)
+ * Provide right params during gem build
+ * Ensure native libraries accessibility on run-time
+
+=== get native libraries
+
+Here we have two option:
+
+ * Build from source code (difficult)
+ * Get prebuild binaries (easy)
+
+We will go by second way because it faster and less error-prone. To get binaries we will use https://chocolatey.org/[`chocolatey`]  package manager. There is straightforward installation process just follow https://chocolatey.org/install once it done libraries can easily be installed with
+
+```
+cinst xsltproc
+```
+
+By finish of this command you will have libraries/headers in `%ChocolateyInstall%\lib\xsltproc\dist` directory
+
+=== build gem
+
+Here also we have two options:
+
+ * Use `gem` command
+ * Use `bundle` command
+
+If you choose `gem` command-line will looks:
+
+```
+gem install ruby-xslt -- ^
+	--with-xml2-include=%ChocolateyInstall%\lib\xsltproc\dist\include\libxml2 ^
+	--with-xslt-include=%ChocolateyInstall%\lib\xsltproc\dist\include ^
+	--with-xml2-lib=%ChocolateyInstall%\lib\xsltproc\dist\lib ^
+	--with-xslt-lib=%ChocolateyInstall%\lib\xsltproc\dist\lib
+```
+
+If you choose `bundle` command-line will looks:
+
+```
+bundle config build.ruby-xslt ^
+	--with-xml2-include=%ChocolateyInstall%\lib\xsltproc\dist\include\libxml2 ^
+	--with-xslt-include=%ChocolateyInstall%\lib\xsltproc\dist\include ^
+	--with-xml2-lib=%ChocolateyInstall%\lib\xsltproc\dist\lib ^
+	--with-xslt-lib=%ChocolateyInstall%\lib\xsltproc\dist\lib
+bundle install
+```
+
+By the end you should get output:
+
+```
+Fetching ruby-xslt X.X.XX
+Installing ruby-xslt X.X.XX with native extensions
+```
+
+Without any errors
+
+=== ensure availability on run-time
+
+Prior 2.4.1 to make native libraries accessible at runtime they must be copied to Ruby `bin` directory, like this:
+
+```
+xcopy /y %ChocolateyInstall%\lib\xsltproc\dist\bin\lib*.dll C:\Ruby25\bin*
+```
+
+But in >= 2.4.1 we can use https://github.com/oneclick/rubyinstaller2/wiki/For-gem-developers#environment-variable-ruby_dll_path[`RUBY_DLL_PATH` environment variable]
+
+Technically we can accomplish this by:
+
+```
+setx /m RUBY_DLL_PATH "%ChocolateyInstall%\lib\xsltproc\dist\bin;%RUBY_DLL_PATH%"
+```
+
+Also `ruby-xslt` expect certain names of `libxml2` and `libxslt` they should be without version in filenames. To 'strip' versions command below can be used:
+
+```
+xcopy /y %ChocolateyInstall%\lib\xsltproc\dist\bin\libxml2*.dll %ChocolateyInstall%\lib\xsltproc\dist\bin\libxml2.dll*
+xcopy /y %ChocolateyInstall%\lib\xsltproc\dist\bin\libxslt*.dll %ChocolateyInstall%\lib\xsltproc\dist\bin\libxslt.dll*
+xcopy /y %ChocolateyInstall%\lib\xsltproc\dist\bin\libexslt*.dll %ChocolateyInstall%\lib\xsltproc\dist\bin\libexslt.dll*
+```
