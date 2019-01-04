@@ -1,96 +1,177 @@
-= metanorma-cli
-Command line script for Metanorma
+= metanorma-cli: Metanorma's command-line interface (CLI)
 
 image:https://img.shields.io/gem/v/metanorma-cli.svg["Gem Version", link="https://rubygems.org/gems/metanorma-cli"]
 image:https://img.shields.io/travis/riboseinc/metanorma-cli/master.svg["Build Status", link="https://travis-ci.org/riboseinc/metanorma-cli"]
 image:https://codeclimate.com/github/riboseinc/metanorma-cli/badges/gpa.svg["Code Climate", link="https://codeclimate.com/github/riboseinc/metanorma-cli"]
 image:https://ci.appveyor.com/api/projects/status/vqo2221uwcaov8kx?svg=true["Build Status", link="https://ci.appveyor.com/project/ribose/metanorma-cli"]
 
+WARNING: If you are using macOS or Windows, we strongly recommend you to
+refer to the https://www.metanorma.com[Metanorma site] for quickstart
+instructions for these two platforms.
+Only manually install as described below if you really want to install
+Metanorma via Rubygems.
 
-Refer https://github.com/riboseinc/metanorma
 
-== install on windows
+== Installation
 
-`metanorma-cli` have transitive dependency on https://github.com/glejeune/ruby-xslt[`ruby-xslt`]. And `ruby-xslt` in its turn depends on the native libraries: `libxml2` and `libxslt`.
+Generally installing this gem is the easiest way to install the full Metanorma toolchain
+as it helps install all officially supported Metanorma flavors (such as ISO, CalConnect, IETF, etc).
 
-It's not a problem to build this gem for `Linux` or `OSX` because these native libraries already presented (or easily can be installed with package manager). But on `Windows` it becomes tricky. Formally you need to:
+[source,sh]
+----
+gem install metanorma-cli
+----
 
- * Get native libraries (`libxml2` and `libxslt`) compiled for your architecture (`x86` or `x64`)
- * Provide right params during gem build
- * Ensure native libraries accessibility on run-time
 
-=== get native libraries
+
+== Installation notes for Windows
+
+=== Background
+
+The Metanorma toolchain (i.e. when you install `metanorma-cli`)
+is dependent on https://github.com/glejeune/ruby-xslt[`ruby-xslt`].
+
+And `ruby-xslt` in its turn depends on the native libraries: `libxml2` and `libxslt`.
+
+On Linux and macOS this is generally not a problem, as these native libraries
+are already present, or could be easily installed using package managers:
+
+* Linux: `yum` on CentOS, `apt` on Debian/Ubuntu, `dnf` on Fedora
+* macOS: https://brew.sh[Homebrew]
+
+However, on Windows it gets a bit tricky.
+
+To satisfy this dependency on Windows, you need to:
+
+. Get native libraries (`libxml2` and `libxslt`) compiled for your architecture (`x86` for 32-bit or `x64` for 64-bit Windows)
+. Provide right options during gem build
+. Ensure these native libraries are accessible at run-time (of the Metanorma toolchain)
+
+=== Installing the native libraries (prerequisites)
 
 Here we have two option:
 
- * Build from source code (difficult)
- * Get prebuild binaries (easy)
+* Build from source code (difficult)
+* Get pre-built binaries (easy)
 
-We will go by second way because it faster and less error-prone. To get binaries we will use https://chocolatey.org/[`chocolatey`]  package manager. There is straightforward installation process just follow https://chocolatey.org/install once it done libraries can easily be installed with
+We go with the latter because it is faster and less error-prone.
 
-```
+The pre-built binaries can be installed via the https://chocolatey.org/[Chocolatey] package manager on Windows.
+
+. Installing Chocolatey is straightforward: follow instructions at https://chocolatey.org/install
+
+. Then, both `libxml2` and `libxslt` can be installed by running this command
+[source,sh]
+----
 cinst xsltproc
-```
+----
 
-By finish of this command you will have libraries/headers in `%ChocolateyInstall%\lib\xsltproc\dist` directory
+Once this is done, the necessary libraries/headers are installed in the
+`%ChocolateyInstall%\lib\xsltproc\dist` directory.
 
-=== build gem
 
-Here also we have two options:
+=== Installing the Metanorma gems
 
- * Use `gem` command
- * Use `bundle` command
+Here there are also two options:
 
-If you choose `gem` command-line will looks:
+* Using the `gem` command
+* Using the `bundle` command
 
-```
+NOTE: Before running this step you must have already installed the prerequisite libraries stated above.
+
+
+==== Installing the gem manually via `gem`
+
+The commands are given below.
+
+[source,sh]
+----
 gem install ruby-xslt -- ^
 	--with-xml2-include=%ChocolateyInstall%\lib\xsltproc\dist\include\libxml2 ^
 	--with-xslt-include=%ChocolateyInstall%\lib\xsltproc\dist\include ^
 	--with-xml2-lib=%ChocolateyInstall%\lib\xsltproc\dist\lib ^
 	--with-xslt-lib=%ChocolateyInstall%\lib\xsltproc\dist\lib
-```
+----
 
-If you choose `bundle` command-line will looks:
+==== Installing the gem via `bundle`
 
-```
+NOTE: Before running this step you must have already installed the prerequisite libraries stated above.
+
+[source,sh]
+----
 bundle config build.ruby-xslt ^
 	--with-xml2-include=%ChocolateyInstall%\lib\xsltproc\dist\include\libxml2 ^
 	--with-xslt-include=%ChocolateyInstall%\lib\xsltproc\dist\include ^
 	--with-xml2-lib=%ChocolateyInstall%\lib\xsltproc\dist\lib ^
 	--with-xslt-lib=%ChocolateyInstall%\lib\xsltproc\dist\lib
 bundle install
-```
+----
 
-By the end you should get output:
 
-```
+==== Success message
+
+With both methods of installing the gem, you should see the following output without any errors.
+
+[source]
+----
 Fetching ruby-xslt X.X.XX
 Installing ruby-xslt X.X.XX with native extensions
-```
+----
 
-Without any errors
 
-=== ensure availability on run-time
 
-Prior 2.4.1 to make native libraries accessible at runtime they must be copied to Ruby `bin` directory, like this:
+=== Ensuring the native libraries are available at run-time
 
-```
-xcopy /y %ChocolateyInstall%\lib\xsltproc\dist\bin\lib*.dll C:\Ruby25\bin*
-```
 
-But in >= 2.4.1 we can use https://github.com/oneclick/rubyinstaller2/wiki/For-gem-developers#environment-variable-ruby_dll_path[`RUBY_DLL_PATH` environment variable]
+==== Step 1: General
 
-Technically we can accomplish this by:
+Firstly, the `ruby-xslt` gem expects the names of `libxml2` and `libxslt` library files to
+not have the version numbers in filenames.
 
-```
-setx /m RUBY_DLL_PATH "%ChocolateyInstall%\lib\xsltproc\dist\bin;%RUBY_DLL_PATH%"
-```
+We need to '`strip`' away the version numbers from the DLL files using the following commands:
 
-Also `ruby-xslt` expect certain names of `libxml2` and `libxslt` they should be without version in filenames. To 'strip' versions command below can be used:
-
-```
+[source,sh]
+----
 xcopy /y %ChocolateyInstall%\lib\xsltproc\dist\bin\libxml2*.dll %ChocolateyInstall%\lib\xsltproc\dist\bin\libxml2.dll*
 xcopy /y %ChocolateyInstall%\lib\xsltproc\dist\bin\libxslt*.dll %ChocolateyInstall%\lib\xsltproc\dist\bin\libxslt.dll*
 xcopy /y %ChocolateyInstall%\lib\xsltproc\dist\bin\libexslt*.dll %ChocolateyInstall%\lib\xsltproc\dist\bin\libexslt.dll*
-```
+----
+
+
+==== Step 2: If Ruby version >= 2.4.1
+
+In Ruby versions newer than 2.4.1, we can use https://github.com/oneclick/rubyinstaller2/wiki/For-gem-developers#environment-variable-ruby_dll_path[`RUBY_DLL_PATH` environment variable]
+to set the correct Ruby DLL path.
+
+This can be accomplished this by running the following one-time command in PowerShell or `cmd`:
+
+[source,sh]
+----
+setx /m RUBY_DLL_PATH "%ChocolateyInstall%\lib\xsltproc\dist\bin;%RUBY_DLL_PATH%"
+----
+
+NOTE: The `setx` command stores this change in the registry and therefore the
+configuration will persist upon restarts.
+
+
+==== Step 2: If Ruby version < 2.4.1
+
+Prior to Ruby 2.4.1, the native libraries must be copied to the Ruby `bin` directory to be
+available for the Ruby runtime as follows (in PowerShell or `cmd`):
+
+[source]
+----
+xcopy /y %ChocolateyInstall%\lib\xsltproc\dist\bin\lib*.dll C:\Ruby25\bin*
+----
+
+NOTE: This is also a one-time change that persists across restarts.
+
+
+=== Installation completed!
+
+If you got here following the instructions step by step, you have setup
+Metanorma on Windows successfully.
+
+Congratulations!!!
+
+
