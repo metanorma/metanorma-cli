@@ -15,8 +15,8 @@ module Metanorma
       "metanorma-acme",
       "metanorma-standoc",
       "metanorma-unece",
-      "metanorma-mpfd"
-      "metanorma-nist"
+      "metanorma-mpfd",
+      "metanorma-nist",
       "metanorma-ogc"
     ]
 
