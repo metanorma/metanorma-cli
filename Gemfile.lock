@@ -26,7 +26,7 @@ GEM
       httpclient (~> 2.8, >= 2.8.3)
       json (>= 1.5.1)
     asciidoctor (1.5.8)
-    asciimath (1.0.6)
+    asciimath (1.0.7)
     byebug (10.0.2)
     camertron-eprun (1.1.1)
     cldr-plurals-runtime-rb (1.0.1)
@@ -41,8 +41,8 @@ GEM
       cnccs (~> 0.1.1)
       gb-agencies (~> 0.0.1)
       iso-bib-item (~> 0.4.2)
-    html2doc (0.8.6)
-      asciimath
+    html2doc (0.8.8)
+      asciimath (~> 1.0.7)
       htmlentities (~> 4.3.4)
       image_size
       mime-types
@@ -65,11 +65,11 @@ GEM
       isoics (~> 0.1.6)
       nokogiri (~> 1.8.4)
       ruby_deep_clone (~> 0.8.0)
-    isobib (0.4.2)
+    isobib (0.4.3)
       algoliasearch
       iecbib (~> 0.2.1)
       iso-bib-item (~> 0.4.2)
-    isodoc (0.9.13)
+    isodoc (0.9.14)
       asciimath
       html2doc (~> 0.8.6)
       htmlentities (~> 4.3.4)
@@ -87,13 +87,13 @@ GEM
     liquid (4.0.1)
     metanorma (0.3.5)
       asciidoctor
-    metanorma-acme (1.0.8)
+    metanorma-acme (1.0.9)
       asciidoctor (~> 1.5.7)
       htmlentities (~> 4.3.4)
       isodoc (~> 0.9.0)
       metanorma-standoc (~> 1.0.8)
       ruby-jing
-    metanorma-csand (1.0.11)
+    metanorma-csand (1.0.12)
       asciidoctor (~> 1.5.7)
       asciimath
       htmlentities (~> 4.3.4)
@@ -106,10 +106,10 @@ GEM
       ruby-xslt
       thread_safe
       uuidtools
-    metanorma-csd (1.0.13)
+    metanorma-csd (1.0.14)
       isodoc (~> 0.9.6)
       metanorma-standoc (~> 1.0.0)
-    metanorma-gb (1.0.11)
+    metanorma-gb (1.0.12)
       gb-agencies (~> 0.0.4)
       isodoc (~> 0.9.1)
       metanorma-iso (~> 1.0.1)
@@ -117,13 +117,13 @@ GEM
     metanorma-ietf (1.0.0)
       isodoc (~> 0.9.6)
       metanorma-standoc (~> 1.0.0)
-    metanorma-iso (1.0.12)
+    metanorma-iso (1.0.13)
       asciidoctor (~> 1.5.7)
       iev (~> 0.2.0)
       isodoc (~> 0.9.8)
       metanorma-standoc (~> 1.0.0)
       ruby-jing
-    metanorma-m3d (1.0.12)
+    metanorma-m3d (1.0.13)
       asciidoctor (~> 1.5.7)
       asciimath
       htmlentities (~> 4.3.4)
@@ -136,28 +136,28 @@ GEM
       ruby-xslt
       thread_safe
       uuidtools
-    metanorma-mpfd (0.1.4)
+    metanorma-mpfd (0.1.5)
       asciidoctor (~> 1.5.7)
       htmlentities (~> 4.3.4)
       isodoc (~> 0.9.0)
       metanorma-standoc (~> 1.0.0)
       nokogiri
       twitter_cldr
-    metanorma-rsd (1.0.12)
+    metanorma-rsd (1.0.13)
       asciidoctor (~> 1.5.7)
       htmlentities (~> 4.3.4)
       isodoc (~> 0.9.0)
       metanorma-standoc (~> 1.0.0)
       nokogiri
-    metanorma-standoc (1.0.13)
+    metanorma-standoc (1.0.14)
       asciidoctor (~> 1.5.7)
       concurrent-ruby
       iev (~> 0.2.0)
       isodoc (~> 0.9.0)
       relaton (~> 0.3.1)
       ruby-jing
-      sterile
-    metanorma-unece (0.0.7)
+      sterile (~> 1.0.14)
+    metanorma-unece (0.0.8)
       asciidoctor (~> 1.5.7)
       htmlentities (~> 4.3.4)
       iso-639
@@ -211,7 +211,7 @@ GEM
       optout (>= 0.0.2)
     ruby-xslt (0.9.10)
     ruby_deep_clone (0.8.0)
-    sass (3.7.2)
+    sass (3.7.3)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)

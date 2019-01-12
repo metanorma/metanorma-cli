@@ -7,7 +7,7 @@ rvm:
   - 2.3
   - ruby-head
 before_install:
-  - gem install bundler -v 1.17.3
+  - gem install bundler -v 2.0.1
   - bundle update
   - unset _JAVA_OPTIONS
 matrix:
