@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    metanorma-cli (1.1.0)
+    metanorma-cli (1.1.1)
       isodoc (~> 0.9.0)
       metanorma (~> 0.3.5)
       metanorma-acme (~> 1.0.1)
@@ -12,6 +12,8 @@ PATH
       metanorma-iso (~> 1.0.6)
       metanorma-m3d (~> 1.0.6)
       metanorma-mpfd (~> 0.1.0)
+      metanorma-nist (~> 0.0.1)
+      metanorma-ogc (~> 0.0.1)
       metanorma-rsd (~> 1.0.5)
       metanorma-standoc (~> 1.0.6)
       metanorma-unece (~> 0.0.1)
@@ -143,6 +145,19 @@ GEM
       metanorma-standoc (~> 1.0.0)
       nokogiri
       twitter_cldr
+    metanorma-nist (0.0.1)
+      asciidoctor (~> 1.5.7)
+      htmlentities (~> 4.3.4)
+      isodoc (~> 0.9.0)
+      metanorma-standoc (~> 1.0.0)
+      ruby-jing
+    metanorma-ogc (0.0.3)
+      asciidoctor (~> 1.5.7)
+      htmlentities (~> 4.3.4)
+      iso-639
+      isodoc (~> 0.9.0)
+      metanorma-standoc (~> 1.0.8)
+      ruby-jing
     metanorma-rsd (1.0.13)
       asciidoctor (~> 1.5.7)
       htmlentities (~> 4.3.4)
