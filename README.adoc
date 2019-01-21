@@ -1,7 +1,7 @@
 = Metanorma's command-line interface (CLI)
 
 image:https://img.shields.io/gem/v/metanorma-cli.svg["Gem Version", link="https://rubygems.org/gems/metanorma-cli"]
-image:https://img.shields.io/travis/riboseinc/metanorma-cli/master.svg["Build Status", link="https://travis-ci.com/riboseinc/metanorma-cli"]
+image:https://img.shields.io/travis/riboseinc/metanorma-cli/master.svg["Build Status", link="https://travis-ci.org/riboseinc/metanorma-cli"]
 image:https://codeclimate.com/github/riboseinc/metanorma-cli/badges/gpa.svg["Code Climate", link="https://codeclimate.com/github/riboseinc/metanorma-cli"]
 image:https://ci.appveyor.com/api/projects/status/vqo2221uwcaov8kx?svg=true["Build Status", link="https://ci.appveyor.com/project/ribose/metanorma-cli"]
 
