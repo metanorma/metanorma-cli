@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    metanorma-cli (1.1.2)
+    metanorma-cli (1.1.3)
       isodoc (~> 0.9.0)
       metanorma (~> 0.3.5)
       metanorma-acme (~> 1.1.0)
