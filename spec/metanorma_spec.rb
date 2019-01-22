@@ -89,10 +89,10 @@ RSpec.describe Metanorma do
   it "exports bibdata as rxl" do
     File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_CONFIGURED_HDR) }
     FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
-    FileUtils.rm_f "testrelaton.xml testrelaton.rxl"
+    FileUtils.rm_f "testrelaton.xml test.rxl"
     system "metanorma -x rxl -t iso test.adoc"
-    expect(File.exist?("testrelaton.rxl")).to be true
-    xml = File.read("testrelaton.rxl", encoding: "utf-8")
+    expect(File.exist?("test.rxl")).to be true
+    xml = File.read("test.rxl", encoding: "utf-8")
     expect(xml).to include %(<bibdata type="article">)
   end
 
