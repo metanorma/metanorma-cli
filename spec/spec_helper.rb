@@ -53,9 +53,12 @@ ASCIIDOC_CONFIGURED_HDR = <<~"HDR"
       :monospace-font: monospace-font
       :title-font: title-font
       :i18nyaml: i18n.yaml
+      :stem:
 
       = Scope
       image::spec/assets/rice_image1.png[]
+
+      stem:[1/r]
 HDR
 
 ISOXML_BLANK_HDR = <<~"HDR"

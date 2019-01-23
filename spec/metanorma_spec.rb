@@ -66,6 +66,17 @@ RSpec.describe Metanorma do
     expect(File.directory?("test.alt/test.alt_images")).to be true
   end
 
+  it "keeps Asciimath" do
+    File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_CONFIGURED_HDR) }
+    FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
+    FileUtils.rm_rf %w(test test.alt)
+    system "metanorma -a -t iso test.adoc"
+    expect(File.exist?("test.xml")).to be true
+    xml = File.read("test.xml", encoding: "utf-8")
+    expect(xml).not_to include %(<stem type="MathML">)
+    expect(xml).to include %(<stem type="AsciiMath">)
+  end
+
   it "data64 encodes images" do
     File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_CONFIGURED_HDR) }
     FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)

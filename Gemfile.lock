@@ -167,6 +167,7 @@ GEM
     metanorma-standoc (1.1.1)
       asciidoctor (~> 1.5.7)
       concurrent-ruby
+      html2doc (~> 0.8.0)
       iev (~> 0.2.0)
       isodoc (~> 0.9.0)
       relaton (~> 0.3.1)

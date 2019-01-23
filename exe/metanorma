@@ -71,6 +71,12 @@ opt_parser = OptionParser.new do |opts|
   ) { options[:wrapper] = true }
 
   opts.on(
+    '-a',
+    '--asciimath',
+    'Keep Asciimath in XML output instead of converting it to MathML'
+  ) { options[:asciimath] = true }
+
+  opts.on(
     '-d',
     '--data-uri-image',
     'Encode HTML output images as data URIs'
