@@ -88,6 +88,12 @@ opt_parser = OptionParser.new do |opts|
     'Export Relaton XML for document to nominated filename'
   ) { |v| options[:relaton] = v }
 
+  opts.on(
+    '-S',
+    '--sourcecode DIR',
+    'Export sourcecode fragments from this document to nominated directory'
+  ) { |v| options[:sourcecode] = v }
+
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts
     exit

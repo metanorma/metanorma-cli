@@ -55,10 +55,19 @@ ASCIIDOC_CONFIGURED_HDR = <<~"HDR"
       :i18nyaml: i18n.yaml
       :stem:
 
-      = Scope
+      == Scope
       image::spec/assets/rice_image1.png[]
 
       stem:[1/r]
+
+      [source,ruby]
+      ----
+      def ruby(x)
+        if x < 0 && x > 1
+          return
+        end
+      end
+      ----
 HDR
 
 ISOXML_BLANK_HDR = <<~"HDR"
