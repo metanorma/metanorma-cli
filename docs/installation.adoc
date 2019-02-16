@@ -205,7 +205,5 @@ NOTE: This is also a one-time change that persists across restarts.
 
 === Installation completed!
 
-If you got here following the instructions step by step, you have setup
-Metanorma on Windows successfully.
-
-Congratulations!!!
+If you got here following the instructions step by step, you have set up
+Metanorma on Windows successfully—congratulations!
