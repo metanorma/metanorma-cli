@@ -1,20 +1,13 @@
 = Installation
 
-The `metanorma` command-line executable gets installed via a Ruby gem.
+You can get the `metanorma` command-line executable by installing this Ruby gem.
 
 [IMPORTANT]
 ====
-To use Metanorma, normally *you don’t manually install this gem*—
-Refer to https://www.metanorma.com/author/topics/install/[Metanorma installation] topic,
-it list quicker ways of getting Metanorma up and running, of which Docker is probably
-the simplest.
+To install the Metanorma toolchain we recommend to use one of the ways described in
+https://www.metanorma.com/author/topics/install/[Metanorma installation] topic.
+Installing this gem by hand may not be the easiest way.
 
-The instructions here are only relevant if you want to manually install
-Metanorma via Rubygems for some specific reason. 
-====
-
-[NOTE]
-====
 When following this installation method, to start building documents you may have to take care
 of manually installing some required third-party software as well.
 Which exactly depends on what documents you’re building, below notes cover some of that.
@@ -34,7 +27,7 @@ Installing the gem will also install all officially supported Metanorma flavors
 
 == Dependencies
 
-The Metanorma toolchain (the one you install as metanorma-cli)
+The Metanorma toolchain (the one you install as Metanorma-CLI)
 is dependent on https://github.com/glejeune/ruby-xslt[`ruby-xslt`].
 
 `ruby-xslt`, in its turn, depends on the native libraries: `libxml2` and `libxslt`.
