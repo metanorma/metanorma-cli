@@ -61,9 +61,7 @@ RSpec.describe Metanorma do
     FileUtils.rm_rf %w(test test.alt)
     system "metanorma -w -t iso test.adoc"
     expect(File.exist?("test/test.html")).to be true
-    expect(File.directory?("test/test_images")).to be true
     expect(File.exist?("test.alt/test.alt.html")).to be true
-    expect(File.directory?("test.alt/test.alt_images")).to be true
   end
 
   it "keeps Asciimath" do
@@ -112,9 +110,9 @@ RSpec.describe Metanorma do
     FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
     FileUtils.rm_rf "extract"
     system "metanorma -x xml -t iso -e extract,sourcecode test.adoc"
-    expect(File.exist?("extract/image/figure0000.png")).to be false
-    expect(File.exist?("extract/sourcecode/sourcecode0000.txt")).to be true
-    expect(File.read("extract/sourcecode/sourcecode0000.txt", encoding: "utf-8") + "\n").to eq <<~OUTPUT
+    expect(File.exist?("extract/image/image-0000.png")).to be false
+    expect(File.exist?("extract/sourcecode/sourcecode-0000.txt")).to be true
+    expect(File.read("extract/sourcecode/sourcecode-0000.txt", encoding: "utf-8") + "\n").to eq <<~OUTPUT
 def ruby(x)
   if x < 0 && x > 1
     return
