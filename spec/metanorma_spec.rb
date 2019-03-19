@@ -107,17 +107,18 @@ RSpec.describe Metanorma do
     expect(xml).to include %(<bibdata type="article">)
   end
 
-  it "exports sourcecode" do
+  it "exports assets" do
     File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_CONFIGURED_HDR) }
     FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
-    FileUtils.rm_rf "sourcecode"
-    system "metanorma -x xml -t iso -S sourcecode test.adoc"
-    expect(File.exist?("sourcecode/0")).to be true
-    expect(File.read("sourcecode/0", encoding: "utf-8") + "\n").to eq <<~OUTPUT
-def ruby(x)  
-  if x < 0 && x > 1  
-    return  
-  end  
+    FileUtils.rm_rf "extract"
+    system "metanorma -x xml -t iso -e extract,sourcecode test.adoc"
+    expect(File.exist?("extract/image/figure0000.png")).to be false
+    expect(File.exist?("extract/sourcecode/sourcecode0000.txt")).to be true
+    expect(File.read("extract/sourcecode/sourcecode0000.txt", encoding: "utf-8") + "\n").to eq <<~OUTPUT
+def ruby(x)
+  if x < 0 && x > 1
+    return
+  end
 end
     OUTPUT
   end

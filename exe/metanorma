@@ -89,10 +89,15 @@ opt_parser = OptionParser.new do |opts|
   ) { |v| options[:relaton] = v }
 
   opts.on(
-    '-S',
-    '--sourcecode DIR',
-    'Export sourcecode fragments from this document to nominated directory'
-  ) { |v| options[:sourcecode] = v }
+    '-e',
+    '--extract DIR(,ASSET1,ASSET2...)',
+    Array,
+    'Export sourcecode fragments from this document to nominated directory. If ASSET1,ASSET2 are named, only those types of asset are extracted'
+  ) do |v|
+    options[:extract] = v[0]
+    options[:extract_type] = []
+    v.size > 1 and options[:extract_type] = v[1..-1].map(&:to_sym)
+  end
 
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts
@@ -128,109 +133,5 @@ unless options[:filename]
 end
 
 filename = options[:filename]
-
-=begin
-options[:type] ||= registry&.find_processor(:iso)&.extract_metanorma_options(File.read(filename, encoding: "utf-8"))[:type]&.to_sym
-standard_type = options[:type]
-unless standard_type
-  puts "[metanorma] Error: Please specify a standard type."
-  puts opt_parser.help
-  exit 0
-end
-=end
-
-=begin
-unless registry.supported_backends.include? standard_type
-  puts "[metanorma] Warning: #{standard_type} is not a default standard type."
-  puts "[metanorma] Info: Attempting to load `metanorma-#{standard_type}` gem for standard type `#{standard_type}`."
-
-  begin
-    require "metanorma-#{standard_type}"
-    puts "[metanorma] Info: gem `metanorma-#{standard_type}` loaded."
-  rescue LoadError
-    puts "[metanorma] Error: loading gem `metanorma-#{standard_type}` failed. Exiting."
-    exit 0
-  end
-
-  unless registry.supported_backends.include? standard_type
-    puts "[metanorma] Error: The `metanorma-#{standard_type}` gem still doesn't support `#{standard_type}`. Exiting."
-    exit 0
-  end
-end
-=end
-
-=begin
-unless options[:format] == :asciidoc
-  puts "[metanorma] Error: Only source file format currently supported is 'asciidoc'."
-  exit 0
-end
-=end
-
-=begin
-options[:extension_keys] ||= registry&.find_processor(:iso)&.
-  extract_metanorma_options(File.read(filename, encoding: "utf-8"))[:extensions]&.split(/,[ ]*/)&.map(&:to_sym)
-options[:extension_keys] = nil if options[:extension_keys] == [:all]
-=end
-
-=begin
-case options[:format]
-when :asciidoc
-  processor = registry.find_processor(options[:type].to_sym)
-  options[:extension_keys] ||= processor.output_formats.inject([]) do |memo, (k, _)|
-    memo << k; memo
-  end
-  extensions = options[:extension_keys].inject([]) do |memo, e|
-    if processor.output_formats[e]
-      memo << e
-    else
-      warn "[metanorma] Error: #{e} format is not supported for this standard."
-    end
-    memo
-  end
-  exit 0 if extensions.empty?
-
-  file, isodoc = case extname = File.extname(filename)
-                 when ".adoc"
-                   puts "[metanorma] Processing: Asciidoctor input."
-                   file = File.read(filename, encoding: "utf-8")
-                   [file, processor.input_to_isodoc(file, filename)]
-                 when ".xml"
-                   puts "[metanorma] Processing: Metanorma XML input."
-
-                   # TODO NN: this is a hack -- we should provide/bridge the
-                   # document attributes in Metanorma XML
-
-                   ["", File.read(filename, encoding: "utf-8")]
-                 else
-                   warn "[metanorma] Error: file extension #{extname} is not supported."
-                   exit 1
-                 end
-
-  if options[:relaton]
-    xml = Nokogiri::XML(isodoc)
-    bibdata = xml.at("//bibdata") || xml.at("//xmlns:bibdata")
-    #docid = bibdata&.at("./xmlns:docidentifier")&.text || options[:filename]
-    #outname = docid.sub(/^\s+/, "").sub(/\s+$/, "").gsub(/\s+/, "-") + ".xml"
-    File.open(options[:relaton], "w:UTF-8") { |f| f.write bibdata.to_xml }
-  end
-
-  extensions.each do |ext|
-    isodoc_options = processor.extract_options(file)
-    isodoc_options[:datauriimage] = true if options[:datauriimage]
-    file_extension = processor.output_formats[ext]
-    outfilename = options[:filename].sub(/\.[^.]+$/, ".#{file_extension}")
-    processor.output(isodoc, outfilename, ext, isodoc_options)
-    if options[:wrapper] and /html$/.match file_extension
-      outfilename = outfilename.sub(/\.html$/, "")
-      FileUtils.mkdir_p outfilename
-      FileUtils.mv "#{outfilename}.html", outfilename
-      FileUtils.mv "#{outfilename}_images", outfilename
-    end
-  end
-else
-  warn "[metanorma] Error: output format (#{options[:format]}) not supported."
-  exit 1
-end
-=end
 
 Metanorma::Compile.new().compile(filename, options)
