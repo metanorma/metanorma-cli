@@ -1,5 +1,6 @@
-require "metanorma/cli/version"
 require "metanorma"
+require "metanorma/cli/version"
+require "metanorma/cli/command"
 
 module Metanorma
   module Cli
@@ -40,5 +41,12 @@ module Metanorma
       load_flavors(flavor_names)
     end
 
+    def self.start(arguments)
+      Metanorma::Cli::Command.start(arguments)
+    end
+
+    def self.root
+      File.dirname(__dir__)
+    end
   end
 end

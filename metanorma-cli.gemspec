@@ -30,10 +30,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "byebug", "~> 10.0"
   spec.add_development_dependency "rspec-command", "~> 1.0.3"
   spec.add_development_dependency "equivalent-xml", "~> 0.6"
-  spec.add_development_dependency 'rspec-core', "~> 3.4"
+  spec.add_development_dependency "rspec-core", "~> 3.4"
 
-
-  spec.add_runtime_dependency 'metanorma-iso', "~> 1.1.0"
+  spec.add_runtime_dependency "thor", "~> 0.20.3"
+  spec.add_runtime_dependency "metanorma-iso", "~> 1.1.0"
   spec.add_runtime_dependency 'metanorma-ietf', "~> 1.0.1"
   spec.add_runtime_dependency 'metanorma-gb', "~> 1.1.0"
   spec.add_runtime_dependency 'metanorma-csd', "~> 1.1.0"
