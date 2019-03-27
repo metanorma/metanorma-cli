@@ -8,6 +8,8 @@
 /tmp/
 /.rubocop-https---**
 /Gemfile.lock
+/templates/*
+!/templates/base
 
 # rspec failure tracking
 .rspec_status
