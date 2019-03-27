@@ -1,0 +1,63 @@
+#!make
+
+include metanorma.env
+export $(shell sed 's/=.*//' metanorma.env)
+
+FORMATS := $(METANORMA_FORMATS)
+comma := ,
+empty :=
+space := $(empty) $(empty)
+
+SRC  := $(filter-out README.adoc, $(wildcard *.adoc))
+XML  := $(patsubst %.adoc,%.xml,$(SRC))
+HTML := $(patsubst %.adoc,%.html,$(SRC))
+DOC  := $(patsubst %.adoc,%.doc,$(SRC))
+PDF  := $(patsubst %.adoc,%.pdf,$(SRC))
+RXL  := $(patsubst %.adoc,%.rxl,$(SRC))
+
+HOST_SHARE_DIR=$(USERPROFILE)\$(shell for %%I in (.) do echo %%~nxI)
+COMPILE_CMD_LOCAL := bundle exec metanorma -R $(RXL) $(SRC)
+COMPILE_CMD_DOCKER := C:/ProgramData/chocolatey/bin/docker run --rm -it -v $(CURDIR):/metanorma/ ribose/metanorma "metanorma -R $(RXL) $(SRC)"
+
+ifdef METANORMA_DOCKER
+  COMPILE_CMD := echo "Compiling via docker..." & $(COMPILE_CMD_DOCKER)
+else
+  COMPILE_CMD := echo "Compiling locally..." & $(COMPILE_CMD_LOCAL)
+endif
+
+_OUT_FILES := $(foreach FORMAT,$(FORMATS),$(shell echo $(FORMAT) | tr '[:lower:]' '[:upper:]'))
+OUT_FILES  := $(foreach F,$(_OUT_FILES),$($F))
+
+all: $(OUT_FILES)
+
+%.xml %.html %.doc %.pdf:	%.adoc | bundle
+	${COMPILE_CMD}
+
+define FORMAT_TASKS
+OUT_FILES-$(FORMAT) := $($(shell echo $(FORMAT) | tr '[:lower:]' '[:upper:]'))
+
+open-$(FORMAT):
+	$$(OUT_FILES-$(FORMAT))
+
+clean-$(FORMAT):
+	rm $$(OUT_FILES-$(FORMAT))
+
+$(FORMAT): clean-$(FORMAT) $$(OUT_FILES-$(FORMAT))
+
+.PHONY: clean-$(FORMAT)
+
+endef
+
+$(foreach FORMAT,$(FORMATS),$(eval $(FORMAT_TASKS)))
+
+# open: $(foreach FORMAT,$(FORMATS),open-$(FORMAT))
+
+open: open-html
+
+clean:
+	rm -rf $(OUT_FILES)
+
+bundle:
+	IF "" == "${METANORMA_DOCKER}" bundle
+
+.PHONY: bundle all open clean
