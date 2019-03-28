@@ -15,6 +15,7 @@ module Metanorma
 
       def run
         target.rmtree if target.exist? && deletable?
+
         templates = base_templates.merge(type_specific_templates)
         templates.each { |source, dest| create_file(source, dest) }
       end
@@ -69,8 +70,12 @@ module Metanorma
       def create_file(source, destination)
         target_path = [target, destination].join("/")
         target_path = Pathname.new(target_path)
-        target_path.dirname.mkdir unless target_path.dirname.exist?
 
+        unless target_path.dirname.exist?
+          FileUtils.mkdir_p(target_path.dirname)
+        end
+
+        UI.say("Creating #{document_name}/#{destination}")
         FileUtils.copy_entry(source, target_path)
       end
 
