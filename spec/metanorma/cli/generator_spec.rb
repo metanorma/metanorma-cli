@@ -6,9 +6,11 @@ RSpec.describe Metanorma::Cli::Generator do
       it "downloads and generate new document" do
         document = "./tmp/my-document"
 
-        Metanorma::Cli::Generator.new(
-          document, type: "csd", doctype: "standard", overwrite: true
-        ).run
+        capture_stdout {
+          Metanorma::Cli::Generator.run(
+            document, type: "csd", doctype: "standard", overwrite: true
+          )
+        }
 
         expect(file_exits?(document, "Gemfile")).to be_truthy
         expect(file_exits?(document, "Makefile")).to be_truthy
