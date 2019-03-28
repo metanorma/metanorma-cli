@@ -10,6 +10,8 @@ before_install:
   - gem install bundler -v 2.0.1
   - bundle update
   - unset _JAVA_OPTIONS
+  - mkdir ./tmp
+
 matrix:
   allow_failures:
     - rvm: ruby-head
