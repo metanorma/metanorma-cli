@@ -35,7 +35,8 @@ module Metanorma
       def templates_sources
         @templates_sources ||= {
           csd: "https://github.com/metanorma/mn-templates-csd",
-          ogc: "https://github.com/metanorma/mn-templates-ogc"
+          ogc: "https://github.com/metanorma/mn-templates-ogc",
+          iso: "https://github.com/metanorma/mn-templates-iso"
         }
       end
 
