@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe Metanorma::Cli::Generator do
   describe ".run" do
-    context "without existing tempaltes" do
+    context "without existing templates" do
       it "downloads and generate new document" do
         document = "./tmp/my-document"
 

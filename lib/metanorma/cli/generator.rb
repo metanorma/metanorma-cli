@@ -65,11 +65,11 @@ module Metanorma
 
       def download_tempales
         git = UI.run("which git")
-        tempalte_source = templates_sources[type.to_sym]
+        template_source = templates_sources[type.to_sym]
 
-        if !git.nil? && tempalte_source
-          UI.say("Downloading #{type} tempaltes ...")
-          UI.run("git clone #{tempalte_source} #{template_dir}/#{type}")
+        if !git.nil? && template_source
+          UI.say("Downloading #{type} templates ...")
+          UI.run("git clone #{template_source} #{template_dir}/#{type}")
         end
       end
 
