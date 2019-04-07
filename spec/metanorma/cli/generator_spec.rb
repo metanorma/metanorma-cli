@@ -14,11 +14,9 @@ RSpec.describe Metanorma::Cli::Generator do
 
         expect(file_exits?(document, "Gemfile")).to be_truthy
         expect(file_exits?(document, "Makefile")).to be_truthy
-        expect(file_exits?(document, "standard/README.adoc")).to be_truthy
-
-        expect(
-          file_exits?(document, "standard/sections/01-scope.adoc"),
-        ).to be_truthy
+        expect(file_exits?(document, "README.adoc")).to be_truthy
+        expect(file_exits?(document, "cc-document.adoc")).to be_truthy
+        expect(file_exits?(document, "sections/01-scope.adoc")).to be_truthy
       end
     end
   end

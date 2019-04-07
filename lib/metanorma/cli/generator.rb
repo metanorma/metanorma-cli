@@ -41,20 +41,24 @@ module Metanorma
       end
 
       def base_templates
-        templates = [template_dir, "base"].join("/")
-        build_template_hash(dir_files(templates), templates)
+        base_template_root = [template_dir, "base"].join("/")
+        build_template_hash(dir_files(base_template_root), base_template_root)
       end
 
       def type_specific_templates
         type_template_path.exist? || download_tempales
-        type_template = [template_dir, type].join("/")
-        build_template_hash(dir_files(type_template, doctype), type_template)
+        type_template_root = [template_dir, type].join("/")
+        type_templates = dir_files(type_template_root, doctype)
+
+        build_template_hash(type_templates, type_template_root, doctype)
       end
 
-      def build_template_hash(elements, source_root)
+      def build_template_hash(elements, source_root, type = nil)
+        type_template_path = [source_root, type].join("/")
+
         Hash.new.tap do |hash|
           elements.each do |element|
-            hash[element] = element.gsub("#{source_root}/", "")
+            hash[element] = element.gsub(type_template_path, "")
           end
         end
       end
@@ -77,7 +81,7 @@ module Metanorma
           FileUtils.mkdir_p(target_path.dirname)
         end
 
-        UI.say("Creating #{document_name}/#{destination}")
+        file_creation_message(document_name, destination)
         FileUtils.copy_entry(source, target_path)
       end
 
@@ -99,6 +103,10 @@ module Metanorma
           "You've an existing document with the same name\n" \
           "Still want to continue, and overwrite the existing one? (yes/no):",
         ).downcase
+      end
+
+      def file_creation_message(document, destination)
+        UI.say("Creating #{[document, destination].join("/").gsub("//", "/")}")
       end
     end
   end
