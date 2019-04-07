@@ -1,5 +1,8 @@
 dist: trusty
 sudo: false
+os:
+  - linux
+  - windows
 language: ruby
 rvm:
   - 2.5
