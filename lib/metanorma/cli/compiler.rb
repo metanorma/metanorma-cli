@@ -7,7 +7,7 @@ module Metanorma
         @extract = options.delete(:extract) || []
 
         # extensions are given as "html,pdf,doc,xml", need to split them
-        @extensions = options.delete(:extensions).split(',')
+        @extensions = (options.delete(:extensions) || "").split(',')
       end
 
       def compile
