@@ -16,7 +16,9 @@ module Metanorma
 
       desc "compile FILENAME", "Compile to a metanorma document"
       option :type, aliases: "-t", desc: "Type of standard to generate"
-      option :extensions, aliases: "-x", type: :array, desc: "Type of extension to generate per type"
+
+      # extensions are given in a string as "html,pdf,doc,xml"
+      option :extensions, aliases: "-x", type: :string, desc: "Type of extension to generate per type"
       option :format, aliases: "-f", default: :asciidoc, desc: "Format of source file: eg. asciidoc"
       option :require, aliases: "-r", type: :array, desc: "Require LIBRARY prior to execution"
       option :wrapper, aliases: "-w", type: :boolean, default: true, desc: "Create wrapper folder for HTML output"
