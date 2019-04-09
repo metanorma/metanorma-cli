@@ -15,7 +15,7 @@ module Metanorma
       end
 
       desc "compile FILENAME", "Compile to a metanorma document"
-      option :type, aliases: "-t", required: true, desc: "Type of standard to generate"
+      option :type, aliases: "-t", desc: "Type of standard to generate"
       option :extensions, aliases: "-x", type: :array, desc: "Type of extension to generate per type"
       option :format, aliases: "-f", default: :asciidoc, desc: "Format of source file: eg. asciidoc"
       option :require, aliases: "-r", type: :array, desc: "Require LIBRARY prior to execution"
@@ -28,6 +28,7 @@ module Metanorma
       def compile(file_name)
         Metanorma::Cli::Compiler.compile(file_name, options.dup)
       end
+
     end
   end
 end
