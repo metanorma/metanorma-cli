@@ -50,7 +50,8 @@ module Metanorma
     #
     def self.start(arguments)
       unless arguments.empty? ||
-        Metanorma::Cli::Command.all_commands.has_key?(arguments[0])
+        Metanorma::Cli::Command.all_commands.has_key?(arguments[0]) ||
+        Metanorma::Cli::Command.instance_variable_get(:@map).has_key?(arguments[0])
 
         arguments.unshift("compile")
       end

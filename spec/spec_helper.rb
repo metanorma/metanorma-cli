@@ -3,6 +3,7 @@ require "equivalent-xml"
 require "rspec-command"
 require "metanorma/cli"
 require "fileutils"
+require 'aruba/rspec'
 
 Dir["./spec/support/**/*.rb"].sort.each { |file| require file }
 
@@ -22,6 +23,7 @@ RSpec.configure do |config|
     ENV["METANORMA_DEV_MODE"] = "true"
   end
 
+  config.include Aruba::Api
   config.include RSpecCommand
 end
 

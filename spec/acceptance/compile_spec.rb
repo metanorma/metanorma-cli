@@ -12,6 +12,7 @@ RSpec.describe "Metanorma" do
         sample_asciidoc_file,
         "asciimath" => true,
         "datauriimage" => true,
+        "extensions"=> "xml,html",
         "format" => :asciidoc,
         "type" => "iso",
         "wrapper" => true,
