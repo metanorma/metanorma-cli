@@ -49,10 +49,12 @@ module Metanorma
     # compile the document or show the help documentation.
     #
     def self.start(arguments)
-      command = find_command(arguments)
-      has_type = arguments.include?("-t") || arguments.include?("--type")
+      unless arguments.empty? ||
+        Metanorma::Cli::Command.all_commands.has_key?(arguments[0])
 
-      arguments.unshift("compile") if command.empty? && has_type
+        arguments.unshift("compile")
+      end
+
       Metanorma::Cli::Command.start(arguments)
     end
 
