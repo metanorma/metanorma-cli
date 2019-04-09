@@ -18,6 +18,10 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
+  config.before :all do
+    ENV["METANORMA_DEV_MODE"] = "true"
+  end
+
   config.include RSpecCommand
 end
 
