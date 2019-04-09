@@ -16,10 +16,9 @@ RSpec.describe Metanorma::Cli::Compiler do
 
   def attributes
     {
-      extension_keys: [],
-      extract: nil,
-      extract_type: [],
       type: "iso",
+      extract_type: [],
+      extension_keys: [],
     }
   end
 

@@ -8,14 +8,8 @@ RSpec.describe "Metanorma" do
 
       capture_stdout { Metanorma::Cli.start(command) }
 
-      expect(Metanorma::Cli::Compiler,).to have_received(:compile).with(
-        sample_asciidoc_file,
-        "asciimath" => true,
-        "datauriimage" => true,
-        "format" => :asciidoc,
-        "type" => "iso",
-        "wrapper" => true,
-      )
+      expect(Metanorma::Cli::Compiler,).to have_received(:compile).
+        with(sample_asciidoc_file, "format" => :asciidoc, "type" => "iso")
     end
   end
 

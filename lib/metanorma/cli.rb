@@ -49,9 +49,7 @@ module Metanorma
     # compile the document or show the help documentation.
     #
     def self.start(arguments)
-      unless arguments.empty? ||
-        Metanorma::Cli::Command.all_commands.has_key?(arguments[0])
-
+      if find_command(arguments).empty?
         arguments.unshift("compile")
       end
 
@@ -74,7 +72,7 @@ module Metanorma
     # will behave as expected.
     #
     def self.find_command(arguments)
-      commands = ["new", "compile", "help"]
+      commands = Metanorma::Cli::Command.all_commands.keys
       commands.select { |cmd| arguments.include?(cmd) == true }
     end
   end

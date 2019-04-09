@@ -148,5 +148,4 @@ unless options[:filename]
 end
 
 filename = options[:filename]
-
 Metanorma::Compile.new().compile(filename, options)
