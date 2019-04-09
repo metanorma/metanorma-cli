@@ -4,13 +4,10 @@
 #
 # Currently, we are developing a new version for this CLI, and
 # to test it out we adding this environment variable. When the
-# `METANORMA_DEV_MODE` set to `true` then it will use the latest
-# version of the CLI.
+# `METANORMA_DEV_MODE` set to `true` then it will revert to the
+# old version of the CLI.
 #
-# It's still in very early stage, so please avoid using this in
-# actual production environment.
-#
-if ENV.fetch("METANORMA_DEV_MODE", false) == "true"
+unless ENV.fetch("METANORMA_DEV_MODE", false) == "true"
   require "bundler/setup"
   require "metanorma/cli"
 
