@@ -4,10 +4,8 @@ module Metanorma
       def initialize(file, options)
         @file = file
         @options = options
-        @extract = options.delete(:extract) || []
-
-        # extensions are given as "html,pdf,doc,xml", need to split them
-        @extensions = (options.delete(:extensions) || "").split(',')
+        @extract = (options.delete(:extract) || "").split(",")
+        @extensions = (options.delete(:extensions) || "").split(",")
       end
 
       def compile
@@ -23,10 +21,11 @@ module Metanorma
       attr_reader :file, :options, :extract, :extensions
 
       def compile_file
-        Metanorma::Compile.new.compile(
-          file,
-          options.merge(customize_options),
-        )
+        Compile.new.compile( file, serialize_options)
+      end
+
+      def serialize_options
+        serialize(options.merge(customize_options))
       end
 
       def customize_options
@@ -42,7 +41,15 @@ module Metanorma
       end
 
       def extension_option
-        extensions ? { extension_keys: extensions.map(&:to_sym) } : {}
+        !extensions.empty? ? { extension_keys: extensions.map(&:to_sym) } : {}
+      end
+
+      def serialize(options)
+        Hash.new.tap do |hash|
+          options.each do |key, value|
+            hash[key.to_sym] = value unless value.nil?
+          end
+        end
       end
     end
   end
