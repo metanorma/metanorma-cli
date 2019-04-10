@@ -7,6 +7,13 @@ require 'aruba/rspec'
 
 Dir["./spec/support/**/*.rb"].sort.each { |file| require file }
 
+# Aruba setup
+require 'pathname'
+root = Pathname.new(__FILE__).parent.parent
+# Allows us to run commands directly, without worrying about the CWD
+ENV['PATH'] = "#{root.join('exe').to_s}#{File::PATH_SEPARATOR}#{ENV['PATH']}"
+# Aruba setup END
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
@@ -19,11 +26,7 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  config.before :all do
-    ENV["METANORMA_DEV_MODE"] = "true"
-  end
-
-  config.include Aruba::Api
+  # config.include Aruba::Api
   config.include RSpecCommand
 end
 
