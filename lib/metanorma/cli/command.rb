@@ -29,8 +29,12 @@ module Metanorma
       def compile(file_name = nil)
         if file_name && !options[:version]
           Metanorma::Cli::Compiler.compile(file_name, options.dup)
+
+        elsif options[:version]
+          invoke(:version, [], type: options[:type] || :iso, format: options[:format])
+
         else
-          invoke(:version, [], type: options[:type], format: options[:format])
+          invoke :help
         end
       end
 
