@@ -4,7 +4,7 @@ RSpec.describe Metanorma do
   it "processes metanorma options inside Asciidoc" do
     File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_PREAMBLE_HDR) }
     FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
-    system "exe/metanorma test.adoc"
+    system "metanorma test.adoc"
     expect(File.exist?("test.xml")).to be true
     expect(File.exist?("test.doc")).to be false
     expect(File.exist?("test.html")).to be true
