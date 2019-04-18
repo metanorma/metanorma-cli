@@ -1,6 +1,7 @@
 require "thor"
 require "metanorma/cli/compiler"
 require "metanorma/cli/generator"
+require "metanorma/cli/git_template"
 
 module Metanorma
   module Cli
@@ -9,9 +10,10 @@ module Metanorma
       option :type, aliases: "-t", required: true, desc: "Document type"
       option :doctype, aliases: "-d", required: true, desc: "Metanorma doctype"
       option :overwrite, aliases: "-r", desc: "Overwrite existing document"
+      option :template, aliases: "-g", desc: "Git hosted remote template skeleton"
 
-      def new(document_name)
-        Metanorma::Cli::Generator.run(document_name, options.dup)
+      def new(name)
+        create_new_document(name, options.dup)
       end
 
       desc "compile FILENAME", "Compile to a metanorma document"
@@ -54,6 +56,16 @@ module Metanorma
         require "metanorma-#{type}"
         processor = Metanorma::Registry.instance.find_processor(type.to_sym)
         processor.version
+      end
+
+      def create_new_document(name, options)
+        Metanorma::Cli::Generator.run(
+          name,
+          type: options[:type],
+          doctype: options[:doctype],
+          template: options[:template],
+          overwrite: options[:overwrite],
+        )
       end
     end
   end

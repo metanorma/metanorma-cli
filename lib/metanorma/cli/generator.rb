@@ -5,52 +5,81 @@ require "metanorma/cli/ui"
 module Metanorma
   module Cli
     class Generator
-      def initialize(document_name, options)
-        @document_name = document_name
-        @type = options.fetch(:type, nil)
-        @target = Pathname.pwd.join(document_name)
-        @overwrite = options.fetch(:overwrite, false)
-        @doctype = options.fetch(:doctype, "standard")
+      def initialize(name, type:, doctype:, **options)
+        @name = name
+        @type = type
+        @doctype = doctype
+        @options = options
       end
 
       def run
-        target.rmtree if target.exist? && deletable?
+        if name && document_path.exist?
+          return unless overwrite?(document_path)
+          document_path.rmtree
+        end
 
-        templates = base_templates.merge(type_specific_templates)
-        templates.each { |source, dest| create_file(source, dest) }
+        create_metanorma_document
       end
 
-      def self.run(document_name, options)
-        new(document_name, options).run
+      # Generator.run
+      #
+      # This interface find / downloads the specified template
+      # and then run the generator to create a new metanorma
+      # document.
+      #
+      # By default it usages the default templates but user can
+      # also provide a remote git teplate repo using --template
+      # ooption, and in that case it will use that template.
+      #
+      def self.run(name, type:, doctype:, **options)
+        new(name, options.merge(type: type, doctype: doctype)).run
       end
 
       private
 
-      attr_reader :type, :doctype, :target, :document_name
+      attr_reader :name, :type, :doctype, :options
 
-      def deletable?
-        @overwrite == true || ask_to_confirm === "yes"
+      def document_path
+        @document_path ||= Pathname.pwd.join(name)
       end
 
-      def templates_sources
-        @templates_sources ||= {
-          csd: "https://github.com/metanorma/mn-templates-csd",
-          ogc: "https://github.com/metanorma/mn-templates-ogc",
-          iso: "https://github.com/metanorma/mn-templates-iso"
-        }
+      def create_metanorma_document
+        type_template = type_specific_template
+
+        unless type_template.empty?
+          templates = base_templates.merge(type_template)
+          templates.each { |source, dest| create_file(source, dest) }
+        else
+          UI.say(
+            "Sorry, could not generate the document!\n" \
+            "Template's are missing, please provide valid template URL"
+          )
+        end
+      end
+
+      def find_template(type)
+        Cli::GitTemplate.find_or_download_by(type)
+      end
+
+      def overwrite?(document_path)
+        options[:overwrite] == true || ask_to_confirm(document_path) === "yes"
       end
 
       def base_templates
-        base_template_root = [template_dir, "base"].join("/")
+        base_template_root = Cli.templates_path.join("base")
         build_template_hash(dir_files(base_template_root), base_template_root)
       end
 
-      def type_specific_templates
-        type_template_path.exist? || download_tempales
-        type_template_root = [template_dir, type].join("/")
-        type_templates = dir_files(type_template_root, doctype)
+      def type_specific_template
+        type_template_path = custom_template || find_template(type)
+        doctype_templates  = dir_files(type_template_path, doctype)
+        build_template_hash(doctype_templates, type_template_path, doctype)
+      end
 
-        build_template_hash(type_templates, type_template_root, doctype)
+      def custom_template
+        if options[:template]
+          Cli::GitTemplate.download(type, repo: options[:template])
+        end
       end
 
       def build_template_hash(elements, source_root, type = nil)
@@ -63,25 +92,15 @@ module Metanorma
         end
       end
 
-      def download_tempales
-        git = UI.run("which git")
-        template_source = templates_sources[type.to_sym]
-
-        if !git.nil? && template_source
-          UI.say("Downloading #{type} templates ...")
-          UI.run("git clone #{template_source} #{template_dir}/#{type}")
-        end
-      end
-
       def create_file(source, destination)
-        target_path = [target, destination].join("/")
+        target_path = [document_path, destination].join("/")
         target_path = Pathname.new(target_path)
 
         unless target_path.dirname.exist?
           FileUtils.mkdir_p(target_path.dirname)
         end
 
-        file_creation_message(document_name, destination)
+        file_creation_message(name, destination)
         FileUtils.copy_entry(source, target_path)
       end
 
@@ -90,17 +109,9 @@ module Metanorma
         Pathname.glob(paths).reject(&:directory?).map(&:to_s)
       end
 
-      def template_dir
-        @template_dir ||= [File.dirname(Cli.root), "templates"].join("/")
-      end
-
-      def type_template_path
-        @type_template_path ||= Pathname.new([template_dir, type].join("/"))
-      end
-
-      def ask_to_confirm
+      def ask_to_confirm(document)
         UI.ask(
-          "You've an existing document with the same name\n" \
+          "You've an existing document with the #{document.to_s}\n" \
           "Still want to continue, and overwrite the existing one? (yes/no):",
         ).downcase
       end

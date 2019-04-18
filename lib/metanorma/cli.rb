@@ -44,7 +44,7 @@ module Metanorma
     # In the Metanorma CLI, we've included some custom behavior,
     # like exposing the compiation directly from the root command.
     #
-    # So, for this use case we firs check if the user is actually
+    # So, for this use case we first check if the user is actually
     # trying to compile a document or not, and based on that we'll
     # compile the document or show the help documentation.
     #
@@ -60,17 +60,14 @@ module Metanorma
       File.dirname(__dir__)
     end
 
+    def self.templates_path
+      root_path.join("templates")
+    end
+
     def self.root_path
       Pathname.new(Cli.root).join("..")
     end
 
-    # Impoartant Note
-    #
-    # This is a workaround to invoke the `compile` as a default
-    # command for the cli, so whenever you are adding a new command
-    # please make sure you add it to this list as well, only then it
-    # will behave as expected.
-    #
     def self.find_command(arguments)
       commands = Metanorma::Cli::Command.all_commands.keys
       commands.select { |cmd| arguments.include?(cmd) == true }
