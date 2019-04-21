@@ -18,6 +18,11 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
+  config.before(:suite) do
+    tmp_dir = Pathname.new("./tmp")
+    FileUtils.mkdir_p(tmp_dir) unless tmp_dir.exist?
+  end
+
   config.include RSpecCommand
 end
 
