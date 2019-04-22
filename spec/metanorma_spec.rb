@@ -148,12 +148,10 @@ RSpec.describe "warns when bogus extension requested" do
   its(:stdout) { is_expected.to include "bogus_format format is not supported for this standard" }
 end
 
-# Maybe use the thor default error in this case?"
-#
-# RSpec.describe "warns when no file provided" do
-#   command "metanorma -t iso -x html"
-#   its(:stdout) { is_expected.to include "Need to specify a file to process" }
-# end
+RSpec.describe "warns when no file provided" do
+  command "metanorma -t iso -x html"
+  its(:stdout) { is_expected.to include "Need to specify a file to process" }
+end
 
 RSpec.describe "gives version information" do
   command "metanorma -v -t iso"

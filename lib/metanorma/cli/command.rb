@@ -35,6 +35,9 @@ module Metanorma
         elsif options[:version]
           invoke(:version, [], type: options[:type] || :iso, format: options[:format])
 
+        elsif options.keys.size >= 2
+          UI.say("Need to specify a file to process")
+
         else
           invoke :help
         end
