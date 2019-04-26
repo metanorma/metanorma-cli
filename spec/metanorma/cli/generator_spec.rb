@@ -15,7 +15,9 @@ RSpec.describe Metanorma::Cli::Generator do
 
         expect(file_exits?(document, "Gemfile")).to be_truthy
         expect(file_exits?(document, "Makefile")).to be_truthy
+        expect(file_exits?(document, ".gitignore")).to be_truthy
         expect(file_exits?(document, "README.adoc")).to be_truthy
+        expect(file_exits?(document, ".gitlab-ci.yml")).to be_truthy
         expect(file_exits?(document, "cc-document.adoc")).to be_truthy
         expect(file_exits?(document, "sections/01-scope.adoc")).to be_truthy
       end
