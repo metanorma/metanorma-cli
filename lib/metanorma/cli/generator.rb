@@ -106,7 +106,9 @@ module Metanorma
 
       def dir_files(*arguments)
         paths = [*arguments, "**", "**"].join("/")
-        Pathname.glob(paths).reject(&:directory?).map(&:to_s)
+        files = Pathname.glob(paths, File::FNM_DOTMATCH) - [".", " .."]
+
+        files.reject(&:directory?).map(&:to_s)
       end
 
       def ask_to_confirm(document)
