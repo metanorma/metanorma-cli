@@ -54,6 +54,9 @@ module Metanorma
       end
 
       Metanorma::Cli::Command.start(arguments)
+
+    rescue Errno::ENOENT => error
+      UI.say("Error: #{error}, \nNot sure what to run? try: metanorma help")
     end
 
     def self.root
