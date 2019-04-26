@@ -13,11 +13,8 @@ RSpec.describe Metanorma::Cli::Generator do
           )
         }
 
-        expect(file_exits?(document, "Gemfile")).to be_truthy
-        expect(file_exits?(document, "Makefile")).to be_truthy
-        expect(file_exits?(document, ".gitignore")).to be_truthy
+        expect_document_to_include_base_templates(document)
         expect(file_exits?(document, "README.adoc")).to be_truthy
-        expect(file_exits?(document, ".gitlab-ci.yml")).to be_truthy
         expect(file_exits?(document, "cc-document.adoc")).to be_truthy
         expect(file_exits?(document, "sections/01-scope.adoc")).to be_truthy
       end
@@ -38,8 +35,7 @@ RSpec.describe Metanorma::Cli::Generator do
           )
         }
 
-        expect(file_exits?(document, "Gemfile")).to be_truthy
-        expect(file_exits?(document, "Makefile")).to be_truthy
+        expect_document_to_include_base_templates(document)
         expect(file_exits?(document, "README.adoc")).to be_truthy
         expect(file_exits?(document, "cc-document.adoc")).to be_truthy
         expect(file_exits?(document, "sections/01-scope.adoc")).to be_truthy
@@ -68,5 +64,24 @@ RSpec.describe Metanorma::Cli::Generator do
 
   def file_exits?(root, filename)
     File.exist?([root, filename].join("/"))
+  end
+
+  def base_templates
+    @base_templates ||= [
+      "Gemfile",
+      "Makefile",
+      "deploy.sh",
+      ".gitignore",
+      ".travis.yml",
+      "Makefile.win",
+      "appveyor.yml",
+      ".gitlab-ci.yml",
+    ]
+  end
+
+  def expect_document_to_include_base_templates(document)
+    base_templates.each do |template|
+      expect(file_exits?(document, template)).to be_truthy, lambda { template }
+    end
   end
 end
