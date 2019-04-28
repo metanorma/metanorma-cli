@@ -63,8 +63,18 @@ module Metanorma
       File.dirname(__dir__)
     end
 
+    def self.base_templates_path
+      root_path.join("templates", "base")
+    end
+
     def self.templates_path
-      root_path.join("templates")
+      Pathname.new(Dir.home).join(".metanorma", "templates")
+    end
+
+    def self.templates_path_access
+      dir = templates_path
+      dir = dir.parent while !dir.exist?
+      File.writable? dir
     end
 
     def self.root_path

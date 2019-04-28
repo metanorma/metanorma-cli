@@ -18,6 +18,14 @@ module Metanorma
           document_path.rmtree
         end
 
+        unless Cli.templates_path_access
+          UI.say(
+            "Sorry, the current user is unable to write to the #{Cli.templates_path} directory.\n\n" \
+            "Please check permission for #{Cli.templates_path}, or try run metanorma with another user"
+          )
+          return
+        end
+
         create_metanorma_document
       end
 
@@ -66,7 +74,7 @@ module Metanorma
       end
 
       def base_templates
-        base_template_root = Cli.templates_path.join("base")
+        base_template_root = Cli.base_templates_path
         build_template_hash(dir_files(base_template_root), base_template_root)
       end
 
