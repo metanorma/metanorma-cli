@@ -66,6 +66,9 @@ module Metanorma
         end
       end
 
+      def find_template(type)
+        Cli::GitTemplate.find_or_download_by(type)
+      end
 
       def overwrite?(document_path)
         options[:overwrite] == true || ask_to_confirm(document_path) === "yes"
@@ -77,12 +80,12 @@ module Metanorma
       end
 
       def type_specific_template
-        type_template_path = custom_template
+        type_template_path = custom_template(type) || find_template(type)
         doctype_templates  = dir_files(type_template_path, doctype)
         build_template_hash(doctype_templates, type_template_path, doctype)
       end
 
-      def custom_template
+      def custom_template(type)
         template = options[:template]
 
         if template && template !~ URI::regexp

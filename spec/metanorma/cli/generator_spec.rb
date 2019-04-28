@@ -64,9 +64,9 @@ RSpec.describe Metanorma::Cli::Generator do
     context "with local template" do
       it "success for existing template" do
         document = "./tmp/my-local-document"
-        template = "./templates"
+        template = "#{Dir.home}/.metanorma/templates"
 
-        capture_stdout {
+        output = capture_stdout {
           Metanorma::Cli::Generator.run(
               document,
               type: "csd",
@@ -75,6 +75,8 @@ RSpec.describe Metanorma::Cli::Generator do
               template: template,
               )
         }
+
+        puts output
 
         expect_document_to_include_base_templates(document)
         expect(file_exits?(document, "README.adoc")).to be_truthy
