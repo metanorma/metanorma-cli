@@ -10,7 +10,7 @@ module Metanorma
       option :type, aliases: "-t", required: true, desc: "Document type"
       option :doctype, aliases: "-d", required: true, desc: "Metanorma doctype"
       option :overwrite, aliases: "-r", desc: "Overwrite existing document"
-      option :template, aliases: "-g", desc: "Git hosted remote template skeleton"
+      option :template, aliases: "-l", desc: "Git hosted remote or local FS template skeleton"
 
       def new(name)
         create_new_document(name, options.dup)

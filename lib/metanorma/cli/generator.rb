@@ -1,3 +1,4 @@
+require "uri"
 require "pathname"
 require "fileutils"
 require "metanorma/cli/ui"
@@ -65,9 +66,6 @@ module Metanorma
         end
       end
 
-      def find_template(type)
-        Cli::GitTemplate.find_or_download_by(type)
-      end
 
       def overwrite?(document_path)
         options[:overwrite] == true || ask_to_confirm(document_path) === "yes"
@@ -79,14 +77,18 @@ module Metanorma
       end
 
       def type_specific_template
-        type_template_path = custom_template || find_template(type)
+        type_template_path = custom_template
         doctype_templates  = dir_files(type_template_path, doctype)
         build_template_hash(doctype_templates, type_template_path, doctype)
       end
 
       def custom_template
-        if options[:template]
-          Cli::GitTemplate.download(type, repo: options[:template])
+        template = options[:template]
+
+        if template && template !~ URI::regexp
+          Pathname.new(template).join(type)
+        else
+          Cli::GitTemplate.find_or_download_by(type)
         end
       end
 
@@ -128,6 +130,11 @@ module Metanorma
 
       def file_creation_message(document, destination)
         UI.say("Creating #{[document, destination].join("/").gsub("//", "/")}")
+      end
+
+      def local_template
+        template = options[:template]
+        template && template !~ URI::regexp
       end
     end
   end

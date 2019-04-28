@@ -19,7 +19,7 @@ RSpec.describe "Metanorma" do
           new
             -t csd
             -d standard
-            -g https://github.com/metanorma/mn-templates-csd
+            -l https://github.com/metanorma/mn-templates-csd
             ./tmp/my-csd-doc
         )
 
