@@ -15,7 +15,7 @@ RSpec.describe Metanorma::Cli::Generator do
 
         expect_document_to_include_base_templates(document)
         expect(file_exits?(document, "README.adoc")).to be_truthy
-        expect(file_exits?(document, "cc-document.adoc")).to be_truthy
+        expect(file_exits?(document, "document.adoc")).to be_truthy
         expect(file_exits?(document, "sections/01-scope.adoc")).to be_truthy
       end
     end
@@ -37,7 +37,7 @@ RSpec.describe Metanorma::Cli::Generator do
 
         expect_document_to_include_base_templates(document)
         expect(file_exits?(document, "README.adoc")).to be_truthy
-        expect(file_exits?(document, "cc-document.adoc")).to be_truthy
+        expect(file_exits?(document, "document.adoc")).to be_truthy
         expect(file_exits?(document, "sections/01-scope.adoc")).to be_truthy
       end
     end
