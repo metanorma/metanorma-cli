@@ -15,7 +15,7 @@ RSpec.describe Metanorma::Cli::Generator do
 
         expect_document_to_include_base_templates(document)
         expect(file_exits?(document, "README.adoc")).to be_truthy
-        expect(file_exits?(document, "cc-document.adoc")).to be_truthy
+        expect(file_exits?(document, "document.adoc")).to be_truthy
         expect(file_exits?(document, "sections/01-scope.adoc")).to be_truthy
       end
     end
@@ -37,7 +37,7 @@ RSpec.describe Metanorma::Cli::Generator do
 
         expect_document_to_include_base_templates(document)
         expect(file_exits?(document, "README.adoc")).to be_truthy
-        expect(file_exits?(document, "cc-document.adoc")).to be_truthy
+        expect(file_exits?(document, "document.adoc")).to be_truthy
         expect(file_exits?(document, "sections/01-scope.adoc")).to be_truthy
       end
     end
@@ -55,6 +55,45 @@ RSpec.describe Metanorma::Cli::Generator do
             doctype: "standard",
             template: template,
           )
+        }
+
+        expect(output).to include("Sorry, could not generate the document!")
+      end
+    end
+
+    context "with local template" do
+      it "success for existing template" do
+        document = "./tmp/my-local-document"
+        template = "./templates"
+
+        capture_stdout {
+          Metanorma::Cli::Generator.run(
+              document,
+              type: "csd",
+              overwrite: true,
+              doctype: "standard",
+              template: template,
+              )
+        }
+
+        expect_document_to_include_base_templates(document)
+        expect(file_exits?(document, "README.adoc")).to be_truthy
+        expect(file_exits?(document, "document.adoc")).to be_truthy
+        expect(file_exits?(document, "sections/01-scope.adoc")).to be_truthy
+      end
+
+      it "raise and throws an exception for non existing dir" do
+        document = "./tmp/my-local-not-exists-document"
+        template = "./templates_not_exists"
+
+        output = capture_stdout {
+          Metanorma::Cli::Generator.run(
+              document,
+              type: "csd",
+              overwrite: true,
+              doctype: "standard",
+              template: template,
+              )
         }
 
         expect(output).to include("Sorry, could not generate the document!")
