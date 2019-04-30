@@ -20,6 +20,11 @@ RSpec.describe Metanorma::Cli::Generator do
       end
     end
 
+    # Note: `csd` is a deafult type and using it with custom tempalte
+    # will fall back to the defalt one, so for the test purpose let's
+    # use an invalid type called `ccsd`, just to distingue that our
+    # test is actually working as expected and cloning the git repo.
+    #
     context "with custom template" do
       it "downloads and create new document" do
         document = "./tmp/my-custom-csd"
@@ -28,7 +33,7 @@ RSpec.describe Metanorma::Cli::Generator do
         capture_stdout {
           Metanorma::Cli::Generator.run(
             document,
-            type: "csd",
+            type: "custom-csd",
             overwrite: true,
             doctype: "standard",
             template: template,
@@ -50,7 +55,7 @@ RSpec.describe Metanorma::Cli::Generator do
         output = capture_stdout {
           Metanorma::Cli::Generator.run(
             document,
-            type: "nncsd",
+            type: "new-csd",
             overwrite: true,
             doctype: "standard",
             template: template,
@@ -64,16 +69,16 @@ RSpec.describe Metanorma::Cli::Generator do
     context "with local template" do
       it "success for existing template" do
         document = "./tmp/my-local-document"
-        template = "./templates"
+        template = [Dir.home, ".metanorma", "templates", "csd"].join("/")
 
         capture_stdout {
           Metanorma::Cli::Generator.run(
-              document,
-              type: "csd",
-              overwrite: true,
-              doctype: "standard",
-              template: template,
-              )
+            document,
+            type: "csd",
+            overwrite: true,
+            doctype: "standard",
+            template: template,
+          )
         }
 
         expect_document_to_include_base_templates(document)
@@ -81,22 +86,22 @@ RSpec.describe Metanorma::Cli::Generator do
         expect(file_exits?(document, "document.adoc")).to be_truthy
         expect(file_exits?(document, "sections/01-scope.adoc")).to be_truthy
       end
+    end
 
-      it "raise and throws an exception for non existing dir" do
-        document = "./tmp/my-local-not-exists-document"
-        template = "./templates_not_exists"
+    context "no write permission" do
+      it "says it out loud with error message" do
+        allow(Metanorma::Cli).to receive(:writable_templates_path?).
+          and_raise(Errno::EACCES)
+
+        document = "./tmp/my-document"
 
         output = capture_stdout {
           Metanorma::Cli::Generator.run(
-              document,
-              type: "csd",
-              overwrite: true,
-              doctype: "standard",
-              template: template,
-              )
+            document, type: "csd", doctype: "standard"
+          )
         }
 
-        expect(output).to include("Sorry, could not generate the document!")
+        expect(output).to include("Sorry, the current user doesn't have write")
       end
     end
   end

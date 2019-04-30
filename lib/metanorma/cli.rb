@@ -71,10 +71,14 @@ module Metanorma
       Pathname.new(Dir.home).join(".metanorma", "templates")
     end
 
-    def self.templates_path_access
-      dir = templates_path
-      dir = dir.parent while !dir.exist?
-      File.writable? dir
+    def self.writable_templates_path?
+      parent_directory = templates_path.join("..", "..")
+
+      unless parent_directory && parent_directory.writable?
+        raise Errno::EACCES, "No permission to write in this drectory"
+      end
+
+      return true
     end
 
     def self.root_path
