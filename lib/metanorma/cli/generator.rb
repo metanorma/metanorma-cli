@@ -11,23 +11,21 @@ module Metanorma
         @type = type
         @doctype = doctype
         @options = options
+        @template = options.fetch(:template, nil)
       end
 
       def run
-        if name && document_path.exist?
-          return unless overwrite?(document_path)
-          document_path.rmtree
+        if Cli.writable_templates_path?
+          if name && document_path.exist?
+            return unless overwrite?(document_path)
+            document_path.rmtree
+          end
+
+          create_metanorma_document
         end
 
-        unless Cli.templates_path_access
-          UI.say(
-            "Sorry, the current user is unable to write to the #{Cli.templates_path} directory.\n\n" \
-            "Please check permission for #{Cli.templates_path}, or try run metanorma with another user"
-          )
-          return
-        end
-
-        create_metanorma_document
+      rescue Errno::EACCES
+        permission_missing_error
       end
 
       # Generator.run
@@ -46,7 +44,7 @@ module Metanorma
 
       private
 
-      attr_reader :name, :type, :doctype, :options
+      attr_reader :name, :type, :doctype, :options, :template
 
       def document_path
         @document_path ||= Pathname.pwd.join(name)
@@ -66,6 +64,9 @@ module Metanorma
         end
       end
 
+      def find_standard_template(type)
+        Cli::GitTemplate.find_or_download_by(type)
+      end
 
       def overwrite?(document_path)
         options[:overwrite] == true || ask_to_confirm(document_path) === "yes"
@@ -77,18 +78,18 @@ module Metanorma
       end
 
       def type_specific_template
-        type_template_path = custom_template
+        type_template_path = custom_template || find_standard_template(type)
         doctype_templates  = dir_files(type_template_path, doctype)
         build_template_hash(doctype_templates, type_template_path, doctype)
       end
 
       def custom_template
-        template = options[:template]
+        if template
+          if template !~ URI::regexp
+            return Pathname.new(template)
+          end
 
-        if template && template !~ URI::regexp
-          Pathname.new(template).join(type)
-        else
-          Cli::GitTemplate.find_or_download_by(type)
+          Cli::GitTemplate.download(type, repo: template)
         end
       end
 
@@ -132,9 +133,12 @@ module Metanorma
         UI.say("Creating #{[document, destination].join("/").gsub("//", "/")}")
       end
 
-      def local_template
-        template = options[:template]
-        template && template !~ URI::regexp
+      def permission_missing_error
+        UI.say(
+          "Sorry, the current user doesn't have write permission\n" \
+          "to #{Cli.templates_path}. Please change it to be writable or\n" \
+          "run metanorma as different user with write permission to this path",
+        )
       end
     end
   end
