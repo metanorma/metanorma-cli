@@ -114,7 +114,6 @@ RSpec.describe Metanorma::Cli::Generator do
     @base_templates ||= [
       "Gemfile",
       "Makefile",
-      "deploy.sh",
       ".gitignore",
       ".travis.yml",
       "Makefile.win",
