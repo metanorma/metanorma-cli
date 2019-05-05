@@ -2,10 +2,5 @@
 .swp
 .tmp.xml
 
-# Output files
-document.html
-document.pdf
-document.xml
-
 # Deploy key
 deploy_key
