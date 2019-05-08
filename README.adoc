@@ -1,4 +1,4 @@
-= Metanorma's command-line interface (CLI)
+= Metanorma CLI
 
 image:https://img.shields.io/gem/v/metanorma-cli.svg["Gem Version", link="https://rubygems.org/gems/metanorma-cli"]
 image:https://img.shields.io/travis/metanorma/metanorma-cli/master.svg["Build Status", link="https://travis-ci.org/metanorma/metanorma-cli"]
@@ -22,3 +22,113 @@ and the process is a little more complex if you’re using Windows.
 
 For advanced details regarding dependencies and Windows installation notes,
 refer to the link:docs/installation.adoc[full installation manual].
+
+== Usages
+
+=== New Docuement
+
+Metanorma CLI allows you to create a new document using an official template, or
+user specified custom template. To see what available please run
+`metanorma help new`, this will show you all avaialble options.
+
+==== Create new document (official tempalte)
+
+The `metanorma new` interface made the document creation as simple as running a
+single command. To create a new document using an official template you simply
+need invoke the command with `type`, `doctype` and other options, then it will
+find and use the official template to create your document.
+
+For example, if you want a create a new `my-csd-document` document using `csd`
+type and `standard` doctype, then you can use the following command.
+
+[source, sh]
+----
+metanorma new -d standard -t csd my-csd-document
+----
+
+This will create your document and it will also print out the files it's
+creating during the generation. Currently, the cli supports `csd`, `ogc` and `iso`.
+
+==== Create new document (custom git tempalte)
+
+The CLI is not limited to the official types and tempaltes, this also support
+creating a new document using your own custom tempalte. To make this process
+more flexible, it expects your template to be a git repo and available online 
+(public/private). Once, invoked then it will automatically download and generate
+the new document using your custom template.
+
+For example, if you want to create a new `my-custom-csd-document` using `csd`
+type, `standard` doctype and a custom template avaiable at `https://github.com/metanorma/mn-templates-csd`, then
+you can use the following command.
+
+[source,sh]
+----
+metanorma new -d standard -t csd \
+  -l https://github.com/metanorma/mn-templates-csd my-custom-csd-document
+----
+
+=== Compile a document
+
+One of the main purpose of this CLI is to compile a document to metanorma document,
+so the best way to figure out what's avaialble is to run the `metanorma help compile`,
+this will display the usage instructions with all available options.
+
+[source]
+----
+Usage:
+  metanorma compile FILENAME [..options]
+
+Options:
+  -t, [--type=TYPE]                   # Type of standard to generate
+  -x, [--extensions=EXTENSIONS]       # Type of extension to generate per type
+  -f, [--format=FORMAT]               # Format of source file: eg. asciidoc
+                                      # Default: asciidoc
+
+  -r, [--require=one two three]       # Require LIBRARY prior to execution
+  -w, [--wrapper], [--no-wrapper]     # Create wrapper folder for HTML output
+  -a, [--asciimath], [--no-asciimath] # Keep Asciimath in XML output instead of converting it to MathM
+  -R, [--relaton=RELATON]             # Export Relaton XML for document to nominated filename
+  -e, [--extract=EXTRACT]             # Export sourcecode fragments from this document to nominated directory
+  -v, [--version=VERSION]             # Print version of code (accompanied with -t)
+----
+
+So, let's put this in use. For example we have a document `my-iso-document.adoc`
+and we want to compile this using `iso` and `html` as extension, then we can use
+the following command.
+
+[source, sh]
+----
+metanorma compile --type iso -x html my-iso-document.adoc
+----
+
+This should compile any valid document, but if there are some issues then it
+will also print those out in the terminal. Currently, the supported backends
+are `rfc2`, `rfc3`, `iso`, `gb`, `csd`, `csand`, `m3d` and `rsd`.
+
+*Note:* Previously we didn't have to speicify the `compile` part to the `cli`,
+as this was the only interface, and it was invoked by default. This will still
+work fine, but we strongly suggest to specify the `compile` part. This will
+ensure your toolset is ready for our next uprade :)
+
+=== Version of the code
+
+The CLI has a dedicated interface that returns the version that are running for
+any specific type. To retrieve the version for a type, we can use the `version`
+interface.
+
+For example: if we want to know the currently running version for `iso`, then we
+can use the following command and this will show the current version that we are
+using for that specific backend.
+
+[source, sh]
+----
+metanorma version --type iso
+----
+
+== Credits
+
+This gem is developed, maintained and funded by https://www.metanorma.com/docs/getting-started/[Ribose Inc.]
+
+== License
+
+The gem is available as open source under the terms of the http://opensource.org/licenses/MIT[MIT License].
