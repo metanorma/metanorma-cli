@@ -121,8 +121,22 @@ end
     OUTPUT
   end
 
-end
+  context "with -r option specified" do
+    it "loads the libary and compile document" do
+      File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_PREAMBLE_HDR) }
+      FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
 
+      system "metanorma compile -t iso -r metanorma-iso test.adoc"
+
+      expect(File.exist?("test.xml")).to be true
+      expect(File.exist?("test.doc")).to be false
+      expect(File.exist?("test.html")).to be true
+      expect(File.exist?("test.alt.html")).to be false
+      xml = File.read("test.xml")
+      expect(xml).to include "</iso-standard>"
+    end
+  end
+end
 
 RSpec.describe "warns when no standard type provided" do
   file "test.adoc", ASCIIDOC_CONFIGURED_HDR

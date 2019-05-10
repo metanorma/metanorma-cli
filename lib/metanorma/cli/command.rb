@@ -9,7 +9,7 @@ module Metanorma
       desc "new NAME", "Create new Metanorma document"
       option :type, aliases: "-t", required: true, desc: "Document type"
       option :doctype, aliases: "-d", required: true, desc: "Metanorma doctype"
-      option :overwrite, aliases: "-r", desc: "Overwrite existing document"
+      option :overwrite, aliases: "-y", type: :boolean, desc: "Overwrite existing document"
       option :template, aliases: "-l", desc: "Git hosted remote or local FS template skeleton"
 
       def new(name)
@@ -20,7 +20,7 @@ module Metanorma
       option :type, aliases: "-t", desc: "Type of standard to generate"
       option :extensions, aliases: "-x", type: :string, desc: "Type of extension to generate per type"
       option :format, aliases: "-f", default: :asciidoc, desc: "Format of source file: eg. asciidoc"
-      option :require, aliases: "-r", type: :array, desc: "Require LIBRARY prior to execution"
+      option :require, aliases: "-r", desc: "Require LIBRARY prior to execution"
       option :wrapper, aliases: "-w", type: :boolean, desc: "Create wrapper folder for HTML output"
       option :asciimath, aliases: "-a", type: :boolean, desc: "Keep Asciimath in XML output instead of converting it to MathM"
       option :datauriimage, aliases: "-d", type: :boolean, desc: "Encode HTML output images as data URIs"
