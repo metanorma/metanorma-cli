@@ -13,6 +13,18 @@ RSpec.describe "Metanorma" do
     end
   end
 
+  describe "failure" do
+    it "returns the correct status code" do
+      begin
+        command = %w(compile -t iso invalid-file)
+        capture_stdout { Metanorma::Cli.start(command) }
+
+      rescue SystemExit => error
+        expect(error.status).to eq(Errno::ENOENT::Errno)
+      end
+    end
+  end
+
   def sample_asciidoc_file
     @sample_asciidoc_file ||=
       Metanorma::Cli.root_path.
