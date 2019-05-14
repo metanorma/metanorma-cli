@@ -57,6 +57,7 @@ module Metanorma
 
     rescue Errno::ENOENT => error
       UI.say("Error: #{error}, \nNot sure what to run? try: metanorma help")
+      exit(Errno::ENOENT::Errno)
     end
 
     def self.root
