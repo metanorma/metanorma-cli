@@ -4,8 +4,7 @@ module Metanorma
       def initialize(file, options)
         @file = file
         @options = options
-        @extract = (options.delete(:extract) || "").split(",")
-        @extensions = (options.delete(:extensions) || "").split(",")
+        normalize_special_options
       end
 
       def compile
@@ -50,6 +49,12 @@ module Metanorma
             hash[key.to_sym] = value unless value.nil?
           end
         end
+      end
+
+      def normalize_special_options
+        @extract = (options.delete(:extract) || "").split(",")
+        @extensions = (options.delete(:extensions) || "").split(",") 
+        options[:require] = [options[:require]] if options[:require]
       end
     end
   end
