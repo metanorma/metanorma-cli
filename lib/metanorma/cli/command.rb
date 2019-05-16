@@ -49,16 +49,27 @@ module Metanorma
 
       def version
         if options[:format] == :asciidoc
-          UI.say(find_version(options[:type]))
+          UI.say(find_backend(options[:type].to_sym).version)
         end
+      end
+
+      desc "list-extensions TYPE", "List supported extensions"
+      def list_extensions(type)
+        output_formats = find_backend(type).output_formats
+        UI.say("Supported extensions: #{join_keys(output_formats.keys)}.")
+      rescue LoadError
+        UI.say("Couldn't load #{type}, please provide a valid type!")
       end
 
       private
 
-      def find_version(type)
+      def find_backend(type)
         require "metanorma-#{type}"
-        processor = Metanorma::Registry.instance.find_processor(type.to_sym)
-        processor.version
+        Metanorma::Registry.instance.find_processor(type.to_sym)
+      end
+
+      def join_keys(keys)
+        [keys[0..-2].join(", "), keys.last].join(" and ")
       end
 
       def create_new_document(name, options)

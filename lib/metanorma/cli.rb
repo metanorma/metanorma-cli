@@ -88,7 +88,7 @@ module Metanorma
 
     def self.find_command(arguments)
       commands = Metanorma::Cli::Command.all_commands.keys
-      commands.select { |cmd| arguments.include?(cmd) == true }
+      commands.select { |cmd| arguments.include?(cmd.gsub("_", "-")) == true }
     end
   end
 end
