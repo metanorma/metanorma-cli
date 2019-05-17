@@ -38,7 +38,7 @@ for advanced details regarding dependencies and Windows installation notes.
 
 == Usage
 
-=== Generating a new Metanorma document using a template  (`metanorma new`)
+=== Generate a new Metanorma document using a template  (`metanorma new`)
 
 Metanorma CLI allows you to create a new document using an official
 template, or a user-specified custom template.
@@ -149,29 +149,39 @@ This should compile any valid document, but if there are some issues then it
 will also print those out in the terminal. Currently, the supported flavors
 are `ietf`, `iso`, `gb`, `csd`, `csand`, `m3d` and `rsd`.
 
-=== Displaying supported extensions (`metanorma list-extensions`)
 
-Having hard time figuring out what extensions is supported or not? Well, we've
-got you covered, if you know the type you are looking for then simply use the
-follwoing command:
+=== List supported output formats (`metanorma list-extensions`)
 
-[source, sh]
-----
-metanorma list-extensions iso
-----
+Need to know what output formats are supported for a given flavor?
+We've got you covered.
 
-This will display all the extension this type supports, and if you want to check
-all available extensions for all types, then you can run the same commad without
-specifying the type, and it will display all available extensions.
+To list out the output formats supported by every single flavor type,
+run the following command:
 
-[source, sh]
+[source,sh]
 
 ----
 metanorma list-extensions
 ----
 
 
-=== Displaying Metanorma processor version (`metanorma version`)
+To list out the output formats supported by a particular flavor type,
+run the following command:
+
+[source,sh]
+----
+metanorma list-extensions <flavor>
+----
+
+e.g.,
+
+[source,sh]
+----
+metanorma list-extensions iso
+----
+
+
+=== Show processor version (`metanorma version`)
 
 The `version` command returns the version of the Metanorma processor for
 a specific flavor.
