@@ -1,4 +1,4 @@
-= Metanorma CLI
+= Metanorma command-line interface (CLI)
 
 image:https://img.shields.io/gem/v/metanorma-cli.svg["Gem Version", link="https://rubygems.org/gems/metanorma-cli"]
 image:https://img.shields.io/travis/metanorma/metanorma-cli/master.svg["Build Status", link="https://travis-ci.org/metanorma/metanorma-cli"]
@@ -14,64 +14,106 @@ Depending on your setup, you may find quicker ways to get started:
 please refer to https://www.metanorma.com/docs/getting-started/[Getting Started] instead.
 ====
 
-At its core, installing this gem is as easy as `gem install metanorma-cli`.
-That will install the `metanorma` executable, which you can use with all
+To install this gem, simply run:
+
+[source,sh]
+----
+gem install metanorma-cli
+----
+
+This will install the `metanorma` executable, which you can use with all
 officially supported Metanorma flavors (such as ISO, CalConnect, IETF, etc).
-However, certain dependencies such as Puppeteer may have to be installed separately,
-and the process is a little more complex if you’re using Windows.
 
-For advanced details regarding dependencies and Windows installation notes,
-refer to the link:docs/installation.adoc[full installation manual].
+However, a number of dependencies (such as Puppeteer and LaTeXML) are not
+installed with this gem, and have to be installed separately.
+The process of installing the full suite can be a little more complex.
 
-== Usages
+Generally, we recommend you to follow steps given at
+https://www.metanorma.com/author/topics/install/[Metanorma Installation].
 
-=== New Docuement
+But if you aren't afraid of tinkering deeply, please see the
+link:docs/installation.adoc[Developer Installation Notes]
+for advanced details regarding dependencies and Windows installation notes.
 
-Metanorma CLI allows you to create a new document using an official template, or
-user specified custom template. To see what available please run
-`metanorma help new`, this will show you all avaialble options.
 
-==== Create new document (official tempalte)
+== Usage
 
-The `metanorma new` interface made the document creation as simple as running a
-single command. To create a new document using an official template you simply
-need invoke the command with `type`, `doctype` and other options, then it will
-find and use the official template to create your document.
+=== Generating a new Metanorma document using a template  (`metanorma new`)
 
-For example, if you want a create a new `my-csd-document` document using `csd`
-type and `standard` doctype, then you can use the following command.
+Metanorma CLI allows you to create a new document using an official
+template, or a user-specified custom template.
+
+To see what options are available under the `new` command,
+run `metanorma help new`.
+
+==== Generate a new document from an official Metanorma template (from an official Metanorma template repository)
+
+The `metanorma new` command allows you to create a document by running a
+single command.
+
+To create a new document using an official template you simply
+invoke the command with the mandatory options `type` and `doctype`,
+then Metanorma will find and load the official template to
+create your document.
+
+For example, if you want to create a new CSD document (`type`: `csd`) called
+`csd-foo-standard`, using the `standard` template type,
+run the following command:
 
 [source, sh]
 ----
-metanorma new -d standard -t csd my-csd-document
+metanorma new -d standard -t csd csd-foo-standard
 ----
 
-This will create your document and it will also print out the files it's
-creating during the generation. Currently, the cli supports `csd`, `ogc` and `iso`.
+This will create your barebones document and will also print out
+all files created during generation.
 
-==== Create new document (custom git tempalte)
+Currently, the supported Metanorma template types are `csd`, `ogc` and `iso`.
 
-The CLI is not limited to the official types and tempaltes, this also support
-creating a new document using your own custom tempalte. To make this process
-more flexible, it expects your template to be a git repo and available online 
-(public/private). Once, invoked then it will automatically download and generate
-the new document using your custom template.
 
-For example, if you want to create a new `my-custom-csd-document` using `csd`
-type, `standard` doctype and a custom template avaiable at `https://github.com/metanorma/mn-templates-csd`, then
-you can use the following command.
+==== Generate a new document from a custom Metanorma template repository
+
+The CLI allows using custom or unofficial template repositories, meaning you
+could also generate a new document using your own custom template.
+
+Metanorma supports two types of template repositories:
+
+* Git: a Git repository (local or remote, public or private)
+* Local: a directory
+
+Once a template repository and a template within is specified, Metanorma will
+automatically download and generate the new document using your custom template.
+
+For example, if you want to create a new CSD document with the
+following parameters:
+
+* Document name: `my-custom-csd-document`
+* Flavor: `csd`
+* Doctype: `standard`
+* Template: `https://gitfoo.com/foobar/mn-templates-foobar` (fictitious example)
+
+You could execute the following command to do so:
 
 [source,sh]
 ----
 metanorma new -d standard -t csd \
-  -l https://github.com/metanorma/mn-templates-csd my-custom-csd-document
+  -l https://gitfoo.com/foobar/mn-templates-foobar my-custom-csd-document
 ----
 
-=== Compile a document
+Here's an example of using a local directory:
 
-One of the main purpose of this CLI is to compile a document to metanorma document,
-so the best way to figure out what's avaialble is to run the `metanorma help compile`,
-this will display the usage instructions with all available options.
+[source,sh]
+----
+metanorma new -d standard -t csd \
+  -l ~/shared/mn-templates my-custom-csd-document
+----
+
+
+=== Compile a document (`metanorma compile` or just `metanorma`)
+
+The key functionality of this CLI is to allow compilation of a Metanorma document.
+The command `metanorma help compile` will display all usage instructions of
+the `compile` command shown with available options.
 
 [source]
 ----
@@ -99,31 +141,30 @@ the following command.
 [source, sh]
 ----
 metanorma compile --type iso -x html my-iso-document.adoc
+# or just
+metanorma --type iso -x html my-iso-document.adoc
 ----
 
 This should compile any valid document, but if there are some issues then it
-will also print those out in the terminal. Currently, the supported backends
-are `rfc2`, `rfc3`, `iso`, `gb`, `csd`, `csand`, `m3d` and `rsd`.
+will also print those out in the terminal. Currently, the supported flavors
+are `ietf`, `iso`, `gb`, `csd`, `csand`, `m3d` and `rsd`.
 
-*Note:* Previously we didn't have to speicify the `compile` part to the `cli`,
-as this was the only interface, and it was invoked by default. This will still
-work fine, but we strongly suggest to specify the `compile` part. This will
-ensure your toolset is ready for our next uprade :)
 
-=== Version of the code
 
-The CLI has a dedicated interface that returns the version that are running for
-any specific type. To retrieve the version for a type, we can use the `version`
-interface.
+=== Displaying Metanorma processor version (`metanorma version`)
 
-For example: if we want to know the currently running version for `iso`, then we
+The `version` command returns the version of the Metanorma processor for
+a specific flavor.
+
+e.g., to know the currently running version for `iso`, then we
 can use the following command and this will show the current version that we are
-using for that specific backend.
+using for that specific processor.
 
 [source, sh]
 ----
 metanorma version --type iso
 ----
+
 
 == Credits
 
@@ -131,4 +172,4 @@ This gem is developed, maintained and funded by https://www.metanorma.com/docs/g
 
 == License
 
-The gem is available as open source under the terms of the http://opensource.org/licenses/MIT[MIT License].
+The gem is available under the terms of the http://opensource.org/licenses/MIT[MIT License].
