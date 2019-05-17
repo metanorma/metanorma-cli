@@ -9,6 +9,15 @@ RSpec.describe "Metanorma" do
       expect(output).to include("Supported extensions: xml, rxl, html")
     end
 
+    it "lists all extensions if no type specified" do
+      command = %w(list-extensions)
+      output = capture_stdout { Metanorma::Cli.start(command) }
+
+      expect(output).to include("iso: xml, rxl, html")
+      expect(output).to include("csd: xml, rxl, html, pdf")
+      expect(output).to include("ietf: xmlrfc2, xmlrfc3, html")
+    end
+
     it "gracefully handles invalid types" do
       command = %w(list-extensions iso-invalid)
       output = capture_stdout { Metanorma::Cli.start(command) }

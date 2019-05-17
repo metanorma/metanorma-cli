@@ -53,15 +53,34 @@ module Metanorma
         end
       end
 
-      desc "list-extensions TYPE", "List supported extensions"
-      def list_extensions(type)
-        output_formats = find_backend(type).output_formats
-        UI.say("Supported extensions: #{join_keys(output_formats.keys)}.")
+      desc "list-extensions", "List supported extensions"
+      def list_extensions(type = nil)
+        single_type_extensions(type) || all_type_extensions
       rescue LoadError
         UI.say("Couldn't load #{type}, please provide a valid type!")
       end
 
       private
+
+      def single_type_extensions(type)
+        if type
+          format_keys = find_backend(type).output_formats.keys
+          UI.say("Supported extensions: #{join_keys(format_keys)}.")
+          return true
+        end
+      end
+
+      def all_type_extensions
+        Metanorma::Cli.load_flavors
+
+        message = "Supported extensions per type: \n"
+        Metanorma::Registry.instance.processors.each do |type_sym, processor|
+          format_keys = processor.output_formats.keys
+          message += "  #{type_sym}: #{join_keys(format_keys)}.\n"
+        end
+
+        UI.say(message)
+      end
 
       def find_backend(type)
         require "metanorma-#{type}"

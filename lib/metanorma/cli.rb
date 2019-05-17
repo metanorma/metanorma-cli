@@ -4,7 +4,6 @@ require "metanorma/cli/command"
 
 module Metanorma
   module Cli
-
     SUPPORTED_GEMS = [
       "metanorma-iso",
       "metanorma-ietf",

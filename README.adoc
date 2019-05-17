@@ -149,6 +149,26 @@ This should compile any valid document, but if there are some issues then it
 will also print those out in the terminal. Currently, the supported flavors
 are `ietf`, `iso`, `gb`, `csd`, `csand`, `m3d` and `rsd`.
 
+=== Displaying supported extensions (`metanorma list-extensions`)
+
+Having hard time figuring out what extensions is supported or not? Well, we've
+got you covered, if you know the type you are looking for then simply use the
+follwoing command:
+
+[source, sh]
+----
+metanorma list-extensions iso
+----
+
+This will display all the extension this type supports, and if you want to check
+all available extensions for all types, then you can run the same commad without
+specifying the type, and it will display all available extensions.
+
+[source, sh]
+
+----
+metanorma list-extensions
+----
 
 
 === Displaying Metanorma processor version (`metanorma version`)
