@@ -2,6 +2,7 @@ require "thor"
 require "metanorma/cli/compiler"
 require "metanorma/cli/generator"
 require "metanorma/cli/git_template"
+require "metanorma/cli/commands/template_repo"
 
 module Metanorma
   module Cli
@@ -59,6 +60,9 @@ module Metanorma
       rescue LoadError
         UI.say("Couldn't load #{type}, please provide a valid type!")
       end
+
+      desc "template-repo", "Manage metanorma templates repository"
+      subcommand :template_repo, Metanorma::Cli::Commands::TemplateRepo
 
       private
 
