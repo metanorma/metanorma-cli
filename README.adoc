@@ -195,6 +195,17 @@ using for that specific processor.
 metanorma version --type iso
 ----
 
+=== Add new template repository (`metanorma template-repo add`)
+
+The `template-repo add` interface allows you to add your custom template
+repository to metanorma, so next time when you need to generate a new document
+then you can directly use that name to use your custom template from that
+repository.
+
+[source, sh]
+----
+metanorma template-repo add my-iso https://github.com/you/my-iso-template
+----
 
 == Credits
 
