@@ -1,3 +1,5 @@
+# Auto-generated !!! Do not edit it manually
+# use ci-master https://github.com/metanorma/metanorma-build-scripts
 version: '{build}'
 
 cache:
@@ -7,7 +9,6 @@ environment:
   matrix:
     - RUBY_VERSION: 25
     - RUBY_VERSION: 24
-    - RUBY_VERSION: 23
     - RUBY_VERSION: _trunk
 
 matrix:
