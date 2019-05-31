@@ -92,7 +92,7 @@ RSpec.describe Metanorma do
     system "metanorma -R testrelaton.xml -t iso test.adoc"
     expect(File.exist?("testrelaton.xml")).to be true
     xml = File.read("testrelaton.xml", encoding: "utf-8")
-    expect(xml).to include %(<bibdata type="article">)
+    expect(xml).to include %(<bibdata type="standard">)
   end
 
   it "exports bibdata as rxl" do
@@ -102,7 +102,7 @@ RSpec.describe Metanorma do
     system "metanorma -x rxl -t iso test.adoc"
     expect(File.exist?("test.rxl")).to be true
     xml = File.read("test.rxl", encoding: "utf-8")
-    expect(xml).to include %(<bibdata type="article">)
+    expect(xml).to include %(<bibdata type="standard">)
   end
 
   it "exports assets" do
