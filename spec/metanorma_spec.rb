@@ -136,6 +136,10 @@ end
       expect(xml).to include "</iso-standard>"
     end
   end
+
+  it "non-zero exit code when metanorma compile for missing file" do
+    expect(system("metanorma compile not_existing.adoc")).to be false
+  end
 end
 
 RSpec.describe "warns when no standard type provided" do
