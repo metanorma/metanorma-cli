@@ -11,6 +11,7 @@
 /templates/*
 !/templates/base
 /test.*
+/test
 /testrelaton.xml
 /extract/
 
