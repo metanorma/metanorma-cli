@@ -11,6 +11,10 @@ module Metanorma
         new.say(message)
       end
 
+      def self.error(message)
+        new.error(message)
+      end
+
       def self.run(command)
         require "open3"
         Open3.capture3(command)

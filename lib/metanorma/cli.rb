@@ -1,5 +1,6 @@
 require "metanorma"
 require "metanorma/cli/version"
+require "metanorma/cli/errors"
 require "metanorma/cli/command"
 
 module Metanorma
@@ -68,7 +69,11 @@ module Metanorma
     end
 
     def self.templates_path
-      Pathname.new(Dir.home).join(".metanorma", "templates")
+      home_directory.join("templates")
+    end
+
+    def self.home_directory
+      Pathname.new(Dir.home).join(".metanorma")
     end
 
     def self.writable_templates_path?
