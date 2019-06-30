@@ -147,7 +147,7 @@ end
 RSpec.describe "warns when bogus standard type requested" do
   file "test.adoc", ASCIIDOC_CONFIGURED_HDR
   command "metanorma -t bogus_format test.adoc"
-  its(:stdout) { is_expected.to include "bogus_format is not a default standard type" }
+  its(:stdout) { is_expected.to include "loading gem `metanorma-bogus_format` failed. Exiting" }
 end
 
 RSpec.describe "warns when bogus format requested" do
