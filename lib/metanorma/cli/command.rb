@@ -34,7 +34,7 @@ module Metanorma
           Metanorma::Cli::Compiler.compile(file_name, options.dup)
 
         elsif options[:version]
-          invoke(:version, [], type: options[:type] || :iso, format: options[:format])
+          invoke(:version, [], type: options[:type], format: options[:format])
 
         elsif options.keys.size >= 2
           UI.say("Need to specify a file to process")
@@ -45,13 +45,15 @@ module Metanorma
       end
 
       desc "version", "Version of the code"
-      option :type, aliases: "-t", required: true, desc: "Type of standard to generate"
+      option :type, aliases: "-t", desc: "Type of standard to generate"
       option :format, aliases: "-f", default: :asciidoc, desc: "Format of source file: eg. asciidoc"
 
       def version
         if options[:format] == :asciidoc
-          UI.say(find_backend(options[:type].to_sym).version)
+          backend_version(options[:type]) || supported_backends
         end
+      rescue NameError => error
+        UI.say(error)
       end
 
       desc "list-extensions", "List supported extensions"
@@ -86,9 +88,23 @@ module Metanorma
         UI.say(message)
       end
 
+      def backend_version(type)
+        if type
+          UI.say(find_backend(type).version)
+        end
+      end
+
       def find_backend(type)
         require "metanorma-#{type}"
-        Metanorma::Registry.instance.find_processor(type.to_sym)
+        Metanorma::Registry.instance.find_processor(type&.to_sym)
+      end
+
+      def supported_backends
+        Metanorma::Cli.load_flavors
+
+        Metanorma::Registry.instance.processors.map do |type, processor|
+          UI.say(processor.version)
+        end
       end
 
       def join_keys(keys)
