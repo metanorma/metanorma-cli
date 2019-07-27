@@ -18,7 +18,7 @@ module Metanorma
       "metanorma-unece",
       "metanorma-mpfd",
       "metanorma-nist",
-      "metanorma-ogc"
+      "metanorma-ogc",
       "metanorma-itu"
     ]
 
