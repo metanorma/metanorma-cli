@@ -19,6 +19,7 @@ module Metanorma
       "metanorma-mpfd",
       "metanorma-nist",
       "metanorma-ogc"
+      "metanorma-itu"
     ]
 
     def self.load_flavors(flavor_names = SUPPORTED_GEMS)
