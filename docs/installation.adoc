@@ -29,7 +29,7 @@ Installing the gem will also install all officially supported Metanorma flavors
 
 === Java
 
-You will have to have a Java runtime installed.
+You will have to have a Java runtime installed. (Use `brew cask install java` on macOS.)
 
 === Puppeteer
 
