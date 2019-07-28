@@ -27,6 +27,10 @@ Installing the gem will also install all officially supported Metanorma flavors
 
 == Dependencies
 
+=== Java
+
+You will have to have a Java runtime installed.
+
 === Puppeteer
 
 *If you are going to generate PDFs from HTML* (which applies to CalConnect Standard Documents),
