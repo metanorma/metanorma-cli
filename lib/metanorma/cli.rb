@@ -12,22 +12,24 @@ module Metanorma
       "metanorma-csd",
       "metanorma-csand",
       "metanorma-m3d",
-      "metanorma-rsd",
       "metanorma-acme",
       "metanorma-standoc",
       "metanorma-unece",
-      "metanorma-mpfd",
       "metanorma-nist",
       "metanorma-ogc",
       "metanorma-itu"
     ]
 
-    def self.load_flavors(flavor_names = SUPPORTED_GEMS)
+    PRIVATE_SUPPORTED_GEMS = ["metanorma-rsd", "metanorma-mpfd"]
+
+    def self.load_flavors(flavor_names = SUPPORTED_GEMS + PRIVATE_SUPPORTED_GEMS)
       flavor_names.each do |flavor|
         begin
           require flavor
         rescue LoadError
-          $stderr.puts "[metanorma] Error: flavor gem #{flavor} not present"
+          unless PRIVATE_SUPPORTED_GEMS.include?(flavor)
+            $stderr.puts "[metanorma] Error: flavor gem #{flavor} not present"
+          end
         end
       end
     end
