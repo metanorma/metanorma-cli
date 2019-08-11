@@ -22,6 +22,13 @@ RSpec.configure do |config|
   config.before(:suite) do
     tmp_dir = Pathname.new("./tmp")
     FileUtils.mkdir_p(tmp_dir) unless tmp_dir.exist?
+
+    # Disable http authentication
+    ENV["GIT_TERMINAL_PROMPT"] = "0"
+  end
+
+  config.after(:suite) do
+    ENV["GIT_TERMINAL_PROMPT"] = "1"
   end
 
   config.include RSpecCommand

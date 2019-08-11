@@ -1,3 +1,5 @@
+require "metanorma/cli/errors"
+
 module Metanorma
   module Cli
     class Compiler
@@ -13,6 +15,8 @@ module Metanorma
 
       def self.compile(file, options)
         new(file, options).compile
+      rescue Errno::ENOENT
+        raise Errors::FileNotFoundError
       end
 
       private
