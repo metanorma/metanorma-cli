@@ -24,7 +24,8 @@ after_success:
     if [[ ($TRAVIS_BRANCH == master) &&
           ($TRAVIS_PULL_REQUEST == false) ]] ; then
       curl -LO --retry 3 https://raw.github.com/mernst/plume-lib/master/bin/trigger-travis.sh &&
-      sh trigger-travis.sh riboseinc metanorma.com $TRAVIS_ACCESS_TOKEN;
+      sh trigger-travis.sh metanorma metanorma.com $TRAVIS_ACCESS_TOKEN;
+      sh trigger-travis.sh metanorma metanorma-docker $TRAVIS_ACCESS_TOKEN;
     fi
 
 after_failure:
@@ -33,5 +34,5 @@ after_failure:
     if [[ ($TRAVIS_BRANCH == master) &&
           ($TRAVIS_PULL_REQUEST == false) ]] ; then
       curl -LO --retry 3 https://raw.github.com/mernst/plume-lib/master/bin/trigger-travis.sh &&
-      sh trigger-travis.sh riboseinc metanorma.com $TRAVIS_ACCESS_TOKEN;
+      sh trigger-travis.sh metanorma metanorma.com $TRAVIS_ACCESS_TOKEN;
     fi
