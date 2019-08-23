@@ -45,11 +45,14 @@ module Metanorma
       end
 
       desc "version", "Version of the code"
-      option :type, aliases: "-t", desc: "Type of standard to generate"
+      option :type, aliases: "-t", required: false, desc: "Type of standard to generate"
       option :format, aliases: "-f", default: :asciidoc, desc: "Format of source file: eg. asciidoc"
 
       def version
-        if options[:format] == :asciidoc
+        if !options[:type]
+          UI.say("Metanorma::Cli #{VERSION}")
+          UI.say("Metanorma #{Metanorma::VERSION}")
+        elsif options[:format] == :asciidoc
           backend_version(options[:type]) || supported_backends
         end
       rescue NameError => error
