@@ -49,12 +49,7 @@ module Metanorma
       option :format, aliases: "-f", default: :asciidoc, desc: "Format of source file: eg. asciidoc"
 
       def version
-        if !options[:type]
-          UI.say("Metanorma::Cli #{VERSION}")
-          UI.say("Metanorma #{Metanorma::VERSION}")
-        elsif options[:format] == :asciidoc
-          backend_version(options[:type]) || supported_backends
-        end
+        backend_version(options[:type]) || supported_backends
       rescue NameError => error
         UI.say(error)
       end
@@ -103,6 +98,9 @@ module Metanorma
       end
 
       def supported_backends
+        UI.say("Metanorma #{Metanorma::VERSION}")
+        UI.say("Metanorma::Cli #{VERSION}")
+
         Metanorma::Cli.load_flavors
 
         Metanorma::Registry.instance.processors.map do |type, processor|
