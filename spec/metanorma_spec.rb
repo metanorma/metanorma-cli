@@ -169,10 +169,3 @@ RSpec.describe "gives version information" do
   command "metanorma -v -t iso"
   its(:stdout) { is_expected.to match(/Metanorma::ISO \d/) }
 end
-
-RSpec.describe "gives version Metanorma-Cli" do
-  command "metanorma version"
-  its(:stdout) {
-    is_expected.to match(/Metanorma::Cli \d/)
-    is_expected.to match(/Metanorma \d/) }
-end
