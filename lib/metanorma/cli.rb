@@ -7,6 +7,7 @@ module Metanorma
   module Cli
     SUPPORTED_GEMS = [
       "metanorma-iso",
+      "metanorma-iec",
       "metanorma-ietf",
       "metanorma-gb",
       "metanorma-csd",
