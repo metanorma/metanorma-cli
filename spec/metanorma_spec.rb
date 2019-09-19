@@ -49,7 +49,7 @@ RSpec.describe Metanorma do
     File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_CONFIGURED_HDR) }
     FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
     system "metanorma -t iso -x html test.adoc"
-    html = File.read("test.html")
+    html = File.read("test.html", encoding: "UTF-8")
     expect(html).to include "font-family: body-font;"
     expect(html).to include "font-family: header-font;"
     expect(html).to include "font-family: monospace-font;"
