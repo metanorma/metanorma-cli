@@ -135,9 +135,11 @@ module Metanorma
 
       def permission_missing_error
         UI.say(
-          "Sorry, the current user doesn't have write permission\n" \
-          "to #{Cli.templates_path}. Please change it to be writable or\n" \
-          "run metanorma as different user with write permission to this path",
+          "Unable to generate document:\n" \
+          "The current user does not have permission to write to this path:\n" \
+          "#{Cli.templates_path}\n" \
+          "Please ensure the path is writable by the current user, or\n" \
+          "run Metanorma using a different user with write permissions."
         )
       end
     end

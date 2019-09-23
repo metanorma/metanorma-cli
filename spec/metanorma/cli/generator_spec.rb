@@ -62,7 +62,7 @@ RSpec.describe Metanorma::Cli::Generator do
           )
         }
 
-        expect(output).to include("Sorry, could not generate the document!")
+        expect(output).to include("Unable to generate document:")
       end
     end
 
@@ -101,7 +101,7 @@ RSpec.describe Metanorma::Cli::Generator do
           )
         }
 
-        expect(output).to include("Sorry, the current user doesn't have write")
+        expect(output).to include("The current user does not have permission to write to this path")
       end
     end
   end
