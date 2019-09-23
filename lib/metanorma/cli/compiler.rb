@@ -1,12 +1,28 @@
+require "pathname"
 require "metanorma/cli/errors"
 
 module Metanorma
   module Cli
     class Compiler
+
       def initialize(file, options)
+        validate_file_path(file)
         @file = file
         @options = options
         normalize_special_options
+      end
+
+      def validate_file_path(file)
+        path = Pathname.new(file)
+        # Check if provided file path exists
+        unless path.exist?
+          raise ::Metanorma::Cli::Errors::FileNotFoundError.new("Specified input file '#{file}' does not exist")
+        end
+
+        # Check if provided file is really a file
+        unless path.file?
+          raise ::Metanorma::Cli::Errors::FileNotFoundError.new("Specified input file '#{file}' is not a file")
+        end
       end
 
       def compile
@@ -15,9 +31,6 @@ module Metanorma
 
       def self.compile(file, options)
         new(file, options).compile
-        # TODO https://github.com/metanorma/metanorma-cli/issues/115
-        # rescue Errno::ENOENT
-        #   raise Errors::FileNotFoundError
       end
 
       private
@@ -25,7 +38,7 @@ module Metanorma
       attr_reader :file, :options, :extract, :extensions
 
       def compile_file
-        Compile.new.compile( file, serialize_options)
+        Compile.new.compile(file, serialize_options)
       end
 
       def serialize_options

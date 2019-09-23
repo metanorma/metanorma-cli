@@ -60,7 +60,7 @@ module Metanorma
       Metanorma::Cli::Command.start(arguments)
 
     rescue Errors::FileNotFoundError => error
-      UI.say("Error: #{error}, \nNot sure what to run? try: metanorma help")
+      UI.say("Error: #{error}. \nNot sure what to run? try: metanorma help")
       exit(Errno::ENOENT::Errno)
     end
 
