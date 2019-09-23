@@ -15,8 +15,9 @@ module Metanorma
 
       def self.compile(file, options)
         new(file, options).compile
-      rescue Errno::ENOENT
-        raise Errors::FileNotFoundError
+        # TODO https://github.com/metanorma/metanorma-cli/issues/115
+        # rescue Errno::ENOENT
+        #   raise Errors::FileNotFoundError
       end
 
       private
@@ -57,7 +58,7 @@ module Metanorma
 
       def normalize_special_options
         @extract = (options.delete(:extract) || "").split(",")
-        @extensions = (options.delete(:extensions) || "").split(",") 
+        @extensions = (options.delete(:extensions) || "").split(",")
         options[:require] = [options[:require]] if options[:require]
       end
     end
