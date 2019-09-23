@@ -84,6 +84,7 @@ module Metanorma
           csd: "https://github.com/metanorma/mn-templates-csd",
           ogc: "https://github.com/metanorma/mn-templates-ogc",
           iso: "https://github.com/metanorma/mn-templates-iso",
+          iec: "https://github.com/metanorma/mn-templates-iec",
           ietf: "https://github.com/metanorma/mn-templates-ietf"
         }
       end
