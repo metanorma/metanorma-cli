@@ -58,8 +58,8 @@ module Metanorma
           templates.each { |source, dest| create_file(source, dest) }
         else
           UI.say(
-            "Sorry, could not generate the document!\n" \
-            "Template's are missing, please provide valid template URL"
+            "Unable to generate document:\n" \
+            "Templates for type #{type.to_s} cannot be found -- please provide a valid `type` or a template URL"
           )
         end
       end
