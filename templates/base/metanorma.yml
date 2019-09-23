@@ -1,0 +1,4 @@
+---
+metanorma:
+  deploy:
+    email: "travis-ci@metanorma.org"
