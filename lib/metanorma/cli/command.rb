@@ -103,7 +103,7 @@ module Metanorma
 
         Metanorma::Cli.load_flavors
 
-        Metanorma::Registry.instance.processors.map do |type, processor|
+        Metanorma::Registry.instance.processors.values.uniq.each do |processor|
           UI.say(processor.version)
         end
       end
