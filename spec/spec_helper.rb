@@ -3,6 +3,7 @@ require "equivalent-xml"
 require "rspec-command"
 require "metanorma/cli"
 require "fileutils"
+require "rexml/document"
 
 Dir["./spec/support/**/*.rb"].sort.each { |file| require file }
 
@@ -32,6 +33,14 @@ RSpec.configure do |config|
   end
 
   config.include RSpecCommand
+end
+
+def xmlpp(x)
+  s = ""
+  f = REXML::Formatters::Pretty.new(2)
+  f.compact = true
+  f.write(REXML::Document.new(x),s)
+  s
 end
 
 ASCIIDOC_BLANK_HDR = <<~"HDR"
