@@ -85,6 +85,7 @@ module Metanorma
           ogc: "https://github.com/metanorma/mn-templates-ogc",
           iso: "https://github.com/metanorma/mn-templates-iso",
           iec: "https://github.com/metanorma/mn-templates-iec",
+          itu: "https://github.com/metanorma/mn-templates-itu",
           ietf: "https://github.com/metanorma/mn-templates-ietf"
         }
       end
