@@ -32,11 +32,11 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "thor", "~> 0.20.3"
   spec.add_runtime_dependency "metanorma-iso", "~> 1.3.0"
-  spec.add_runtime_dependency 'metanorma-ietf', "~> 1.0.1"
+  spec.add_runtime_dependency 'metanorma-ietf', "~> 2.0.0"
   spec.add_runtime_dependency 'metanorma-gb', "~> 1.3.0"
   spec.add_runtime_dependency 'metanorma-iec', "~> 0.1.0"
   spec.add_runtime_dependency 'metanorma-csd', "~> 1.3.0"
-  spec.add_runtime_dependency 'metanorma-csand', "~> 1.3.0"
+  spec.add_runtime_dependency 'metanorma-csa', "~> 1.4.0"
   #spec.add_runtime_dependency 'metanorma-rsd', "~> 1.1.0"
   spec.add_runtime_dependency 'metanorma-m3d', "~> 1.3.0"
   spec.add_runtime_dependency 'metanorma-acme', "~> 1.3.0"
