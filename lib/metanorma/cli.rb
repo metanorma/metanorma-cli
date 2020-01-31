@@ -11,7 +11,7 @@ module Metanorma
       "metanorma-ietf",
       "metanorma-gb",
       "metanorma-csd",
-      "metanorma-csand",
+      "metanorma-csa",
       "metanorma-m3d",
       "metanorma-acme",
       "metanorma-standoc",
