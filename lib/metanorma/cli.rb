@@ -15,7 +15,7 @@ module Metanorma
       "metanorma-m3d",
       "metanorma-acme",
       "metanorma-standoc",
-      "metanorma-unece",
+      "metanorma-un",
       "metanorma-nist",
       "metanorma-ogc",
       "metanorma-itu"
