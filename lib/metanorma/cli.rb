@@ -84,7 +84,7 @@ module Metanorma
       parent_directory = templates_path.join("..", "..")
 
       unless parent_directory && parent_directory.writable?
-        raise Errno::EACCES, "No permission to write in this drectory"
+        raise Errno::EACCES, "No permission to write in this directory"
       end
 
       return true
