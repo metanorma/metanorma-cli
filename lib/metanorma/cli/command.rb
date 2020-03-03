@@ -31,6 +31,7 @@ module Metanorma
 
       def compile(file_name = nil)
         if file_name && !options[:version]
+          Metanorma::Cli.load_flavors
           Metanorma::Cli::Compiler.compile(file_name, options.dup)
 
         elsif options[:version]
