@@ -50,4 +50,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'metanorma', "~> 0.3.9"
   #spec.add_runtime_dependency 'nokogiri', ">= 1"
   spec.add_runtime_dependency "git", "~> 1.5"
+  spec.add_runtime_dependency "relaton-cli", ">= 0.8.1"
 end
