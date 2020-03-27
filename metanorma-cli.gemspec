@@ -39,7 +39,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'metanorma-csa', "~> 1.4.0"
   #spec.add_runtime_dependency 'metanorma-rsd', "~> 1.1.0"
   spec.add_runtime_dependency 'metanorma-m3d', "~> 1.3.0"
-  spec.add_runtime_dependency 'metanorma-acme', "~> 1.4.0"
+  spec.add_runtime_dependency 'metanorma-generic', "~> 1.4.0"
   spec.add_runtime_dependency 'metanorma-standoc', "~> 1.3.0", ">= 1.3.18"
   #spec.add_runtime_dependency 'metanorma-mpfd', "~> 0.1.0"
   spec.add_runtime_dependency 'metanorma-un', "~> 0.3.1"

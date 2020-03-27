@@ -13,7 +13,7 @@ module Metanorma
       "metanorma-csd",
       "metanorma-csa",
       "metanorma-m3d",
-      "metanorma-acme",
+      "metanorma-generic",
       "metanorma-standoc",
       "metanorma-un",
       "metanorma-nist",
