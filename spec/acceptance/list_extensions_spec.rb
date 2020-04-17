@@ -15,7 +15,7 @@ RSpec.describe "Metanorma" do
 
       expect(output).to include("iso: xml, rxl, html")
       expect(output).to include("csd: xml, rxl, html, pdf")
-      expect(output).to include("ietf: rxl, xml, rfc, html and txt")
+      expect(output).to include("ietf: rxl, xml, rfc, html, txt and pdf")
     end
 
     it "gracefully handles invalid types" do
