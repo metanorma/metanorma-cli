@@ -7,9 +7,13 @@ AllCops:
   DisplayCopNames: false
   StyleGuideCopsOnly: false
   TargetRubyVersion: 2.4
-require:
-- rubocop-rails
-- rubocop-performance
+
+# Disableing for now
+#
+# require:
+#  - rubocop-rails
+#  - rubocop-performance
+#
 Naming/AccessorMethodName:
   Description: Check the naming of accessor methods for get_/set_.
   Enabled: false

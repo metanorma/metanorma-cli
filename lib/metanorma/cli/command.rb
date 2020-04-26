@@ -1,4 +1,5 @@
 require "thor"
+require "metanorma/cli/setup"
 require "metanorma/cli/compiler"
 require "metanorma/cli/generator"
 require "metanorma/cli/git_template"
@@ -64,6 +65,24 @@ module Metanorma
 
       desc "template-repo", "Manage metanorma templates repository"
       subcommand :template_repo, Metanorma::Cli::Commands::TemplateRepo
+
+      desc "setup", "Initial necessary setup"
+      option(
+        :agree_to_terms,
+        type: :boolean,
+        required: false,
+        default: false,
+        desc: "Aggree / Disagree to licensing terms",
+      )
+
+      def setup
+        Metanorma::Cli::REQUIRED_FONTS.each do |font|
+          Metanorma::Cli::Setup.run(
+            font: font,
+            term_agreement: options[:agree_to_terms],
+          )
+        end
+      end
 
       private
 
