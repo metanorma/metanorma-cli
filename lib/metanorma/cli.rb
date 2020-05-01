@@ -18,7 +18,7 @@ module Metanorma
       "metanorma-un",
       "metanorma-nist",
       "metanorma-ogc",
-      "metanorma-itu"
+      "metanorma-itu",
     ]
 
     PRIVATE_SUPPORTED_GEMS = ["metanorma-rsd", "metanorma-mpfd"]
