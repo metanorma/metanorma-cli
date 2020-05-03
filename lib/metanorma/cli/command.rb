@@ -72,7 +72,7 @@ module Metanorma
         type: :boolean,
         required: false,
         default: false,
-        desc: "Aggree / Disagree to licensing terms",
+        desc: "Agree / Disagree with all third-party licensing terms presented (WARNING: do know what you are agreeing with!)",
       )
 
       def setup
@@ -87,11 +87,11 @@ module Metanorma
       private
 
       def single_type_extensions(type)
-        if type
-          format_keys = find_backend(type).output_formats.keys
-          UI.say("Supported extensions: #{join_keys(format_keys)}.")
-          return true
-        end
+        return false unless type
+
+        format_keys = find_backend(type).output_formats.keys
+        UI.say("Supported extensions: #{join_keys(format_keys)}.")
+        true
       end
 
       def all_type_extensions
