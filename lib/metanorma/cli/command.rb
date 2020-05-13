@@ -1,4 +1,5 @@
 require "thor"
+require "metanorma/cli/setup"
 require "metanorma/cli/compiler"
 require "metanorma/cli/generator"
 require "metanorma/cli/git_template"
@@ -65,14 +66,32 @@ module Metanorma
       desc "template-repo", "Manage metanorma templates repository"
       subcommand :template_repo, Metanorma::Cli::Commands::TemplateRepo
 
+      desc "setup", "Initial necessary setup"
+      option(
+        :agree_to_terms,
+        type: :boolean,
+        required: false,
+        default: false,
+        desc: "Agree / Disagree with all third-party licensing terms presented (WARNING: do know what you are agreeing with!)",
+      )
+
+      def setup
+        Metanorma::Cli::REQUIRED_FONTS.each do |font|
+          Metanorma::Cli::Setup.run(
+            font: font,
+            term_agreement: options[:agree_to_terms],
+          )
+        end
+      end
+
       private
 
       def single_type_extensions(type)
-        if type
-          format_keys = find_backend(type).output_formats.keys
-          UI.say("Supported extensions: #{join_keys(format_keys)}.")
-          return true
-        end
+        return false unless type
+
+        format_keys = find_backend(type).output_formats.keys
+        UI.say("Supported extensions: #{join_keys(format_keys)}.")
+        true
       end
 
       def all_type_extensions
