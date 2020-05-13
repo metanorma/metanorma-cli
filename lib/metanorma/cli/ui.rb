@@ -3,8 +3,8 @@ require "thor"
 module Metanorma
   module Cli
     class UI < Thor
-      def self.ask(message)
-        new.ask(message)
+      def self.ask(message, options = {})
+        new.ask(message, options)
       end
 
       def self.say(message)
