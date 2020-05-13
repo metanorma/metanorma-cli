@@ -46,6 +46,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'metanorma-ogc', "~> 1.0.0"
   spec.add_runtime_dependency 'metanorma-nist', "~> 1.0.0"
   spec.add_runtime_dependency 'metanorma-itu', "~> 1.0.0"
+  spec.add_runtime_dependency 'metanorma-iho', "~> 0.0.1"
   spec.add_runtime_dependency 'isodoc', "~> 1.0.0"
   spec.add_runtime_dependency 'metanorma', "~> 1.0.0"
   #spec.add_runtime_dependency 'nokogiri', ">= 1"

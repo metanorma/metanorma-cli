@@ -12,6 +12,7 @@ module Metanorma
       "metanorma-gb",
       "metanorma-csd",
       "metanorma-csa",
+      "metanorma-iho",
       "metanorma-m3d",
       "metanorma-generic",
       "metanorma-standoc",
