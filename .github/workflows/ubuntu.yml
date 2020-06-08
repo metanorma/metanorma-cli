@@ -46,12 +46,11 @@ jobs:
         run: |
           curl -LO --retry 3 https://raw.githubusercontent.com/metanorma/metanorma-build-scripts/master/trigger-gh-actions.sh
           [[ -f ".github/workflows/dependent_repos.env" ]] && source .github/workflows/dependent_repos.env
+          CLIENT_PAYLOAD=$(cat <<EOF
+          "{ "ref": "${GITHUB_REF}" }"
+          EOF
+          )
           for repo in $DEPENDENT_REPOS
           do
-            sh trigger-gh-actions.sh $ORGANISATION $repo $GH_USERNAME $GH_ACCESS_TOKEN $GITHUB_REPOSITORY "$(cat <<EOF
-              {
-                "ref": "${GITHUB_REF}"
-              }
-              EOF
-              )"
+            sh trigger-gh-actions.sh $ORGANISATION $repo $GH_USERNAME $GH_ACCESS_TOKEN $GITHUB_REPOSITORY "$CLIENT_PAYLOAD"
           done
