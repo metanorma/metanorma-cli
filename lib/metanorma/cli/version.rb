@@ -1,5 +1,5 @@
 module Metanorma
   module Cli
-    VERSION = "1.2.12.1"
+    VERSION = "1.2.13"
   end
 end
