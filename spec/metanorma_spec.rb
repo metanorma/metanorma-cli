@@ -2,7 +2,7 @@ require_relative "spec_helper"
 
 RSpec.describe Metanorma do
   it "processes metanorma options inside Asciidoc" do
-    File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_PREAMBLE_HDR) }
+    File.write("test.adoc", ASCIIDOC_PREAMBLE_HDR, encoding: "UTF-8")
     FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
     system "metanorma test.adoc"
     expect(File.exist?("test.xml")).to be true
@@ -14,7 +14,7 @@ RSpec.describe Metanorma do
   end
 
   it "processes an asciidoc ISO document" do
-    File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_BLANK_HDR) }
+    File.write("test.adoc", ASCIIDOC_BLANK_HDR, encoding: "UTF-8")
     FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
     system "metanorma -t iso test.adoc"
     expect(File.exist?("test.xml")).to be true
@@ -24,7 +24,7 @@ RSpec.describe Metanorma do
   end
 
   it "processes all extensions of an asciidoc ISO document" do
-    File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_BLANK_HDR) }
+    File.write("test.adoc", ASCIIDOC_BLANK_HDR, encoding: "UTF-8")
     FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
     system "metanorma -t iso -x all test.adoc"
     expect(File.exist?("test.xml")).to be true
@@ -34,7 +34,7 @@ RSpec.describe Metanorma do
   end
 
   it "processes specific extensions of an asciidoc ISO document" do
-    File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_BLANK_HDR) }
+    File.write("test.adoc", ASCIIDOC_BLANK_HDR, encoding: "UTF-8")
     FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
     system "metanorma -t iso -x xml,doc test.adoc"
     expect(File.exist?("test.xml")).to be true
@@ -46,7 +46,7 @@ RSpec.describe Metanorma do
   end
 
   it "extracts isodoc options from asciidoc file" do
-    File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_CONFIGURED_HDR) }
+    File.write("test.adoc", ASCIIDOC_CONFIGURED_HDR, encoding: "UTF-8")
     FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
     system "metanorma -t iso -x html test.adoc"
     html = File.read("test.html", encoding: "UTF-8")
@@ -56,7 +56,7 @@ RSpec.describe Metanorma do
   end
 
   it "wraps HTML output" do
-    File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_CONFIGURED_HDR) }
+    File.write("test.adoc", ASCIIDOC_CONFIGURED_HDR, encoding: "UTF-8")
     FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
     FileUtils.rm_rf %w(test test.alt)
     system "metanorma -w -t iso test.adoc"
@@ -65,7 +65,7 @@ RSpec.describe Metanorma do
   end
 
   it "keeps Asciimath" do
-    File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_CONFIGURED_HDR) }
+    File.write("test.adoc", ASCIIDOC_CONFIGURED_HDR, encoding: "UTF-8")
     FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
     FileUtils.rm_rf %w(test test.alt)
     system "metanorma -a -t iso test.adoc"
@@ -76,7 +76,7 @@ RSpec.describe Metanorma do
   end
 
   it "data64 encodes images" do
-    File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_CONFIGURED_HDR) }
+    File.write("test.adoc", ASCIIDOC_CONFIGURED_HDR, encoding: "UTF-8")
     FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
     FileUtils.rm_rf %w(test test.alt)
     system "metanorma -d -t iso test.adoc"
@@ -86,7 +86,7 @@ RSpec.describe Metanorma do
   end
 
   it "exports bibdata" do
-    File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_CONFIGURED_HDR) }
+    File.write("test.adoc", ASCIIDOC_CONFIGURED_HDR, encoding: "UTF-8")
     FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
     FileUtils.rm_f "testrelaton.xml"
     system "metanorma -R testrelaton.xml -t iso test.adoc"
@@ -96,7 +96,7 @@ RSpec.describe Metanorma do
   end
 
   it "exports bibdata as rxl" do
-    File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_CONFIGURED_HDR) }
+    File.write("test.adoc", ASCIIDOC_CONFIGURED_HDR, encoding: "UTF-8")
     FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
     FileUtils.rm_f "testrelaton.xml test.rxl"
     system "metanorma -x rxl -t iso test.adoc"
@@ -106,7 +106,7 @@ RSpec.describe Metanorma do
   end
 
   it "exports assets" do
-    File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_CONFIGURED_HDR) }
+    File.write("test.adoc", ASCIIDOC_CONFIGURED_HDR, encoding: "UTF-8")
     FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
     FileUtils.rm_rf "extract"
     system "metanorma -x xml -t iso -e extract,sourcecode test.adoc"
@@ -123,7 +123,7 @@ end
 
   context "with -r option specified" do
     it "loads the libary and compile document" do
-      File.open("test.adoc", "w:UTF-8") { |f| f.write(ASCIIDOC_PREAMBLE_HDR) }
+      File.write("test.adoc", ASCIIDOC_PREAMBLE_HDR, encoding: "UTF-8")
       FileUtils.rm_f %w(test.xml test.html test.alt.html test.doc)
 
       system "metanorma compile -t iso -r metanorma-iso test.adoc"
@@ -140,32 +140,34 @@ end
   it "non-zero exit code when metanorma compile for missing file" do
     expect(system("metanorma compile not_existing.adoc")).to be false
   end
-end
 
-RSpec.describe "warns when no standard type provided" do
-  file "test.adoc", ASCIIDOC_CONFIGURED_HDR
-  command "metanorma test.adoc"
-  its(:stdout) { is_expected.to include "Please specify a standard type" }
-end
+  it "warns when no standard type provided" do
+    File.write("test.adoc", ASCIIDOC_CONFIGURED_HDR, encoding: "UTF-8")
+    stdout = `metanorma test.adoc`
+    expect(stdout).to include "Please specify a standard type"
+  end
 
-RSpec.describe "warns when bogus standard type requested" do
-  file "test.adoc", ASCIIDOC_CONFIGURED_HDR
-  command "metanorma -t bogus_format test.adoc"
-  its(:stdout) { is_expected.to include "loading gem `metanorma-bogus_format` failed. Exiting" }
-end
+  it "warns when bogus standard type requested" do
+    File.write("test.adoc", ASCIIDOC_CONFIGURED_HDR, encoding: "UTF-8")
+    stdout = `metanorma -t bogus_format test.adoc`
+    expect(stdout).to include "loading gem `metanorma-bogus_format` failed. "\
+                              "Exiting"
+  end
 
-RSpec.describe "warns when bogus format requested" do
-  file "test.adoc", ASCIIDOC_CONFIGURED_HDR
-  command "metanorma -t iso -f bogus_format test.adoc"
-  its(:stdout) { is_expected.to include "Only source file format currently supported is 'asciidoc'" }
-end
+  it "warns when bogus format requested" do
+    File.write("test.adoc", ASCIIDOC_CONFIGURED_HDR, encoding: "UTF-8")
+    stdout = `metanorma -t iso -f bogus_format test.adoc`
+    expect(stdout).to include "Only source file format currently supported "\
+                              "is 'asciidoc'"
+  end
 
-RSpec.describe "warns when no file provided" do
-  command "metanorma -t iso -x html"
-  its(:stdout) { is_expected.to include "Need to specify a file to process" }
-end
+  it "warns when no file provided" do
+    stdout = `metanorma -t iso -x html`
+    expect(stdout).to include "Need to specify a file to process"
+  end
 
-RSpec.describe "gives version information" do
-  command "metanorma -v -t iso"
-  its(:stdout) { is_expected.to match(/Metanorma::ISO \d/) }
+  it "gives version information" do
+    stdout = `metanorma -v -t iso`
+    expect(stdout).to match /Metanorma::ISO \d/
+  end
 end
