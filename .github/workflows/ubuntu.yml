@@ -11,6 +11,7 @@ on:
     paths-ignore:
       - .github/workflows/macos.yml
       - .github/workflows/windows.yml
+
 jobs:
   test-linux:
     name: Test on Ruby ${{ matrix.ruby }} Ubuntu
@@ -30,7 +31,6 @@ jobs:
         uses: actions/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-          architecture: 'x64'
       - name: Update gems
         run: |
           gem install bundler
@@ -39,7 +39,7 @@ jobs:
         run: |
           bundle exec rake
       - name: Trigger dependent repositories
-        if: github.ref == 'refs/heads/master' && matrix.ruby == '2.6'
+        if: (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')) && matrix.ruby == '2.6'
         env:
           GH_USERNAME: ${{ secrets.PAT_USERNAME }}
           GH_ACCESS_TOKEN: ${{ secrets.PAT_TOKEN }}
@@ -48,5 +48,10 @@ jobs:
           [[ -f ".github/workflows/dependent_repos.env" ]] && source .github/workflows/dependent_repos.env
           for repo in $DEPENDENT_REPOS
           do
-            sh trigger-gh-actions.sh $ORGANISATION $repo $GH_USERNAME $GH_ACCESS_TOKEN $GITHUB_REPOSITORY "{ \"ref\": \"${GITHUB_REF}\" }"
+            sh trigger-gh-actions.sh $ORGANISATION $repo $GH_USERNAME $GH_ACCESS_TOKEN $GITHUB_REPOSITORY "$(cat <<EOF
+              {
+                "ref": "${GITHUB_REF}"
+              }
+              EOF
+              )"
           done
