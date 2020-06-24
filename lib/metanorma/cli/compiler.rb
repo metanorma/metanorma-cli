@@ -25,10 +25,12 @@ module Metanorma
         end
       end
 
+      # @return [Array<String>]
       def compile
         compile_file
       end
 
+      # @return [Array<String>]
       def self.compile(file, options)
         new(file, options).compile
       end
@@ -37,8 +39,11 @@ module Metanorma
 
       attr_reader :file, :options, :extract, :extensions
 
+      # @return [Array<String>]
       def compile_file
-        Compile.new.compile(file, serialize_options)
+        c = Compile.new
+        c.compile(file, serialize_options)
+        c.errors
       end
 
       def serialize_options
