@@ -10,10 +10,10 @@ module Metanorma
       "metanorma-iec",
       "metanorma-ietf",
       "metanorma-gb",
-      "metanorma-csd",
+      "metanorma-cc",
       "metanorma-csa",
       "metanorma-iho",
-      "metanorma-m3d",
+      "metanorma-m3aawg",
       "metanorma-generic",
       "metanorma-standoc",
       "metanorma-un",
@@ -35,7 +35,7 @@ module Metanorma
       "CAMBRIA.TTC",
     ].freeze
 
-    PRIVATE_SUPPORTED_GEMS = ["metanorma-rsd", "metanorma-mpfd"]
+    PRIVATE_SUPPORTED_GEMS = ["metanorma-ribose", "metanorma-mpfa"]
 
     def self.load_flavors(flavor_names = SUPPORTED_GEMS + PRIVATE_SUPPORTED_GEMS)
       flavor_names.each do |flavor|
