@@ -6,15 +6,15 @@ RSpec.describe "Metanorma" do
       command = %w(list-extensions iso)
       output = capture_stdout { Metanorma::Cli.start(command) }
 
-      expect(output).to include("Supported extensions: xml, rxl, html")
+      expect(output).to include("Supported extensions: xml, presentation, rxl, html")
     end
 
     it "lists all extensions if no type specified" do
       command = %w(list-extensions)
       output = capture_stdout { Metanorma::Cli.start(command) }
 
-      expect(output).to include("iso: xml, rxl, html")
-      expect(output).to include("csd: xml, rxl, html, pdf")
+      expect(output).to include("iso: xml, presentation, rxl, html")
+      expect(output).to include("cc: xml, presentation, rxl, html, pdf")
       expect(output).to include("ietf: rxl, xml, rfc, html, txt and pdf")
     end
 
