@@ -31,7 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "equivalent-xml", "~> 0.6"
   spec.add_development_dependency "rspec-core", "~> 3.4"
 
-  spec.add_runtime_dependency "thor", "~> 0.20.3"
+  spec.add_runtime_dependency "thor", "~> 1.0"
   spec.add_runtime_dependency "metanorma-iso", "~> 1.4.0"
   spec.add_runtime_dependency 'metanorma-ietf', "~> 2.1.0"
   spec.add_runtime_dependency 'metanorma-gb', "~> 1.4.0"
@@ -53,5 +53,5 @@ Gem::Specification.new do |spec|
   #spec.add_runtime_dependency 'nokogiri', ">= 1"
   spec.add_runtime_dependency "git", "~> 1.5"
   spec.add_runtime_dependency "relaton-cli", ">= 0.8.2"
-  spec.add_runtime_dependency "fontist", "~> 1.0.0"
+  spec.add_runtime_dependency "fontist", "~> 1.0"
 end
