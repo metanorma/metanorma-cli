@@ -9,6 +9,7 @@ on:
     paths-ignore:
       - .github/workflows/macos.yml
       - .github/workflows/ubuntu.yml
+
 jobs:
   test-windows:
     name: Test on Ruby ${{ matrix.ruby }} Windows
@@ -28,7 +29,6 @@ jobs:
         uses: actions/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-          architecture: 'x64'
       - name: Update gems
         shell: pwsh
         run: |
