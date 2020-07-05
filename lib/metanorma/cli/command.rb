@@ -33,7 +33,9 @@ module Metanorma
       def compile(file_name = nil)
         if file_name && !options[:version]
           Metanorma::Cli.load_flavors
-          Metanorma::Cli::Compiler.compile(file_name, options.dup)
+          errs = Metanorma::Cli::Compiler.compile(file_name, options.dup)
+          errs.each { |e| Util.log e, :error }
+          exit(1) if errs.any?
 
         elsif options[:version]
           invoke(:version, [], type: options[:type], format: options[:format])
@@ -76,11 +78,15 @@ module Metanorma
       )
 
       def setup
-        Metanorma::Cli::REQUIRED_FONTS.each do |font|
-          Metanorma::Cli::Setup.run(
-            font: font,
-            term_agreement: options[:agree_to_terms],
-          )
+        list_required_fonts.each do |font|
+          begin
+            Metanorma::Cli::Setup.run(
+              font: font,
+              term_agreement: options[:agree_to_terms],
+            )
+          rescue Fontist::Errors::NonSupportedFontError
+            UI.say("[info]: Font `#{font}` is not supported yet!")
+          end
         end
       end
 
@@ -140,6 +146,19 @@ module Metanorma
           template: options[:template],
           overwrite: options[:overwrite],
         )
+      end
+
+      def list_required_fonts
+        Metanorma::Cli.load_flavors
+
+        Metanorma::Registry.instance.processors.map do |_key, processor|
+          flavour = processor.class.to_s.gsub("::Processor", "")
+          flavour_module = Object.const_get(flavour)
+
+          if flavour_module.respond_to?(:fonts_used)
+            flavour_module.fonts_used.map { |_, value| value }.flatten
+          end
+        end.compact.flatten.uniq
       end
     end
   end

@@ -54,7 +54,6 @@ jobs:
           do
             sh trigger-gh-actions.sh $ORGANISATION $repo $GH_USERNAME $GH_ACCESS_TOKEN $GITHUB_REPOSITORY "$CLIENT_PAYLOAD"
           done
-
       - name: Trigger release repositories
         if: (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')) && matrix.ruby == '2.6'
         env:

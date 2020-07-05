@@ -15,7 +15,7 @@ RSpec.describe "Metanorma" do
   end
 
   def required_fonts
-    Metanorma::Cli::REQUIRED_FONTS
+    ["Arial", "Tahoma", "Calibri"]
   end
 
   def installed_fonts

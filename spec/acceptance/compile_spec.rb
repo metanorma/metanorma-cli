@@ -4,7 +4,7 @@ RSpec.describe "Metanorma" do
   describe "compile" do
     it "compile a document to desire document type" do
       command = %W(compile -t iso #{sample_asciidoc_file})
-      allow(Metanorma::Cli::Compiler).to receive(:compile)
+      allow(Metanorma::Cli::Compiler).to receive(:compile).and_return []
 
       capture_stdout { Metanorma::Cli.start(command) }
       registered_tags = Metanorma::Registry.instance.root_tags
