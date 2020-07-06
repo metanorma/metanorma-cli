@@ -41,6 +41,37 @@ for advanced details regarding dependencies and Windows installation notes.
 
 == Usage
 
+=== Setting up
+
+Metanorma CLI helps you install necessary fonts used by particular flavors,
+as long as those fonts have a license that allow you to install them.
+
+For example, ISO relies on Cambria while ITU relies on Arial, which are both not
+supplied by default on Linux. Due to licensing terms, you are allowed to
+install them yourself.
+
+By running the `metanorma setup` command, Metanorma will identify fonts not
+available on your system, and helps you install them once you agree to
+the license terms presented by those fonts.
+
+Typically run the command below.
+
+[source, sh]
+----
+metanorma setup
+----
+
+If you are sure you want to agree with all the font licensing terms,
+such as during non-interactive runs for continuous integration,
+you can explicitly agree to all terms using the `--agree-to-terms`
+option.
+
+[source, sh]
+----
+metanorma setup --agree-to-terms
+----
+
+
 === Generate a new Metanorma document using a template  (`metanorma new`)
 
 Metanorma CLI allows you to create a new document using an official
