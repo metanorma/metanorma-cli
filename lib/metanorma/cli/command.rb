@@ -29,6 +29,7 @@ module Metanorma
       option :relaton, aliases: "-R", desc: "Export Relaton XML for document to nominated filename"
       option :extract, aliases: "-e", desc: "Export sourcecode fragments from this document to nominated directory"
       option :version, aliases: "-v", desc: "Print version of code (accompanied with -t)"
+      option "output-dir", aliases: "-o", desc: "Directory to save compiled files"
 
       def compile(file_name = nil)
         if file_name && !options[:version]
