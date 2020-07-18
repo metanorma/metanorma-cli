@@ -74,10 +74,9 @@ module Metanorma
         resemble the desired styling. Metanorma can download these files for you
         if you accept the font licensing conditions for the font #{font_name}.
 
+        "#{font_name}" font license:
         ----------
-
         #{license}
-
         ----------
 
         If you want Metanorma to download these fonts for you and indicate your
