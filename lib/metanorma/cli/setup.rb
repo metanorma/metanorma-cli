@@ -69,18 +69,24 @@ module Metanorma
 
       def message(license)
         <<~MSG
-        Metanorma has detected that you do not have the necessary fonts installed
-        for PDF generation. The generated PDF will use generic fonts that may not
-        resemble the desired styling. Metanorma can download these files for you
-        if you accept the font licensing conditions for the font #{font_name}.
+          FONT LICENSE ACCEPTANCE REQUIRED:
 
-        "#{font_name}" font license:
-        ----------
-        #{license}
-        ----------
+          Metanorma has detected that you do not have the necessary fonts installed
+          for PDF generation. Without those fonts, the generated PDF will use
+          generic fonts that may not resemble the desired styling.
 
-        If you want Metanorma to download these fonts for you and indicate your
-        acceptance of the font licenses, type "Yes" / "No":
+          Metanorma can download these files for you if you accept the font
+          licensing conditions for the font "#{font_name}".
+
+          FONT LICENSE BEGIN ("#{font_name}")
+          -----------------------------------------------------------------------
+          #{license}
+          -----------------------------------------------------------------------
+          FONT LICENSE END ("#{font_name}")
+
+          Do you accept all presented font licenses, and want Metanorma to
+          download these fonts for you?
+          => TYPE "Yes" or "No":
         MSG
       end
     end
