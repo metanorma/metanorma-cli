@@ -1,5 +1,6 @@
 require "spec_helper"
 
+=begin
 RSpec.describe "Metanorma" do
   describe "setup" do
     context "without existing fonts" do
@@ -22,3 +23,4 @@ RSpec.describe "Metanorma" do
     Metanorma::Cli.fonts
   end
 end
+=end

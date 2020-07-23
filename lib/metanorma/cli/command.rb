@@ -54,6 +54,7 @@ module Metanorma
       option :format, aliases: "-f", default: :asciidoc, desc: "Format of source file: eg. asciidoc"
 
       def version
+        Metanorma::Cli.load_flavors
         backend_version(options[:type]) || supported_backends
       rescue NameError => error
         UI.say(error)
@@ -120,7 +121,7 @@ module Metanorma
       end
 
       def find_backend(type)
-        require "metanorma-#{type}"
+        load_flavours(type)
         Metanorma::Registry.instance.find_processor(type&.to_sym)
       end
 
@@ -160,6 +161,13 @@ module Metanorma
             flavour_module.fonts_used.map { |_, value| value }.flatten
           end
         end.compact.flatten.uniq
+      end
+
+      def load_flavours(type)
+        Metanorma::Cli.load_flavors
+        unless Metanorma::Registry.instance.find_processor(type&.to_sym)
+          require "metanorma-#{type}"
+        end
       end
     end
   end
