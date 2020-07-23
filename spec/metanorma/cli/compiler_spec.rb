@@ -24,12 +24,12 @@ RSpec.describe Metanorma::Cli::Compiler do
       # Try to update metanorma gem
 
       expect do
-        Metanorma::Cli.start(["spec/fixtures/draft-gold-acvp-sub-kdf135-x942.adoc"])
+        Metanorma::Cli.start(["spec/fixtures/mn-samples-ietf-antioch.adoc"])
       end.to raise_error SystemExit
 
-      delete_file_if_exist("draft-gold-acvp-sub-kdf135-x942.err")
-      delete_file_if_exist("draft-gold-acvp-sub-kdf135-x942.rfc.xml")
-      delete_file_if_exist("draft-gold-acvp-sub-kdf135-x942.")
+      delete_file_if_exist("mn-samples-ietf-antioch.err")
+      delete_file_if_exist("mn-samples-ietf-antioch.rfc.xml")
+      delete_file_if_exist("mn-samples-ietf-antioch.")
     end
 
     it "write files to specified output dir" do

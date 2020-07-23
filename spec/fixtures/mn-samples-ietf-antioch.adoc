@@ -1,0 +1,36 @@
+= The Holy Hand Grenade of Antioch
+:doctype: internet-draft
+:abbrev: Hand Grenade of Antioch
+:updates: RFC 8140
+:submission-type: independent
+:intended-series: informational
+:docnumber: draft-camelot-holy-grenade-01
+:status: informational
+:consensus: false
+:area: General, Operations and Management
+:keyword: rabbits, grenades, antioch, camelot
+:ipr: trust200902
+:revdate: 2018-04-15T00:00:00Z
+:fullname: Arthur son of Uther Pendragon
+:initials: A.
+:surname: Pendragon
+:email: arthur.pendragon@ribose.com
+:organization: Camelot
+:contributor-uri: http://camelot.gov.example
+:address: Palace\ Camel Lot 1, Camelot, England, United Kingdom
+:comments: yes
+:notedraftinprogress: yes
+:smart-quotes: false
+:docfile: document.adoc
+:mn-document-class: ietf
+:mn-output-extensions: xmlrfc2,txt,html,nits
+//:mn-output-extensions: rfc,xml,txt,html,rxl
+
+include::sections/00-abstract.adoc[]
+include::sections/01-intro.adoc[]
+include::sections/02-conventions.adoc[]
+include::sections/03-supported.adoc[]
+include::sections/10-security.adoc[]
+include::sections/11-iana.adoc[]
+include::sections/99-acknowledgements.adoc[]
+include::sections/98-references.adoc[]
