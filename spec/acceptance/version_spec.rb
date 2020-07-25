@@ -19,7 +19,7 @@ RSpec.describe "Metanorma" do
         expect(output).to include("Metanorma #{Metanorma::VERSION}")
         expect(output).to include("Metanorma::Cli #{Metanorma::Cli::VERSION}")
         expect(output).to include("Metanorma::ISO #{Metanorma::ISO::VERSION}")
-        expect(output).to include("Metanorma::Csd #{Metanorma::Csd::VERSION}")
+        expect(output).to include("Metanorma::Csa #{Metanorma::Csa::VERSION}")
         expect(output).to include("Metanorma::Ietf #{Metanorma::Ietf::VERSION}")
       end
     end
