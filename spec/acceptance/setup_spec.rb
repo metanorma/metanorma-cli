@@ -1,11 +1,12 @@
 require "spec_helper"
 
-=begin
 RSpec.describe "Metanorma" do
   describe "setup" do
     context "without existing fonts" do
       it "downlaods user's fonts as specified" do
         stub_system_home_directory
+        allow(Fontist::Font).to receive(:install).and_return(fixture_fonts)
+
         command = %w(setup --agree-to-terms)
         Metanorma::Cli.start(command)
 
@@ -16,11 +17,14 @@ RSpec.describe "Metanorma" do
   end
 
   def required_fonts
-    ["Arial", "Tahoma", "Calibri"]
+    ["FakeCalibri"]
   end
 
   def installed_fonts
     Metanorma::Cli.fonts
   end
+
+  def fixture_fonts
+    [Metanorma::Cli.root_path.join("spec", "fixtures", "FakeCalibri.ttf").to_s]
+  end
 end
-=end
