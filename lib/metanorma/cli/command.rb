@@ -57,14 +57,11 @@ module Metanorma
       def collection(filename = nil)
         if filename
           opts = options.dup
-          if opts[:format]
-            opts[:format] = opts[:format].split(",").map &:to_sym
-          end
+          opts[:format] &&= opts[:format].split(",").map &:to_sym
           opts[:output_folder] = opts.delete :"output-folder"
           coll = Metanorma::Collection.parse filename
           coll.render opts
-        else
-          UI.say("Need to specify a file to process")
+        else UI.say("Need to specify a file to process")
         end
       rescue ArgumentError => e
         UI.say e.message
