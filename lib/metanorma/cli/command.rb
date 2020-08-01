@@ -4,7 +4,6 @@ require "metanorma/cli/compiler"
 require "metanorma/cli/generator"
 require "metanorma/cli/git_template"
 require "metanorma/cli/commands/template_repo"
-require "metanorma/cli/collection"
 
 module Metanorma
   module Cli
@@ -57,23 +56,18 @@ module Metanorma
 
       def collection(filename = nil)
         if filename
-          # opts = options.dup
-          # if opts[:format]
-          #   opts[:format] = opts[:format].split(",").map &:to_sym
-          # end
-          # opts[:output_folder] = opts.delete :"output-folder"
-          # xml = File.read filename, encoding: "UTF-8"
-          # folder = File.dirname(filename)
-          # Metanorma::CollectionRenderer.render(xml, folder, opts)
-          Metanorma::Cli::Collection.generate filename, options.dup
+          opts = options.dup
+          if opts[:format]
+            opts[:format] = opts[:format].split(",").map &:to_sym
+          end
+          opts[:output_folder] = opts.delete :"output-folder"
+          coll = Metanorma::Collection.parse filename
+          coll.render opts
         else
           UI.say("Need to specify a file to process")
         end
-      # rescue Nokogiri::XML::XPath::SyntaxError
-      #   xml = Metanorma::Yaml2XmlCollection.convert filename
-      #   Metanorma::CollectionRenderer.render(xml, folder, opts)
-      # rescue ArgumentError => e
-      #   UI.say e.message
+      rescue ArgumentError => e
+        UI.say e.message
       end
 
       desc "version", "Version of the code"
