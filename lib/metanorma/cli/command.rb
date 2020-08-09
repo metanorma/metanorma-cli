@@ -86,6 +86,12 @@ module Metanorma
               font: font,
               term_agreement: options[:agree_to_terms],
             )
+          rescue Fontist::Errors::LicensingError
+            UI.error(
+              "[error]: Required font license missing! You can accept required" \
+              "licenses using `metanorma setup --agree-to-terms`"
+            )
+            return
           rescue Fontist::Errors::NonSupportedFontError
             UI.say("[info]: Font `#{font}` is not supported yet!")
           end

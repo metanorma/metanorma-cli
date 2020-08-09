@@ -18,8 +18,8 @@ RSpec.describe Metanorma::Cli::Setup do
         font_name = "FakeCalibri"
 
         stub_system_home_directory
-
         allow(Fontist::Font).to receive(:install).and_return(fixture_fonts)
+
         Metanorma::Cli::Setup.run(font: "CALIBRI.TTF", term_agreement: true)
 
         expect(Metanorma::Cli.fonts.grep(/#{font_name}/i)).not_to be_nil
