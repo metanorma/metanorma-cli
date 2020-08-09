@@ -59,5 +59,5 @@ Gem::Specification.new do |spec|
   #spec.add_runtime_dependency 'nokogiri', ">= 1"
   spec.add_runtime_dependency "git", "~> 1.5"
   spec.add_runtime_dependency "relaton-cli", ">= 0.8.2"
-  spec.add_runtime_dependency "fontist", "~> 1.2"
+  spec.add_runtime_dependency "fontist", "~> 1.3.0"
 end

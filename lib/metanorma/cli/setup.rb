@@ -43,7 +43,7 @@ module Metanorma
         begin
           Fontist::Font.find(font_name)
         rescue Fontist::Errors::MissingFontError
-          ask_user_and_download_font(font_name)
+          process_font_installation(font_name)
         end
       end
 
@@ -54,39 +54,18 @@ module Metanorma
         end
       end
 
-      def ask_user_and_download_font(font_name)
-        response = term_agreement ? "yes" : "no"
-        formula = Fontist::Formula.find(font_name)
+      def process_font_installation(font_name)
+        accepted_agreement = term_agreement == true ? "yes" : "no"
 
-        if !term_agreement
-          response = UI.ask(message(formula.license).strip)
-        end
-
-        if response.downcase === "yes"
-          Fontist::Font.install(font_name, confirmation: response)
-        end
+        UI.say(missing_font_message) if !term_agreement
+        Fontist::Font.install(font_name, confirmation: accepted_agreement)
       end
 
-      def message(license)
+      def missing_font_message
         <<~MSG
-          FONT LICENSE ACCEPTANCE REQUIRED:
-
           Metanorma has detected that you do not have the necessary fonts installed
           for PDF generation. Without those fonts, the generated PDF will use
-          generic fonts that may not resemble the desired styling.
-
-          Metanorma can download these files for you if you accept the font
-          licensing conditions for the font "#{font_name}".
-
-          FONT LICENSE BEGIN ("#{font_name}")
-          -----------------------------------------------------------------------
-          #{license}
-          -----------------------------------------------------------------------
-          FONT LICENSE END ("#{font_name}")
-
-          Do you accept all presented font licenses, and want Metanorma to
-          download these fonts for you?
-          => TYPE "Yes" or "No":
+          generic fonts that may not resemble the desired styling.\n
         MSG
       end
     end
