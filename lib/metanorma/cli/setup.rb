@@ -63,8 +63,8 @@ module Metanorma
 
       def missing_font_message
         <<~MSG
-          Metanorma has detected that you do not have the necessary fonts installed
-          for PDF generation. Without those fonts, the generated PDF will use
+          Your system does not have the necessary fonts installed for
+          PDF generation. Without these fonts, the generated PDF will use
           generic fonts that may not resemble the desired styling.\n
         MSG
       end
