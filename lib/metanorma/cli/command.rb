@@ -88,12 +88,12 @@ module Metanorma
             )
           rescue Fontist::Errors::LicensingError
             UI.error(
-              "[error]: Required font license missing! You can accept required" \
-              "licenses using `metanorma setup --agree-to-terms`"
+              "[error]: License acceptance required to install a necessary font." \
+              "Accept required licenses with: `metanorma setup --agree-to-terms`."
             )
             return
           rescue Fontist::Errors::NonSupportedFontError
-            UI.say("[info]: Font `#{font}` is not supported yet!")
+            UI.say("[info]: The font `#{font}` is not yet supported.")
           end
         end
       end
