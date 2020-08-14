@@ -49,6 +49,24 @@ module Metanorma
         end
       end
 
+      desc "collection FILENAME", "Render HTML pages from XML/YAML colection"
+      option :format, aliases: "-x", type: :string, desc: "Formats to generate"
+      option "output-folder", aliases: "-w", required: true, desc: "Directory to save compiled files"
+      option :coverpage, aliases: "-c", desc: "Liquid template"
+
+      def collection(filename = nil)
+        if filename
+          opts = options.dup
+          opts[:format] &&= opts[:format].split(",").map &:to_sym
+          opts[:output_folder] = opts.delete :"output-folder"
+          coll = Metanorma::Collection.parse filename
+          coll.render opts
+        else UI.say("Need to specify a file to process")
+        end
+      rescue ArgumentError => e
+        UI.say e.message
+      end
+
       desc "version", "Version of the code"
       option :type, aliases: "-t", required: false, desc: "Type of standard to generate"
       option :format, aliases: "-f", default: :asciidoc, desc: "Format of source file: eg. asciidoc"
