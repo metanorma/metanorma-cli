@@ -1,3 +1,15 @@
+require "vcr"
+
+VCR.configure do |config|
+  config.cassette_library_dir = "spec/vcr_cassettes"
+  config.hook_into :webmock
+end
+
+require "simplecov"
+SimpleCov.start do
+  add_filter "/spec/"
+end
+
 require "bundler/setup"
 require "equivalent-xml"
 require "rspec-command"

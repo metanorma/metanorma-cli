@@ -36,6 +36,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec-command", "~> 1.0.3"
   spec.add_development_dependency "equivalent-xml", "~> 0.6"
   spec.add_development_dependency "rspec-core", "~> 3.4"
+  spec.add_development_dependency "vcr", "~> 5.0.0"
+  spec.add_development_dependency "webmock"
+  spec.add_development_dependency "simplecov", "~> 0.15"
 
   spec.add_runtime_dependency "thor", "~> 1.0"
   spec.add_runtime_dependency "metanorma-iso", "~> 1.5.0"
