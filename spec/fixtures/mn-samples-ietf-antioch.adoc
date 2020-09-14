@@ -25,6 +25,7 @@
 :mn-document-class: ietf
 :mn-output-extensions: xmlrfc2,txt,html,nits
 //:mn-output-extensions: rfc,xml,txt,html,rxl
+:flush-caches: true
 
 include::sections/00-abstract.adoc[]
 include::sections/01-intro.adoc[]
