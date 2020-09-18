@@ -14,18 +14,13 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://www.metanorma.com"
   spec.license       = "BSD-2-Clause"
 
-=begin
-  spec.files         = Dir['**/*'].reject { |f| f.match(%r{^(test|spec|features|templates|.git)/|.(gem|gif|png|jpg|jpeg|xml|html|doc|pdf|dtd|ent)$}) }
-  spec.files        += Dir.glob("templates/base/**", File::FNM_DOTMATCH).reject { |f| File.directory?(f) }
-=end
-
-  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
-    f.match(%r{^(test|spec|features)/})
-  end
-
-  spec.extra_rdoc_files = %w[README.adoc LICENSE]
+  spec.extra_rdoc_files = %w[README.adoc LICENSE CODE_OF_CONDUCT.md]
+  spec.files         = Dir['{lib,bin,exe,docs}/**/*'] \
+                     + Dir['templates/base/**/*'] \
+                     + %w[Gemfile Rakefile i18n.yaml metanorma-cli.gemspec]
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+
   spec.require_paths = ["lib"]
   spec.required_ruby_version = '>= 2.4.0'
 
