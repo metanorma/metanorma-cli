@@ -198,7 +198,7 @@ which contains:
 
 * Directives on how the collection should be generated
 * Metadata about the collection
-* A manifest listing the contents of the collection
+* A manifest listing the documents contained in the collection, in nested hierarchy
 * Content to put at the beginning of the collection container
 * Content to put at the endeginning of the collection container
 
@@ -208,6 +208,15 @@ may cross-reference each other using the syntax
 as proposed in https://github.com/metanorma/metanorma/issues/57, where
 `mydoc` is be the value of docref/identifier corresponding to the target document,
 as set in the YAML manifest.
+
+The output directory will contain:
+
+* The documents referenced in the manifest, with any citations of other documents in the collection
+resolved, in the output formats requested
+* If `xml` or `presentation` are requested as formats, a concatenated `collection.xml` and/or
+`collection.presentation.xml` file, containing all the documents in the collection.
+* If `html` is requested as a format, an `index.html` HTML page, populated from a provided
+Liquid template coverpage, and linking to all the documents in the manifest.
 
 
 [source]
