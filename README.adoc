@@ -183,6 +183,43 @@ This should compile any valid document, but if there are some issues then it
 will also print those out in the terminal. Currently, the supported flavors
 are `ietf`, `iso`, `gb`, `csd`, `csand`, `m3d` and `rsd`.
 
+=== Compile a document collection (`metanorma collection`)
+
+(_This is placeholder for more complete documentation later._)
+
+This functionality compiles collections of Metanorma documents. It compiles
+the individual documents comprising the collection; then it compiles a document
+acting as a container for those collections. See 
+https://github.com/metanorma/metanorma/wiki/Metanorma-collections[],
+https://github.com/metanorma/metanorma-cli/blob/master/spec/fixtures/collection1.yml[]
+
+The file argument to the collection command is a Metanorma Collections YAML file,
+which contains:
+
+* Directives on how the collection should be generated
+* Metadata about the collection
+* A manifest listing the contents of the collection
+* Content to put at the beginning of the collection container
+* Content to put at the endeginning of the collection container
+
+Documents within a collection
+may cross-reference each other using the syntax 
+`* [[[myanchor,repo:(current-metanorma-collection/mydoc)]]]`,
+as proposed in https://github.com/metanorma/metanorma/issues/57, where
+`mydoc` is be the value of docref/identifier corresponding to the target document,
+as set in the YAML manifest.
+
+
+[source]
+----
+Usage:
+  metanorma collection FILENAME [..options]
+
+Options:
+  -x, [--extensions=EXTENSIONS]     # Type of extension to generate
+  -w, [--output-folder=FOLDER]      # Folder to generate collection in
+  -c, [--coverpage=COVERPAGE]       # Cover page as Liquid template for collection (currently HTML only)
+----
 
 === List supported output formats (`metanorma list-extensions`)
 
