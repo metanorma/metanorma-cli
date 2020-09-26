@@ -4,6 +4,7 @@ require "metanorma/cli/compiler"
 require "metanorma/cli/generator"
 require "metanorma/cli/git_template"
 require "metanorma/cli/commands/template_repo"
+require "metanorma"
 
 module Metanorma
   module Cli

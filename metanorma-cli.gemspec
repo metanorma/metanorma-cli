@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.required_ruby_version = '>= 2.4.0'
 
-  spec.add_development_dependency "pry"
+  #spec.add_development_dependency "pry"
   spec.add_development_dependency "rake", "~> 12.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "byebug", "~> 10.0"
@@ -44,8 +44,8 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'metanorma-csa', "~> 1.6.0"
   #spec.add_runtime_dependency 'metanorma-ribose', "~> 1.6.0"
   spec.add_runtime_dependency 'metanorma-m3aawg', "~> 1.5.0"
-  spec.add_runtime_dependency 'metanorma-generic', "~> 1.6.0"
-  spec.add_runtime_dependency 'metanorma-standoc', "~> 1.5.0"
+  spec.add_runtime_dependency 'metanorma-generic', "~> 1.7.0"
+  spec.add_runtime_dependency 'metanorma-standoc', "~> 1.6.0"
   #spec.add_runtime_dependency 'metanorma-mpfa', "~> 0.5.0"
   spec.add_runtime_dependency 'metanorma-un', "~> 0.5.0"
   spec.add_runtime_dependency 'metanorma-ogc', "~> 1.2.0"
@@ -53,8 +53,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'metanorma-itu', "~> 1.2.0"
   spec.add_runtime_dependency 'metanorma-iho', "~> 0.2.0"
   spec.add_runtime_dependency 'isodoc', "~> 1.2.0"
-  spec.add_runtime_dependency 'metanorma', "~> 1.1.0"
-  #spec.add_runtime_dependency 'nokogiri', ">= 1"
+  spec.add_runtime_dependency 'metanorma', "~> 1.1.5"
   spec.add_runtime_dependency "git", "~> 1.5"
   spec.add_runtime_dependency "relaton-cli", ">= 0.8.2"
   spec.add_runtime_dependency "fontist", "~> 1.3.0"
