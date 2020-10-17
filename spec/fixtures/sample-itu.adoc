@@ -1,0 +1,109 @@
+= Telecommunication for rural and remote areas
+:bureau: D
+:docnumber: D.19
+:published-date: 2019-01
+:status: in-force
+:doctype: recommendation
+:imagesdir: images
+:docfile: D-REC-D.19-201003-E.adoc
+:mn-document-class: itu
+:mn-output-extensions: xml,html,doc,pdf,rxl
+:local-cache-only:
+:data-uri-image:
+:section-refsig: Clause
+:xrefstyle: short
+:legacy-do-not-insert-missing-sections:
+
+== {blank}
+
+ITU-D
+
+_recognizing_
+
+. that the following Recommendations resulting from the ITU-D study periods 1998-2002 and 2002-2006 have provided guidance on a number of issues concerning telecommunications/ICTs in rural and remote areas:
+
+** RECOMMENDATION ITU-D 6-1, Appropriate low-cost technology options for the provision of telecommunications in rural and remote areas, (January, 2002);
+
+** RECOMMENDATION ITU-D 7-1, Planning and implementation of national telecommunication development plans for rural and remote areas, (January, 2002)
+
+** RECOMMENDATION ITU-D 8-1, Promotion of the application of telecommunication facilities for developing various sectors in rural and remote areas; (January, 2002);
+
+** RECOMMENDATION ITU-D 9-1, Appropriate regulatory structures as a means of encouraging the extension of telecommunication services to remote and rural areas, (January, 2002);
+
+** RECOMMENDATION ITU-D 10-1, Options available for financing rural and remote telecommunication programmes and projects, (January, 2002);
+
+** RECOMMENDATION ITU-D 17, Sharing of facilities in rural and remote areas (January, 2002);
+
+** RECOMMENDATION ITU D 18, Potential benefits of rural telecommunications (March, 2006).
+
+
+. that the Focus Group 7 addressed technological options, service potential and financing mechanisms for the provision of telecommunications/ICTs in rural and remote areas;
+
+
+_noting_
+
+. that Focus Group 7 on Rural Telecommunications has paid particular attention to the role of Micro-Finance Institutions (MFI) in promoting access to ICT services and application by supporting small entrepreneurs
+
+. the excellent results of the study period 2006-2010 which consolidate experiences world-wide on the successful provision of telecommunications/ICTs to rural and remote areas, based, inter alia, on information submitted to the case library and on e-Discussions on the issues identified by the Rapporteur Group; {blank}footnote:[The case library on Question 10-2/2 is available at
+http://www.itu.int/ITU-D/study_groups/SGP_2006-2010/events/Case_Library/index.asp.
+e-Discussion web page is available at http://www.itu.int/ituweblogs/ITU-D-SG2-Q10/]
+
+. that experiences all over the world, with emerging technologies deployed in rural and remote areas providing broadband, wired transmission media and wireless transmission media indicate rapid decrease of costs, increase of range and capacity, and that all these developments make connecting rural areas a feasible option;
+
+. that satellite technologies, including satellite backhaul solutions, play a unique role in extending service delivery and coverage areas and Very Small Aperture Terminals (VSAT) technology has established itself as a versatile communication platform for rural and remote areas;
+
+. that the deployment of IP based platforms serving wide areas can make a range of developmental services and applications such as education, health, agriculture etc., available to the rural population;
+
+. that these developments make it possible that telecommunication/ICT services and applications can be provided by small and medium enterprises, local governments, non-governmental organizations in rural and remote areas with appropriate business models;
+
+. that technical expertise and adoption capacity are important factors to plan, implement and operate such facilities;
+
+. that in rural and remote areas of developing countries, low incomes, lack of literacy and computer literacy limit the number of people who can have internet access in their homes. These communities need public ICT facilities which can be used for communication, delivery of services and various capacity building activities. There is a role for small entrepreneurs, local governments, schools and post offices in this process;
+
+. that provision of ICT services and applications by small entrepreneurs in rural and remote areas have the potential of creating employment. These ventures can be supported by financial institutions and receive support from various government schemes;
+
+. that a well planned maintenance and operation programme in order to keep the infrastructure and associated equipment, including terminal equipment in good working condition is an essential aspect of the support structures in rural areas;
+
+. the excellent collaboration between ITU/BDT and the Universal Postal Union in promoting the use of post offices as vehicles for provision of access to telecommunications/ICT services and applications in rural and remote areas;
+
+. that energy supply is a basic bottleneck for the spread of telecommunications/ICTs in rural and remote areas and that innovative uses of solar power, mini-hydro power and windmill power sources, some times in combination are being successfully used in many countries to provide reliable energy sources for mobile base stations;
+
+
+
+_considering_
+
+. that the provision of telecommunications, ICT services and applications can make significant contribution to the quality of life of the population living rural and remote areas;
+
+. that stimulation of demand for telecommunications/ICTs through proactive government policies is a key to realizing their benefits;
+
+. that the accumulation of experiences world-wide on community access institutions (telekiosks, multipurpose community telecentres, multi-media centres), points to the need for pro-active and supportive government policies to simulate demand of the services available;
+
+. that the availability of information should be reinforced by upgradation of skills and provision of capital in order that information is properly utilized; and
+
+. that access to telecommunications/ICTs for all will maximize social welfare, increase productivity, conserve resources and will contribute to safeguarding human rights.
+
+
+
+_recommends_
+
+. that developing countries should include provision of telecommunications/ICTs in rural and remote areas in their national development plans;
+
+. that in planning infrastructure development in rural and remote areas it is important to assess all available technologies in the market taking into consideration the regulatory environment, geographical conditions, climate, costs (capital expenditure and operational expenditure), maintainability, operability, sustainability, etc., based on the results of the site survey;
+
+. that community access to ICT facilities and services is particularly important in rural and remote areas. Business models which can achieve financial and operational sustainability can be operated by local entrepreneurs supported by a variety of initiatives. These facilities, where necessary, should also be supported by Universal Service Funds as an essential component of rural communications;
+
+. that post offices have a communicative presence in the lives of the population in rural areas and their use as vehicles for provision of telecommunication/ICTs should be encouraged;
+
+. that local institutions, such as village committees should be involved in planning and implementing ICT facilities;
+
+. that enhancing local technical expertise and adoption are important for successful implementation of ICT services and applications in rural and remote areas. Attention should be paid to training, exchange of information, creation of shared maintenance facilities in order to achieve sustainability and viability;
+
+. that migration to broadband technology should be encouraged;
+
+. that keeping even technologically obsolete equipment in good working condition through effective preventive maintenance programme is an essential part of making telecommunications in rural areas viable and should be encouraged, while guarding against making developing countries a dumping ground for obsolete technologies;
+
+. that it is important to take steps to ensure continued reliability of equipment in rural environments such as developing an appropriate maintenance and operation strategy and encouraging training for technical staff;
+
+. that given that lack of energy supply is a major bottleneck in the provision of telecommunications/ICTs in rural and remote areas, renewable energy sources should be used whenever feasible taking into consideration the environmental problems; and
+
+. that partnership among governments, industry, local agencies and international organizations is desirable in the development of low cost ICT infrastructure, including renewable energy sources and terminals for the provision of telecommunications/ICTs in rural and remote areas and should be pursued.
