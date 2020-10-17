@@ -285,6 +285,21 @@ repository.
 metanorma template-repo add my-iso https://github.com/you/my-iso-template
 ----
 
+=== Generate metanorma minisite
+
+The `site` interface allows you to manage mini site generation using the CLI.
+To generate a mini site you need to provide the `SOURCE_PATH` and the CLI will
+take care of compiling each of those files and generate deployable site in the
+provided output directory.
+
+This interface also supports a YAML manifest file that can be used to customize
+the site generation process. You can check more details here: link:./spec/fixtures/metanorma.yml[metanorma.yml]
+
+[source, sh]
+----
+metanorma site generate SOURCE_PATH -o OUTPUT_PATH -c metanorma.yml
+----
+
 == Credits
 
 This gem is developed, maintained and funded by https://www.metanorma.com/docs/getting-started/[Ribose Inc.]

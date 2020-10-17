@@ -14,6 +14,7 @@
 /test
 /testrelaton.xml
 /extract/
+/site/
 
 # rspec failure tracking
 .rspec_status
