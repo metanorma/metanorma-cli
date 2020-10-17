@@ -4,6 +4,7 @@ require "metanorma/cli/compiler"
 require "metanorma/cli/generator"
 require "metanorma/cli/git_template"
 require "metanorma/cli/commands/template_repo"
+require "metanorma/cli/commands/site"
 require "metanorma"
 
 module Metanorma
@@ -88,6 +89,9 @@ module Metanorma
 
       desc "template-repo", "Manage metanorma templates repository"
       subcommand :template_repo, Metanorma::Cli::Commands::TemplateRepo
+
+      desc "site", "Manage site for metanorma collections"
+      subcommand :site, Metanorma::Cli::Commands::Site
 
       desc "setup", "Initial necessary setup"
       option(
