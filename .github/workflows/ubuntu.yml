@@ -31,9 +31,17 @@ jobs:
         uses: actions/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+      - name: Cache gems
+        uses: actions/cache@preview
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('Gemfile') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.ruby }}-gem-
       - name: Update gems
         run: |
           gem install bundler
+          bundle config --local path vendor/bundle
           bundle install --jobs 4 --retry 3
       - name: Run specs
         run: |
@@ -54,6 +62,7 @@ jobs:
           do
             sh trigger-gh-actions.sh $ORGANISATION $repo $GH_USERNAME $GH_ACCESS_TOKEN $GITHUB_REPOSITORY "$CLIENT_PAYLOAD"
           done
+
       - name: Trigger release repositories
         if: (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')) && matrix.ruby == '2.6'
         env:

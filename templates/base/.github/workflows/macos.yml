@@ -32,9 +32,7 @@ jobs:
           restore-key: xml2rfc
       - name: Use Metanorma
         run: |
-          brew update
-          brew install yq
-          brew install https://raw.githubusercontent.com/metanorma/homebrew-metanorma/master/Formula/metanorma.rb
+          brew install yq metanorma/metanorma/metanorma
           metanorma version
       - name: Setup Fonts
         run: |
