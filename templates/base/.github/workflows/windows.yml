@@ -39,4 +39,4 @@ jobs:
           gem install bundler
       - name: Metanorma compile
         run: |
-          make -f Makefile.win clean all SHELL=cmd
+          make -f Makefile.win clean all SHELL=cmd SKIP_BUNDLE=true

@@ -45,4 +45,4 @@ jobs:
           JAVA_OPTS: "java.awt.headless=true"
         run: |
           source $(brew --prefix metanorma)/libexec/venv/bin/activate
-          make clean all
+          make clean all SKIP_BUNDLE=true
