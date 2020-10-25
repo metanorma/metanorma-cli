@@ -3,7 +3,8 @@
 name: notify
 
 on:
-  check_run: [ completed ]
+  check_run:
+    types: [ completed ]
 
 jobs:
   notify:
