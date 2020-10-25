@@ -37,12 +37,15 @@ jobs:
       - name: Setup Fonts
         run: |
           metanorma setup --agree-to-terms
-      - name: Install bundler
+      - name: Use Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+      - name: Install relaton
         run: |
-          sudo gem install bundler
+          gem install relaton-cli
       - name: Metanorma compile
         env:
           JAVA_OPTS: "java.awt.headless=true"
         run: |
-          source $(brew --prefix metanorma)/libexec/venv/bin/activate
           make clean all SKIP_BUNDLE=true

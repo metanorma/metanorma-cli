@@ -34,9 +34,13 @@ jobs:
         shell: pwsh
         run: |
           cinst --no-progress -y metanorma yq
-      - name: Install bundler
+      - name: Use Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+      - name: Install relaton
         run: |
-          gem install bundler
+          gem install relaton-cli
       - name: Metanorma compile
         run: |
           make -f Makefile.win clean all SHELL=cmd SKIP_BUNDLE=true
