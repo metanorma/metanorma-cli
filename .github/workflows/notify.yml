@@ -24,7 +24,7 @@ jobs:
           )
           for repo in $TEMPLATE_REPOS" $SAMPLES_REPOS"
           do
-            sh trigger-gh-actions.sh $ORGANISATION $repo $GH_USERNAME $GH_ACCESS_TOKEN $GITHUB_REPOSITORY "$CLIENT_PAYLOAD"
+            echo sh trigger-gh-actions.sh $ORGANISATION $repo $GH_USERNAME $GH_ACCESS_TOKEN $GITHUB_REPOSITORY "$CLIENT_PAYLOAD"
           done
 
       - name: Trigger release repositories
@@ -41,5 +41,5 @@ jobs:
           )
           for repo in $DEPENDENT_REPOS
           do
-            sh trigger-gh-actions.sh $ORGANISATION $repo $GH_USERNAME $GH_ACCESS_TOKEN $GITHUB_REPOSITORY "$CLIENT_PAYLOAD"
+            echo sh trigger-gh-actions.sh $ORGANISATION $repo $GH_USERNAME $GH_ACCESS_TOKEN $GITHUB_REPOSITORY "$CLIENT_PAYLOAD"
           done
