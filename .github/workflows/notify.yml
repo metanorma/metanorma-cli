@@ -4,7 +4,6 @@ name: notify
 
 on:
   check_suite:
-    type: [ completed ]
 
 jobs:
   notify:
