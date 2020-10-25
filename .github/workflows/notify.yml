@@ -2,14 +2,13 @@
 # See https://github.com/metanorma/cimas
 name: notify
 
-on:
-  status:
-    state: [ success ]
+on: status
 
 jobs:
   notify:
     name: Notify dependent repos
     runs-on: ubuntu-latest
+    if: github.event.state == 'success'
     steps:
       - uses: actions/checkout@master
 
