@@ -3,7 +3,7 @@
 name: notify
 
 on:
-  check_suite:
+  check_run: [ completed ]
 
 jobs:
   notify:
