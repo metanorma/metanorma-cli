@@ -2,7 +2,7 @@
 # See https://github.com/metanorma/cimas
 image:
   name: metanorma/mn
-  entrypoint: [""]
+  entrypoint: [ "" ]
 
 cache:
   paths:
@@ -37,7 +37,9 @@ pages:
     - build
   stage: deploy
   script:
-    - 'curl --location --output artifacts.zip --header "JOB-TOKEN: $CI_JOB_TOKEN" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/master/download?job=build"'
+    - >
+      'curl --location --output artifacts.zip --header
+      "JOB-TOKEN: $CI_JOB_TOKEN" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/jobs/artifacts/master/download?job=build"'
   artifacts:
     paths:
       - public

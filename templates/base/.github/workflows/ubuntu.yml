@@ -37,19 +37,20 @@ jobs:
           sudo chown -R $USER:$(id -gn $USER) $HOME/.config
       - name: Setup Fonts
         run: |
-          sudo gem install rake metanorma-cli
-          sudo metanorma setup --agree-to-terms
+          metanorma setup --agree-to-terms
       - name: Install yq
         run: |
           sudo snap install yq
           echo "::add-path::/snap/bin"
-      - name: Install bundler
+      - name: Use Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+      - name: Install relaton
         run: |
-          sudo gem install bundler
+          gem install relaton-cli
       - name: Metanorma compile
         env:
           JAVA_OPTS: "java.awt.headless=true"
         run: |
-          source $HOME/.nvm/nvm.sh
-          nvm use mn-node
-          make clean all publish
+          make clean all publish SKIP_BUNDLE=true
