@@ -4,7 +4,7 @@ name: docker
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, main  ]
   pull_request:
     paths-ignore:
       - .github/workflows/test.yml
@@ -20,8 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     container: docker://metanorma/mn
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
           token: ${{ secrets.METANORMA_CI_PAT_TOKEN || github.token }}
           submodules: true
