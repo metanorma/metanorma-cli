@@ -4,7 +4,7 @@ name: windows
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, main  ]
   pull_request:
     paths-ignore:
       - .github/workflows/test.yml
@@ -33,7 +33,7 @@ jobs:
       - name: Install Metanorma & yq
         shell: pwsh
         run: |
-          cinst --no-progress -y metanorma yq
+          cinst --no-progress -y metanorma yq gnuwin32-coreutils.install
       - name: Use Ruby
         uses: ruby/setup-ruby@v1
         with:
