@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.required_ruby_version = '>= 2.4.0'
 
-  #spec.add_development_dependency "pry"
+  spec.add_development_dependency "pry"
   spec.add_development_dependency "rake", "~> 12.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "byebug", "~> 10.0"
@@ -34,16 +34,18 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "vcr", "~> 5.0.0"
   spec.add_development_dependency "webmock"
   spec.add_development_dependency "simplecov", "~> 0.15"
+  # need for dev because locally compiled metanorma-iso does not have css
+  spec.add_development_dependency "sassc"
 
   spec.add_runtime_dependency "thor", "~> 1.0"
   spec.add_runtime_dependency "metanorma-iso", "~> 1.5.0"
   spec.add_runtime_dependency 'metanorma-ietf', "~> 2.2.0"
   spec.add_runtime_dependency 'metanorma-gb', "~> 1.5.0"
   spec.add_runtime_dependency 'metanorma-iec', "~> 1.2.0"
-  spec.add_runtime_dependency 'metanorma-cc', "~> 1.5.0"
+  spec.add_runtime_dependency 'metanorma-cc', "~> 1.6.0"
   spec.add_runtime_dependency 'metanorma-csa', "~> 1.6.0"
   #spec.add_runtime_dependency 'metanorma-ribose', "~> 1.6.0"
-  spec.add_runtime_dependency 'metanorma-m3aawg', "~> 1.5.0"
+  spec.add_runtime_dependency 'metanorma-m3aawg', "~> 1.6.0"
   spec.add_runtime_dependency 'metanorma-generic', "~> 1.7.0"
   spec.add_runtime_dependency 'metanorma-standoc', "~> 1.6.0"
   #spec.add_runtime_dependency 'metanorma-mpfa', "~> 0.5.0"

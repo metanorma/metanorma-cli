@@ -14,7 +14,7 @@ RSpec.describe "Metanorma" do
       output = capture_stdout { Metanorma::Cli.start(command) }
 
       expect(output).to include("iso: xml, presentation, rxl, html")
-      expect(output).to include("cc: xml, presentation, rxl, html, pdf")
+      expect(output).to include("cc: xml, presentation, rxl, html, doc and pdf")
       expect(output).to include("ietf: rxl, xml, rfc, html, txt and pdf")
     end
 
