@@ -11,7 +11,6 @@ SimpleCov.start do
 end
 
 require "bundler/setup"
-require "equivalent-xml"
 require "rspec-command"
 require "metanorma/cli"
 require "fileutils"
