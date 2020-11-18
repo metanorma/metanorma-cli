@@ -2,9 +2,7 @@
 # See https://github.com/metanorma/cimas
 name: notify
 
-on:
-  status:
-  workflow_dispatch:
+on: status
 
 jobs:
   notify:
