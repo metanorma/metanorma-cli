@@ -81,14 +81,6 @@ module Metanorma
       Pathname.new(Dir.home).join(".metanorma")
     end
 
-    def self.fonts_directory
-      Metanorma::Cli.home_directory.join("fonts")
-    end
-
-    def self.fonts
-      Dir.glob(Metanorma::Cli.fonts_directory.join("**"))
-    end
-
     def self.writable_templates_path?
       parent_directory = templates_path.join("..", "..")
 
