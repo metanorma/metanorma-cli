@@ -92,16 +92,15 @@ RSpec.describe Metanorma do
 
   it "wraps HTML output" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    system "metanorma -w -t iso #{@dir}/test.adoc"
+    system "metanorma -w -t iso -x html #{@dir}/test.adoc"
     Dir.chdir(@dir) do
       expect(File.exist?("test/test.html")).to be true
-      expect(File.exist?("test.alt/test.alt.html")).to be true
     end
   end
 
   it "keeps Asciimath" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    system "metanorma -a -t iso #{@dir}/test.adoc"
+    system "metanorma -a -t iso -x xml #{@dir}/test.adoc"
     Dir.chdir(@dir) do
       expect(File.exist?("test.xml")).to be true
       xml = File.read("test.xml", encoding: "utf-8")
@@ -112,7 +111,7 @@ RSpec.describe Metanorma do
 
   it "data64 encodes images" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    system "metanorma -d -t iso #{@dir}/test.adoc"
+    system "metanorma -d -t iso -x html #{@dir}/test.adoc"
     Dir.chdir(@dir) do
       expect(File.exist?("test.html")).to be true
       html = File.read("test.html", encoding: "utf-8")
@@ -122,7 +121,7 @@ RSpec.describe Metanorma do
 
   it "exports bibdata" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    system "metanorma -R #{@dir}/testrelaton.xml -t iso #{@dir}/test.adoc"
+    system "metanorma -R #{@dir}/testrelaton.xml -t iso -x html #{@dir}/test.adoc"
     Dir.chdir(@dir) do
       expect(File.exist?("testrelaton.xml")).to be true
       xml = File.read("testrelaton.xml", encoding: "utf-8")
