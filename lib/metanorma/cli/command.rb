@@ -1,5 +1,4 @@
 require "thor"
-require "metanorma/cli/setup"
 require "metanorma/cli/compiler"
 require "metanorma/cli/generator"
 require "metanorma/cli/git_template"
@@ -31,6 +30,10 @@ module Metanorma
       option :extract, aliases: "-e", desc: "Export sourcecode fragments from this document to nominated directory"
       option :version, aliases: "-v", desc: "Print version of code (accompanied with -t)"
       option "output-dir", aliases: "-o", desc: "Directory to save compiled files"
+
+      option :agree_to_terms, type: :boolean, desc: "Agree / Disagree with all third-party licensing terms presented (WARNING: do know what you are agreeing with!)"
+      option :no_install_fonts, type: :boolean, desc: "Skip the font installation process"
+      option :continue_without_fonts, type: :boolean, desc: "Continue processing even when fonts are missing"
 
       def compile(file_name = nil)
         if file_name && !options[:version]
@@ -89,34 +92,6 @@ module Metanorma
       desc "template-repo", "Manage metanorma templates repository"
       subcommand :template_repo, Metanorma::Cli::Commands::TemplateRepo
 
-      desc "setup", "Initial necessary setup"
-      option(
-        :agree_to_terms,
-        type: :boolean,
-        required: false,
-        default: false,
-        desc: "Agree / Disagree with all third-party licensing terms presented (WARNING: do know what you are agreeing with!)",
-      )
-
-      def setup
-        list_required_fonts.each do |font|
-          begin
-            Metanorma::Cli::Setup.run(
-              font: font,
-              term_agreement: options[:agree_to_terms],
-            )
-          rescue Fontist::Errors::LicensingError
-            UI.error(
-              "[error]: License acceptance required to install a necessary font." \
-              "Accept required licenses with: `metanorma setup --agree-to-terms`."
-            )
-            return
-          rescue Fontist::Errors::NonSupportedFontError
-            UI.say("[info]: The font `#{font}` is not yet supported.")
-          end
-        end
-      end
-
       private
 
       def single_type_extensions(type)
@@ -173,19 +148,6 @@ module Metanorma
           template: options[:template],
           overwrite: options[:overwrite],
         )
-      end
-
-      def list_required_fonts
-        Metanorma::Cli.load_flavors
-
-        Metanorma::Registry.instance.processors.map do |_key, processor|
-          flavour = processor.class.to_s.gsub("::Processor", "")
-          flavour_module = Object.const_get(flavour)
-
-          if flavour_module.respond_to?(:fonts_used)
-            flavour_module.fonts_used.map { |_, value| value }.flatten
-          end
-        end.compact.flatten.uniq
       end
 
       def load_flavours(type)
