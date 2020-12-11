@@ -44,7 +44,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         stub_external_interface_calls
 
         Metanorma::Cli::SiteGenerator.generate(
-          source_path.join("invalid"),
+          source_path,
           output_dir: output_directory,
           config: source_path.join("metanorma.yml"),
         )
