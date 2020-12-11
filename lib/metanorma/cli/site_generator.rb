@@ -52,7 +52,8 @@ module Metanorma
       end
 
       def build_collection_file(collection_name)
-        UI.info("Building collection file ...")
+        collection_path = [site_path, collection_name].join("/")
+        UI.info("Building collection file: #{collection_path} ...")
 
         Relaton::Cli::RelatonFile.concatenate(
           asset_folder,
@@ -71,7 +72,7 @@ module Metanorma
       end
 
       def convert_to_html_page(collection, page_name)
-        UI.info("Generating html site ...")
+        UI.info("Generating html site in #{site_path} ...")
 
         Relaton::Cli::XMLConvertor.to_html(collection)
         File.rename(Pathname.new(collection).sub_ext(".html").to_s, page_name)
@@ -112,8 +113,8 @@ module Metanorma
       end
 
       def source_from_manifest
-        @source_from_manifest ||= manifest[:files].map do |source|
-          manifest_file.dirname.join(source)
+        @source_from_manifest ||= manifest[:files].map do |source_file|
+          source.join(source_file)
         end
       end
 

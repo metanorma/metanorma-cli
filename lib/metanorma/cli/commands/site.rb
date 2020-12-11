@@ -10,7 +10,7 @@ module Metanorma
         option(
           :output_dir,
           aliases: "-o",
-          default: Pathname.new(Dir.pwd).join("site"),
+          default: Pathname.new(Dir.pwd).join("site").to_s,
           desc: "Output directory for the generated site",
         )
 
