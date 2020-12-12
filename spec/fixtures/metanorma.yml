@@ -13,10 +13,15 @@ metanorma:
   # The following source node can be used to be selective about
   # the files in the specified source directory. The way you add
   # files here is to use relative paths in regards to source path
-  # not necessarily related to the configuration file path.
+  # not necessarily related to the configuration file path. The
+  # file selections also support wildcards.
+  #
+  # The following are examples of supported pattern, the CLI is
+  # also smart ignore any duplicates automaticaly.
   #
   source:
     files:
+      - ./*.adoc
       - ./sample.adoc
       - ./sample.adoc
       - ./sample-itu.adoc
