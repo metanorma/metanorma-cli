@@ -114,8 +114,9 @@ module Metanorma
 
       def source_from_manifest
         @source_from_manifest ||= manifest[:files].map do |source_file|
-          source.join(source_file)
-        end
+          file_path = source.join(source_file).to_s
+          file_path.include?("*") ? Dir.glob(file_path) : file_path
+        end.flatten
       end
 
       def ensure_site_asset_directory!
