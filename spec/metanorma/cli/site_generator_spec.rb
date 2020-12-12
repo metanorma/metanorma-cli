@@ -50,7 +50,9 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         )
 
         collection = manifest["relaton"]["collection"]
-        manifest_files = manifest["metanorma"]["source"]["files"]
+        manifest_files = select_files_including_wildcard(
+          manifest["metanorma"]["source"]["files"],
+        )
 
         manifest_files.each do |manifest_file|
           expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
@@ -60,7 +62,9 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           )
         end
 
-        expect(Metanorma::Cli::Compiler).to have_received(:compile).twice
+        expect(Metanorma::Cli::Compiler).to have_received(:compile).exactly(
+          manifest_files.uniq.count,
+        ).times
 
         expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
           asset_folder,
@@ -84,6 +88,13 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
 
     def output_directory
       @output_directory ||= Metanorma::Cli.root_path.join("tmp")
+    end
+
+    def select_files_including_wildcard(files)
+      files.map do |file|
+        file_path = source_path.join(file).to_s
+        file_path.to_s.include?("*") ? Dir.glob(file_path) : file_path
+      end.flatten
     end
 
     def source_path
