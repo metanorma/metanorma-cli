@@ -11,6 +11,10 @@ module Metanorma
         new.say(message)
       end
 
+      def self.info(message)
+        new.say(["[info]", message].join(": "))
+      end
+
       def self.error(message)
         new.error(message)
       end

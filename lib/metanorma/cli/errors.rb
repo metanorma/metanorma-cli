@@ -4,6 +4,7 @@ module Metanorma
       class DuplicateTemplateError < StandardError; end
 
       class FileNotFoundError < StandardError; end
+      class InvalidManifestFileError < StandardError; end
     end
   end
 end

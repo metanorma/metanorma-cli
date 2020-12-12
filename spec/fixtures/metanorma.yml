@@ -1,0 +1,33 @@
+---
+# Optional: Metanora Node
+#
+# The metanorma ndoe allows us to customize the metanorma
+# complilation process, as of now we are supporting to be
+# selectetive about which file to use, but in future we
+# might add more functionality thourgh it.
+#
+metanorma:
+
+  # Optional: Source files
+  #
+  # The following source node can be used to be selective about
+  # the files in the specified source directory. The way you add
+  # files here is to use relative paths in regards to source path
+  # not necessarily related to the configuration file path.
+  #
+  source:
+    files:
+      - ./sample.adoc
+      - ./sample.adoc
+      - ./sample-itu.adoc
+
+# Required: Site metadata
+#
+# The following relaton node is required for site generation.
+# The collection node data are used in the site title or heading
+# and the organization is used in the copyright area.
+#
+relaton:
+  collection:
+    organization: "Metanorma : Organization name sample"
+    name: "Metanorma: Sample collection name from metanorma.yml"
