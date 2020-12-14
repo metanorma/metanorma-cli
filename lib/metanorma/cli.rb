@@ -10,6 +10,7 @@ module Metanorma
       "metanorma-iec",
       "metanorma-ietf",
       #"metanorma-gb",
+      "metanorma-bipm",
       "metanorma-cc",
       "metanorma-csa",
       "metanorma-iho",
