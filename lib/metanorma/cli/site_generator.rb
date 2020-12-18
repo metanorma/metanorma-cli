@@ -21,10 +21,9 @@ module Metanorma
 
       def generate
         site_directory = asset_directory.join("..")
+        select_source_files.each { |source| compile(source) }
 
         Dir.chdir(site_directory) do
-          select_source_files.each { |source| compile(source) }
-
           build_collection_file(collection_name)
           convert_to_html_page(collection_name, "index.html")
         end
@@ -67,7 +66,7 @@ module Metanorma
         UI.info("Compiling #{source} ...")
 
         Metanorma::Cli::Compiler.compile(
-          source.to_s, format: :asciidoc, "output-dir" => asset_folder
+          source.to_s, format: :asciidoc, "output-dir" => asset_directory
         )
       end
 
