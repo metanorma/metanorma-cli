@@ -6,13 +6,14 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
       it "invokes sets of messages to generate a complete site" do
         asset_folder = "documents"
         stub_external_interface_calls
+        asset_directory = output_directory.join(asset_folder)
 
         Metanorma::Cli::SiteGenerator.generate(
           source_path, output_dir: output_directory
         )
 
         expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
-          sources.first.to_s, format: :asciidoc, "output-dir" => asset_folder
+          sources.first.to_s, format: :asciidoc, "output-dir" => asset_directory
         )
 
         expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
@@ -58,7 +59,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
             source_path.join(manifest_file).to_s,
             format: :asciidoc,
-            "output-dir" => asset_folder,
+            "output-dir" => output_directory.join(asset_folder),
           )
         end
 
