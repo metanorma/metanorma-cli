@@ -8,9 +8,9 @@ module Metanorma
       def initialize(source, options = {})
         @source = find_realpath(source)
         @site_path = options.fetch(:output_dir, "site").to_s
-        @manifest_file = find_realpath(options.fetch(:config, nil))
         @asset_folder = options.fetch(:asset_folder, "documents").to_s
         @collection_name = options.fetch(:collection_name, "documents.xml")
+        @manifest_file = find_realpath(options.fetch(:config, default_config))
 
         ensure_site_asset_directory!
       end
@@ -38,6 +38,11 @@ module Metanorma
         Pathname.new(source_path.to_s).realpath if source_path
       rescue Errno::ENOENT
         source_path
+      end
+
+      def default_config
+        default_file = Pathname.new(Dir.pwd).join("metanorma.yml")
+        default_file if File.exist?(default_file)
       end
 
       def select_source_files
