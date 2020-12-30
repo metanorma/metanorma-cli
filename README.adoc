@@ -228,6 +228,32 @@ Options:
   -c, [--coverpage=COVERPAGE]       # Cover page as Liquid template for collection (currently HTML only)
 ----
 
+=== List supported doctypes (`metanorma list-doctypes`)
+
+You want to know what are the supported doctypes and what do they support for
+input and output format? Well, the `metanorma list-doctypes` can help.
+
+
+[source,sh]
+----
+metanorma list-doctypes
+----
+
+
+To list out the details for a specific flavor run the following command:
+
+[source,sh]
+----
+metanorma list-doctypes <flavor>
+----
+
+e.g.,
+
+[source,sh]
+----
+metanorma list-doctypes iso
+----
+
 === List supported output formats (`metanorma list-extensions`)
 
 Need to know what output formats are supported for a given flavor?
