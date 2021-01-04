@@ -4,8 +4,11 @@ Encoding.default_internal = Encoding::UTF_8
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}" }
 
-
 gemspec
+
+gem "metanorma", git: "https://github.com/metanorma/metanorma", branch: "feature/move-fontist-logic-to-metanorma-gem"
+# gem "metanorma", path: '../metanorma'
+gem "metanorma-standoc", git: "https://github.com/metanorma/metanorma-standoc", branch: "feature/move-fontist-logic-to-metanorma-gem"
 
 if File.exist? 'Gemfile.devel'
   eval File.read('Gemfile.devel'), nil, 'Gemfile.devel' # rubocop:disable Security/Eval
