@@ -32,9 +32,9 @@ module Metanorma
       option :version, aliases: "-v", desc: "Print version of code (accompanied with -t)"
       option "output-dir", aliases: "-o", desc: "Directory to save compiled files"
 
-      option :agree_to_terms, type: :boolean, desc: "Agree / Disagree with all third-party licensing terms presented (WARNING: do know what you are agreeing with!)"
-      option :no_install_fonts, type: :boolean, desc: "Skip the font installation process"
-      option :continue_without_fonts, type: :boolean, desc: "Continue processing even when fonts are missing"
+      option :"agree-to-terms", type: :boolean, desc: "Agree / Disagree with all third-party licensing terms presented (WARNING: do know what you are agreeing with!)"
+      option :"no-install-fonts", type: :boolean, desc: "Skip the font installation process"
+      option :"continue-without-fonts", type: :boolean, desc: "Continue processing even when fonts are missing"
 
       def compile(file_name = nil)
         if file_name && !options[:version]
