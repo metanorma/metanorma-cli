@@ -3,7 +3,8 @@ RSpec.describe "Collection" do
     of = "spec/results"
     Metanorma::Cli.start [
       "collection", "spec/fixtures/collection1.yml", "-x", "html",
-      "-w", of, "-c", "spec/fixtures/collection_cover.html"
+      "-w", of, "-c", "spec/fixtures/collection_cover.html",
+      "--no-install-fonts"
     ]
     expect(File.exist?("spec/results/index.html")).to be true
     expect(File.exist?("spec/results/dummy.html")).to be true
@@ -17,7 +18,8 @@ RSpec.describe "Collection" do
     of = "spec/results"
     Metanorma::Cli.start [
       "collection", "spec/fixtures/collection1.xml", "-x", "html",
-      "-w", of, "-c", "spec/fixtures/collection_cover.html"
+      "-w", of, "-c", "spec/fixtures/collection_cover.html",
+      "--no-install-fonts"
     ]
     expect(File.exist?("spec/results/index.html")).to be true
     expect(File.exist?("spec/results/dummy.html")).to be true

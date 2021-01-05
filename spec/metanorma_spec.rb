@@ -33,7 +33,7 @@ RSpec.describe Metanorma do
 
   it "processes metanorma options inside Asciidoc" do
     create_clean_test_files ASCIIDOC_PREAMBLE_HDR
-    system "metanorma #{@dir}/test.adoc"
+    system "metanorma #{@dir}/test.adoc --no-install-fonts"
     Dir.chdir(@dir) do
       expect(File.exist?("test.xml")).to be true
       expect(File.exist?("test.doc")).to be false
@@ -46,7 +46,7 @@ RSpec.describe Metanorma do
 
   it "processes an asciidoc ISO document" do
     create_clean_test_files ASCIIDOC_BLANK_HDR
-    system "metanorma -t iso #{@dir}/test.adoc"
+    system "metanorma -t iso #{@dir}/test.adoc --no-install-fonts"
     Dir.chdir(@dir) do
       expect(File.exist?("test.xml")).to be true
       expect(File.exist?("test.doc")).to be true
@@ -57,7 +57,7 @@ RSpec.describe Metanorma do
 
   it "processes all extensions of an asciidoc ISO document" do
     create_clean_test_files ASCIIDOC_BLANK_HDR
-    system "metanorma -t iso -x all #{@dir}/test.adoc"
+    system "metanorma -t iso -x all #{@dir}/test.adoc --no-install-fonts"
     Dir.chdir(@dir) do
       expect(File.exist?("test.xml")).to be true
       expect(File.exist?("test.doc")).to be true
@@ -68,7 +68,7 @@ RSpec.describe Metanorma do
 
   it "processes specific extensions of an asciidoc ISO document" do
     create_clean_test_files ASCIIDOC_BLANK_HDR
-    system "metanorma -t iso -x xml,doc #{@dir}/test.adoc"
+    system "metanorma -t iso -x xml,doc #{@dir}/test.adoc --no-install-fonts"
     Dir.chdir(@dir) do
       expect(File.exist?("test.xml")).to be true
       expect(File.exist?("test.doc")).to be true
@@ -81,7 +81,7 @@ RSpec.describe Metanorma do
 
   it "extracts isodoc options from asciidoc file" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    system "metanorma -t iso -x html #{@dir}/test.adoc"
+    system "metanorma -t iso -x html #{@dir}/test.adoc --no-install-fonts"
     Dir.chdir(@dir) do
       html = File.read("test.html", encoding: "UTF-8")
       expect(html).to include "font-family: body-font;"
@@ -92,7 +92,7 @@ RSpec.describe Metanorma do
 
   it "wraps HTML output" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    system "metanorma -w -t iso -x html #{@dir}/test.adoc"
+    system "metanorma -w -t iso -x html #{@dir}/test.adoc --no-install-fonts"
     Dir.chdir(@dir) do
       expect(File.exist?("test/test.html")).to be true
     end
@@ -100,7 +100,7 @@ RSpec.describe Metanorma do
 
   it "keeps Asciimath" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    system "metanorma -a -t iso -x xml #{@dir}/test.adoc"
+    system "metanorma -a -t iso -x xml #{@dir}/test.adoc --no-install-fonts"
     Dir.chdir(@dir) do
       expect(File.exist?("test.xml")).to be true
       xml = File.read("test.xml", encoding: "utf-8")
@@ -111,7 +111,7 @@ RSpec.describe Metanorma do
 
   it "data64 encodes images" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    system "metanorma -d -t iso -x html #{@dir}/test.adoc"
+    system "metanorma -d -t iso -x html #{@dir}/test.adoc --no-install-fonts"
     Dir.chdir(@dir) do
       expect(File.exist?("test.html")).to be true
       html = File.read("test.html", encoding: "utf-8")
@@ -121,7 +121,7 @@ RSpec.describe Metanorma do
 
   it "exports bibdata" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    system "metanorma -R #{@dir}/testrelaton.xml -t iso -x html #{@dir}/test.adoc"
+    system "metanorma -R #{@dir}/testrelaton.xml -t iso -x html #{@dir}/test.adoc --no-install-fonts"
     Dir.chdir(@dir) do
       expect(File.exist?("testrelaton.xml")).to be true
       xml = File.read("testrelaton.xml", encoding: "utf-8")
@@ -131,7 +131,7 @@ RSpec.describe Metanorma do
 
   it "exports bibdata as rxl" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    system "metanorma -x rxl -t iso #{@dir}/test.adoc"
+    system "metanorma -x rxl -t iso #{@dir}/test.adoc --no-install-fonts"
     Dir.chdir(@dir) do
       expect(File.exist?("test.rxl")).to be true
       xml = File.read("test.rxl", encoding: "utf-8")
@@ -141,7 +141,7 @@ RSpec.describe Metanorma do
 
   it "exports assets" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    system "metanorma -x xml -t iso -e extract,sourcecode #{@dir}/test.adoc"
+    system "metanorma -x xml -t iso -e extract,sourcecode #{@dir}/test.adoc --no-install-fonts"
     Dir.chdir(@dir) do
       expect(File.exist?("extract/image/image-0000.png")).to be false
     end
@@ -159,7 +159,7 @@ end
     it "loads the libary and compile document" do
       create_clean_test_files ASCIIDOC_PREAMBLE_HDR
 
-      system "metanorma compile -t iso -r metanorma-iso #{@dir}/test.adoc"
+      system "metanorma compile -t iso -r metanorma-iso #{@dir}/test.adoc --no-install-fonts"
 
       Dir.chdir(@dir) do
         expect(File.exist?("test.xml")).to be true
@@ -178,7 +178,7 @@ end
 
   it "warns when no standard type provided" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    stdout = `metanorma #{@dir}/test.adoc`
+    stdout = `metanorma #{@dir}/test.adoc --no-install-fonts`
     expect(stdout).to include "Please specify a standard type"
   end
 
