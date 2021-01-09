@@ -1,199 +1,135 @@
-require_relative "spec_helper"
 require "tmpdir"
+require "pathname"
+require_relative "spec_helper"
 
 RSpec.describe Metanorma do
   before :all do
-    @dir = Dir.mktmpdir("metanorma_spec")
-    FileUtils.mkdir_p("#{@dir}/spec")
-    FileUtils.cp_r "spec/assets", "#{@dir}/spec/"
+    spec_assets_path = output_path.join("spec")
+
+    FileUtils.mkdir_p(spec_assets_path)
+    FileUtils.cp_r("spec/assets", spec_assets_path)
   end
 
   after :each do
-    Dir.chdir(@dir) do
-      FileUtils.rm_f %w(test.xml
-                        test.html
-                        test.alt.html
-                        test.doc
-                        test.rxl
-                        test test.alt)
-    end
-  end
-
-  def create_clean_test_files(content)
-    File.write(File.join(@dir, "test.adoc"), content, encoding: "UTF-8")
-    Dir.chdir(@dir) do
-      FileUtils.rm_f %w(test.xml
-                        test.html
-                        test.alt.html
-                        test.doc
-                        test.rxl
-                        test test.alt)
-    end
+    cleanup_test_files
   end
 
   it "processes metanorma options inside Asciidoc" do
     create_clean_test_files ASCIIDOC_PREAMBLE_HDR
-    system "metanorma #{@dir}/test.adoc --no-install-fonts"
-    Dir.chdir(@dir) do
-      expect(File.exist?("test.xml")).to be true
-      expect(File.exist?("test.doc")).to be false
-      expect(File.exist?("test.html")).to be true
-      expect(File.exist?("test.alt.html")).to be false
-      xml = File.read("test.xml")
-      expect(xml).to include "</iso-standard>"
-    end
+
+    compile_doc(source_file)
+
+    expect_files_to_exists("test.xml", "test.html")
+    expect_files_to_not_exists("test.doc", "test.alt.html")
+    expect(file_content("test.xml")).to include("</iso-standard>")
   end
 
   it "processes an asciidoc ISO document" do
     create_clean_test_files ASCIIDOC_BLANK_HDR
-    system "metanorma -t iso #{@dir}/test.adoc --no-install-fonts"
-    Dir.chdir(@dir) do
-      expect(File.exist?("test.xml")).to be true
-      expect(File.exist?("test.doc")).to be true
-      expect(File.exist?("test.html")).to be true
-      expect(File.exist?("test.alt.html")).to be true
-    end
+    compile_doc(source_file, "-t iso")
+
+    expect_files_to_exists("test.xml", "test.doc", "test.html", "test.alt.html")
   end
 
   it "processes all extensions of an asciidoc ISO document" do
     create_clean_test_files ASCIIDOC_BLANK_HDR
-    system "metanorma -t iso -x all #{@dir}/test.adoc --no-install-fonts"
-    Dir.chdir(@dir) do
-      expect(File.exist?("test.xml")).to be true
-      expect(File.exist?("test.doc")).to be true
-      expect(File.exist?("test.html")).to be true
-      expect(File.exist?("test.alt.html")).to be true
-    end
+    compile_doc(source_file, "-t iso -x all")
+
+    expect_files_to_exists("test.xml", "test.doc", "test.html", "test.alt.html")
   end
 
   it "processes specific extensions of an asciidoc ISO document" do
     create_clean_test_files ASCIIDOC_BLANK_HDR
-    system "metanorma -t iso -x xml,doc #{@dir}/test.adoc --no-install-fonts"
-    Dir.chdir(@dir) do
-      expect(File.exist?("test.xml")).to be true
-      expect(File.exist?("test.doc")).to be true
-      expect(File.exist?("test.html")).to be false
-      expect(File.exist?("test.alt.html")).to be false
-      xml = File.read("test.xml")
-      expect(xml).to include "</iso-standard>"
-    end
+    compile_doc(source_file, "-t iso -x xml,doc")
+
+    expect_files_to_exists("test.xml", "test.doc")
+    expect_files_to_not_exists("test.html", "test.alt.html")
+    expect(file_content("test.xml")).to include("</iso-standard>")
   end
 
   it "extracts isodoc options from asciidoc file" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    system "metanorma -t iso -x html #{@dir}/test.adoc --no-install-fonts"
-    Dir.chdir(@dir) do
-      html = File.read("test.html", encoding: "UTF-8")
-      expect(html).to include "font-family: body-font;"
-      expect(html).to include "font-family: header-font;"
-      expect(html).to include "font-family: monospace-font;"
-    end
+
+    compile_doc(source_file, "-t iso -x html")
+    html = file_content("test.html")
+
+    expect(html).to include "font-family: body-font;"
+    expect(html).to include "font-family: header-font;"
+    expect(html).to include "font-family: monospace-font;"
   end
 
   it "wraps HTML output" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    system "metanorma -w -t iso -x html #{@dir}/test.adoc --no-install-fonts"
-    Dir.chdir(@dir) do
-      expect(File.exist?("test/test.html")).to be true
-    end
+    compile_doc(source_file, "-w -t iso -x html")
+
+    expect_files_to_exists("test/test.html")
   end
 
   it "keeps Asciimath" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    system "metanorma -a -t iso -x xml #{@dir}/test.adoc --no-install-fonts"
-    Dir.chdir(@dir) do
-      expect(File.exist?("test.xml")).to be true
-      xml = File.read("test.xml", encoding: "utf-8")
-      expect(xml).not_to include %(<stem type="MathML">)
-      expect(xml).to include %(<stem type="AsciiMath">)
-    end
+
+    compile_doc(source_file, "-a -t iso -x xml")
+    xml = file_content("test.xml")
+
+    expect(xml).not_to include('<stem type="MathML">')
+    expect(xml).to include('<stem type="AsciiMath">')
   end
 
   it "data64 encodes images" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    system "metanorma -d -t iso -x html #{@dir}/test.adoc --no-install-fonts"
-    Dir.chdir(@dir) do
-      expect(File.exist?("test.html")).to be true
-      html = File.read("test.html", encoding: "utf-8")
-      expect(html).to include "data:image"
-    end
+    compile_doc(source_file, "-d -t iso -x html")
+
+    expect(file_content("test.html")).to include("data:image")
   end
 
   it "exports bibdata" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    system "metanorma -R #{@dir}/testrelaton.xml -t iso -x html #{@dir}/test.adoc --no-install-fonts"
-    Dir.chdir(@dir) do
-      expect(File.exist?("testrelaton.xml")).to be true
-      xml = File.read("testrelaton.xml", encoding: "utf-8")
-      expect(xml).to include %(<bibdata type="standard">)
-    end
+    filename = "testrelaton.xml"
+    compile_doc(source_file, "-R #{file_path(filename)} -t iso -x html")
+
+    expect(
+      file_content(filename),
+    ).to include('<bibdata type="standard">')
   end
 
   it "exports bibdata as rxl" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    system "metanorma -x rxl -t iso #{@dir}/test.adoc --no-install-fonts"
-    Dir.chdir(@dir) do
-      expect(File.exist?("test.rxl")).to be true
-      xml = File.read("test.rxl", encoding: "utf-8")
-      expect(xml).to include %(<bibdata type="standard">)
-    end
-  end
+    compile_doc(source_file, "-x rxl -t iso")
 
-  it "exports assets" do
-    create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    system "metanorma -x xml -t iso -e extract,sourcecode #{@dir}/test.adoc --no-install-fonts"
-    Dir.chdir(@dir) do
-      expect(File.exist?("extract/image/image-0000.png")).to be false
-    end
-    expect(File.exist?("extract/sourcecode/sourcecode-0000.txt")).to be true
-    expect(File.read("extract/sourcecode/sourcecode-0000.txt", encoding: "utf-8") + "\n").to eq <<~OUTPUT
-def ruby(x)
-  if x < 0 && x > 1
-    return
-  end
-end
-    OUTPUT
+    expect(file_content("test.rxl")).to include('<bibdata type="standard">')
   end
 
   context "with -r option specified" do
     it "loads the libary and compile document" do
       create_clean_test_files ASCIIDOC_PREAMBLE_HDR
+      compile_doc(source_file, "-t iso -r metanorma-iso --no-install-fonts")
 
-      system "metanorma compile -t iso -r metanorma-iso #{@dir}/test.adoc --no-install-fonts"
-
-      Dir.chdir(@dir) do
-        expect(File.exist?("test.xml")).to be true
-        expect(File.exist?("test.doc")).to be false
-        expect(File.exist?("test.html")).to be true
-        expect(File.exist?("test.alt.html")).to be false
-        xml = File.read("test.xml")
-        expect(xml).to include "</iso-standard>"
-      end
+      expect_files_to_exists("test.xml", "test.html")
+      expect_files_to_not_exists("test.doc", "test.alt.html")
+      expect(file_content("test.xml")).to include("</iso-standard>")
     end
   end
 
   it "non-zero exit code when metanorma compile for missing file" do
-    expect(system("metanorma compile not_existing.adoc")).to be false
+    expect(compile_doc("not_existing.adoc")).to be false
   end
 
   it "warns when no standard type provided" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    stdout = `metanorma #{@dir}/test.adoc --no-install-fonts`
+    stdout = `metanorma #{source_file} --no-install-fonts`
     expect(stdout).to include "Please specify a standard type"
   end
 
   it "warns when bogus standard type requested" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    stdout = `metanorma -t bogus_format #{@dir}/test.adoc`
-    expect(stdout).to include "loading gem `metanorma-bogus_format` failed. "\
-                              "Exiting"
+    stdout = `metanorma -t bogus_format #{source_file}`
+    expect(stdout).to include("loading gem `metanorma-bogus_format` failed.")
   end
 
   it "warns when bogus format requested" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    stdout = `metanorma -t iso -f bogus_format #{@dir}/test.adoc`
-    expect(stdout).to include "Only source file format currently supported "\
-                              "is 'asciidoc'"
+    stdout = `metanorma -t iso -f bogus_format #{source_file}`
+    expect(stdout).to include("Only source file format currently supported")
   end
 
   it "warns when no file provided" do
@@ -203,6 +139,63 @@ end
 
   it "gives version information" do
     stdout = `metanorma -v -t iso`
-    expect(stdout).to match /Metanorma::ISO \d/
+    expect(stdout).to match(/Metanorma::ISO \d/)
+  end
+
+  it "exports assets" do
+    create_clean_test_files ASCIIDOC_CONFIGURED_HDR
+
+    compile_doc(source_file, "-x xml -t iso -e extract,sourcecode")
+    output_file = "extract/sourcecode/sourcecode-0000.txt"
+
+    expect_files_to_not_exists("extract/image/image-0000.png")
+    expect(file_content(output_file, false) + "\n").to eq(code_block)
+  end
+
+  def code_block
+    <<~OUTPUT
+      def ruby(x)
+        if x < 0 && x > 1
+          return
+        end
+      end
+    OUTPUT
+  end
+
+  def file_content(file, temp = true)
+    File.read(file_path(file, temp))
+  end
+
+  def cleanup_test_files
+    FileUtils.rm_f(Dir.glob(file_path("test**")))
+  end
+
+  def file_path(file, temp = true)
+    temp == true ? output_path.join(file) : file
+  end
+
+  def source_file
+    @source_file ||= output_path.join("test.adoc")
+  end
+
+  def create_clean_test_files(content)
+    cleanup_test_files
+    File.write(source_file, content, encoding: "UTF-8")
+  end
+
+  def output_path
+    @output_path ||= Pathname.new(Dir.mktmpdir("metanorma_tests"))
+  end
+
+  def compile_doc(source_file, options = "")
+    system("metanorma compile #{options} #{source_file} --agree-to-terms")
+  end
+
+  def expect_files_to_exists(*files)
+    files.each { |file| expect(File.exist?(file_path(file))).to be_truthy }
+  end
+
+  def expect_files_to_not_exists(*files)
+    files.each { |file| expect(File.exist?(file_path(file))).to be_falsey }
   end
 end
