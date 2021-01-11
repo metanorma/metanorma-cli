@@ -67,7 +67,7 @@ module Metanorma
           opts = options.dup
           opts[:format] &&= opts[:format].split(",").map &:to_sym
           opts[:output_folder] = opts.delete :"output-folder"
-          opts[:compile] = opts.slice("agree-to-terms", "no-install-fonts", "continue-without-fonts").map { |k, v| [k.to_sym, v] }.to_h
+          opts[:compile] = opts.select { |k, v| ["agree-to-terms", "no-install-fonts", "continue-without-fonts"].include?(k)}.map { |k, v| [k.to_sym, v] }.to_h
           coll = Metanorma::Collection.parse filename
           coll.render opts
         else UI.say("Need to specify a file to process")
