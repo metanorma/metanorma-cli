@@ -32,9 +32,9 @@ module Metanorma
       option :version, aliases: "-v", desc: "Print version of code (accompanied with -t)"
       option "output-dir", aliases: "-o", desc: "Directory to save compiled files"
 
-      option :agree_to_terms, type: :boolean, desc: "Agree / Disagree with all third-party licensing terms presented (WARNING: do know what you are agreeing with!)"
-      option :no_install_fonts, type: :boolean, desc: "Skip the font installation process"
-      option :continue_without_fonts, type: :boolean, desc: "Continue processing even when fonts are missing"
+      option :"agree-to-terms", type: :boolean, desc: "Agree / Disagree with all third-party licensing terms presented (WARNING: do know what you are agreeing with!)"
+      option :"no-install-fonts", type: :boolean, desc: "Skip the font installation process"
+      option :"continue-without-fonts", type: :boolean, desc: "Continue processing even when fonts are missing"
 
       def compile(file_name = nil)
         if file_name && !options[:version]
@@ -58,12 +58,16 @@ module Metanorma
       option :format, aliases: "-x", type: :string, desc: "Formats to generate"
       option "output-folder", aliases: "-w", required: true, desc: "Directory to save compiled files"
       option :coverpage, aliases: "-c", desc: "Liquid template"
+      option :"agree-to-terms", type: :boolean, desc: "Agree / Disagree with all third-party licensing terms presented (WARNING: do know what you are agreeing with!)"
+      option :"no-install-fonts", type: :boolean, desc: "Skip the font installation process"
+      option :"continue-without-fonts", type: :boolean, desc: "Continue processing even when fonts are missing"
 
       def collection(filename = nil)
         if filename
           opts = options.dup
           opts[:format] &&= opts[:format].split(",").map &:to_sym
           opts[:output_folder] = opts.delete :"output-folder"
+          opts[:compile] = opts.slice("agree-to-terms", "no-install-fonts", "continue-without-fonts").map { |k, v| [k.to_sym, v] }.to_h
           coll = Metanorma::Collection.parse filename
           coll.render opts
         else UI.say("Need to specify a file to process")

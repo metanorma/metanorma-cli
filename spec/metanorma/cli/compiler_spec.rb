@@ -27,7 +27,7 @@ RSpec.describe Metanorma::Cli::Compiler do
       VCR.use_cassette "workgroup_fetch" do
 
         expect do
-          Metanorma::Cli.start(["spec/fixtures/mn-samples-ietf-antioch.adoc"])
+          Metanorma::Cli.start(["spec/fixtures/mn-samples-ietf-antioch.adoc", "--no-install-fonts"])
         end.to raise_error SystemExit
 
         delete_file_if_exist("mn-samples-ietf-antioch.err")
@@ -38,7 +38,7 @@ RSpec.describe Metanorma::Cli::Compiler do
 
     it "write files to specified output dir" do
       VCR.use_cassette "workgroup_fetch" do
-        Metanorma::Cli.start(["spec/fixtures/sample-file.adoc", "-o", "spec/assets"])
+        Metanorma::Cli.start(["spec/fixtures/sample-file.adoc", "-o", "spec/assets", "--no-install-fonts"])
         expect(File.exist?("spec/assets/sample-file.html")).to be true
         expect(File.exist?("spec/assets/sample-file.xml")).to be true
         expect(File.exist?("spec/assets/sample-file.presentation.xml")).to be true
@@ -52,6 +52,7 @@ RSpec.describe Metanorma::Cli::Compiler do
       type: "iso",
       extract_type: [],
       extension_keys: [],
+      :"no-install-fonts" => true
     }
   end
 
