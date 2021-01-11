@@ -19,6 +19,10 @@ module Metanorma
         new.error(message)
       end
 
+      def self.table(header, data)
+        new.print_table(data.unshift(header))
+      end
+
       def self.run(command)
         require "open3"
         Open3.capture3(command)

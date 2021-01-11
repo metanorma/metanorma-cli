@@ -94,6 +94,17 @@ module Metanorma
         UI.say("Couldn't load #{type}, please provide a valid type!")
       end
 
+      desc "list-doctypes", "List supported doctypes"
+      def list_doctypes(type = nil)
+        processors = backend_processors
+
+        if type && processors[type.to_sym]
+          processors = { type.to_sym => processors[type.to_sym] }
+        end
+
+        print_doctypes_table(processors)
+      end
+
       desc "template-repo", "Manage metanorma templates repository"
       subcommand :template_repo, Metanorma::Cli::Commands::TemplateRepo
 
@@ -126,6 +137,13 @@ module Metanorma
         if type
           UI.say(find_backend(type).version)
         end
+      end
+
+      def backend_processors
+        @backend_processors ||= (
+          Metanorma::Cli.load_flavors
+          Metanorma::Registry.instance.processors
+        )
       end
 
       def find_backend(type)
@@ -163,6 +181,18 @@ module Metanorma
         unless Metanorma::Registry.instance.find_processor(type&.to_sym)
           require "metanorma-#{type}"
         end
+      end
+
+      def print_doctypes_table(processors)
+        table_data = processors.map do |type_sym, processor|
+          [
+            type_sym.to_s,
+            processor.input_format,
+            join_keys(processor.output_formats.keys),
+          ]
+        end
+
+        UI.table(["Type", "Input", "Supported output format"], table_data)
       end
     end
   end
