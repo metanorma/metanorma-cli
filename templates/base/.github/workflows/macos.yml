@@ -34,8 +34,6 @@ jobs:
 
       - run: brew install yq metanorma/metanorma/metanorma
 
-      - run: metanorma setup --agree-to-terms
-
       - name: Use Ruby
         uses: ruby/setup-ruby@v1
         with:
