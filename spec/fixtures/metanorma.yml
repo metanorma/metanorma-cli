@@ -32,7 +32,6 @@ metanorma:
 # The collection node data are used in the site title or heading
 # and the organization is used in the copyright area.
 #
-relaton:
   collection:
     organization: "Metanorma : Organization name sample"
     name: "Metanorma: Sample collection name from metanorma.yml"

@@ -2,8 +2,8 @@ require "spec_helper"
 
 RSpec.describe Metanorma::Cli::SiteGenerator do
   describe ".generate" do
-    context "without  manifest file" do
-      it "invokes sets of messages to generate a complete site" do
+    context "without manifest file" do
+      it "detects input documents and generate a complete site" do
         asset_folder = "documents"
         stub_external_interface_calls
         asset_directory = output_directory.join(asset_folder)
@@ -21,7 +21,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         )
       end
 
-      it "converts the collection xml to html and reanmes it to index" do
+      it "converts collection xml to html and renames it to index" do
         stub_external_interface_calls
         collection_xml = "documents.xml"
 
@@ -40,7 +40,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
     end
 
     context "with manifest file" do
-      it "usages the manifest to select files and passes it to relaton" do
+      it "uses the manifest to select files" do
         asset_folder = "documents"
         stub_external_interface_calls
 
@@ -50,7 +50,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           config: source_path.join("metanorma.yml"),
         )
 
-        collection = manifest["relaton"]["collection"]
+        collection = manifest["metanorma"]["collection"]
         manifest_files = select_files_including_wildcard(
           manifest["metanorma"]["source"]["files"],
         )
