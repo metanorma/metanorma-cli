@@ -5,13 +5,13 @@ module Metanorma
   module Cli
     module Commands
       class Site < Thor
-        desc "generate SOURCE_PATH", "Geneate site from collection"
-        option :config, aliases: "-c", desc: "The metanorma configuration file"
+        desc "generate SOURCE_PATH", "Generate site from collection"
+        option :config, aliases: "-c", desc: "Metanorma configuration file"
         option(
           :output_dir,
           aliases: "-o",
           default: Pathname.new(Dir.pwd).join("site").to_s,
-          desc: "Output directory for the generated site",
+          desc: "Output directory for generated site",
         )
 
         def generate(source_path)

@@ -101,11 +101,11 @@ module Metanorma
           ) || [],
 
           collection_name: extract_config_data(
-            manifest["relaton"]["collection"], "name"
+            manifest["metanorma"]["collection"], "name"
           ),
 
           collection_organization: extract_config_data(
-            manifest["relaton"]["collection"], "organization"
+            manifest["metanorma"]["collection"], "organization"
           ),
         }
       rescue NoMethodError
