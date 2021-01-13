@@ -12,6 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
+      - run: echo "ref=${GITHUB_REF}"
+
       - name: Trigger repositories
         env:
           GH_USERNAME: metanorma-ci

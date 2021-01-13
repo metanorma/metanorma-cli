@@ -62,4 +62,4 @@ jobs:
           context: 'tests-passed-successfully'
           description: 'Tests passed successfully'
           state: 'success'
-          sha: ${{ github.event.pull_request.head.sha || github.sha }}
+          sha: ${{ github.event.pull_request.head.ref || github.ref }}
