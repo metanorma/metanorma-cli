@@ -225,8 +225,7 @@ end
 
     files.each do |file|
       file_path = dir_path.join(file).to_s
-      puts file_path
-      expect(File.exist?(file_path)).to be_truthy
+      expect(File.exist?(file_path)).to be_falsey, Dir.glob(dir_path.join("**/**")).join(",")
     end
   end
 
