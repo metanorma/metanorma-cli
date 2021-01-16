@@ -220,7 +220,9 @@ end
 
   def expect_files_to_exists(*files)
     files.each do |file|
-      expect(File.exist?(dir_path.join(file))).to be_truthy
+      file_path = dir_path.join(file).to_s
+      puts file_path
+      expect(File.exist?(file_path)).to be_truthy
     end
   end
 
