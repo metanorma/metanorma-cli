@@ -23,14 +23,15 @@ RSpec.describe Metanorma do
 
   def create_clean_test_files(content)
     File.write(File.join(@dir, "test.adoc"), content, encoding: "UTF-8")
-    Dir.chdir(@dir) do
-      FileUtils.rm_f %w(test.xml
-                        test.html
-                        test.alt.html
-                        test.doc
-                        test.rxl
-                        test test.alt)
-    end
+    cleanup_test_files
+    # Dir.chdir(@dir) do
+    #   FileUtils.rm_f %w(test.xml
+    #                     test.html
+    #                     test.alt.html
+    #                     test.doc
+    #                     test.rxl
+    #                     test test.alt)
+    # end
   end
 
   it "processes metanorma options inside Asciidoc" do
