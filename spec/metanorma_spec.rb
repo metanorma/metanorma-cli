@@ -10,14 +10,15 @@ RSpec.describe Metanorma do
   end
 
   after :each do
-    Dir.chdir(@dir) do
-      FileUtils.rm_f %w(test.xml
-                        test.html
-                        test.alt.html
-                        test.doc
-                        test.rxl
-                        test test.alt)
-    end
+    cleanup_test_files
+    # Dir.chdir(@dir) do
+    #   FileUtils.rm_f %w(test.xml
+    #                     test.html
+    #                     test.alt.html
+    #                     test.doc
+    #                     test.rxl
+    #                     test test.alt)
+    # end
   end
 
   def create_clean_test_files(content)
@@ -209,5 +210,12 @@ end
 
   def tmp_directory
     @tmp_directory ||= Metanorma::Cli.root_path.join("tmp", "acceptance")
+  end
+
+  def cleanup_test_files
+    Dir.chdir(@dir) do
+      files = %w(test.xml test.html test.alt.html test.doc test.rxl test test.alt)
+      FileUtils.rm_f(files)
+    end
   end
 end
