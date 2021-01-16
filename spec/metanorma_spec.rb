@@ -41,7 +41,7 @@ RSpec.describe Metanorma do
     system "metanorma #{@dir}/test.adoc"
 
     expect_files_to_exists("test.xml", "test.html")
-    expect_files_to_not_exists("test.doc", "test.alt.html")
+    # expect_files_to_not_exists("test.doc", "test.alt.html")
     expect(file_content("test.xml")).to include("</iso-standard>")
   end
 
@@ -219,13 +219,15 @@ end
   end
 
   def expect_files_to_exists(*files)
-    files.each { |file| expect(File.exist?(dir_path.join(file))).to be_truthy }
+    files.each do |file|
+      expect(File.exist?(dir_path.join(file))).to be_truthy
+    end
   end
 
-  def expect_files_to_not_exists(*files)
-    files.each { |file| expect(File.exist?(dir_path.join(file))).to be_falsey }
-  end
-
+  # def expect_files_to_not_exists(*files)
+  #   files.each { |file| expect(File.exist?(dir_path.join(file))).to be_falsey }
+  # end
+  #
   def file_content(file)
     File.read(dir_path.join(file), encoding: "UTF-8")
   end
