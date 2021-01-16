@@ -42,7 +42,7 @@ RSpec.describe Metanorma do
 
     expect_files_to_exists("test.xml", "test.html")
     # expect_files_to_not_exists("test.doc", "test.alt.html")
-    expect(file_content("test.xml")).to include("</iso-standard>")
+    expect(file_content("test.xml")).to include("</iso-standard>"), see_all_files_as_error
   end
 
   it "processes an asciidoc ISO document" do
@@ -225,7 +225,7 @@ end
 
     files.each do |file|
       file_path = dir_path.join(file).to_s
-      expect(File.exist?(file_path)).to be_falsey, Dir.glob(dir_path.join("**/**")).join(",")
+      expect(File.exist?(file_path)).to be_falsey, see_all_files_as_error
     end
   end
 
@@ -235,5 +235,9 @@ end
   #
   def file_content(file)
     File.read(dir_path.join(file), encoding: "UTF-8")
+  end
+
+  def see_all_files_as_error
+    Dir.glob(dir_path.join("**/**")).join(",")
   end
 end
