@@ -5,8 +5,10 @@ RSpec.describe Metanorma do
   before :all do
     # @dir = Dir.mktmpdir("metanorma_spec")
     @dir = tmp_directory
-    FileUtils.mkdir_p("#{@dir}/spec")
-    FileUtils.cp_r "spec/assets", "#{@dir}/spec/"
+    spec_assets_path = tmp_directory.join("spec")
+
+    FileUtils.mkdir_p(spec_assets_path)
+    FileUtils.cp_r("spec/assets", spec_assets_path)
   end
 
   after :each do
@@ -206,7 +208,7 @@ end
 
   it "gives version information" do
     stdout = `metanorma -v -t iso`
-    expect(stdout).to match /Metanorma::ISO \d/
+    expect(stdout).to match(/Metanorma::ISO \d/)
   end
 
   def tmp_directory
