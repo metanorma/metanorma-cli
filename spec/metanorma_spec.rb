@@ -3,7 +3,8 @@ require "tmpdir"
 
 RSpec.describe Metanorma do
   before :all do
-    @dir = Dir.mktmpdir("metanorma_spec")
+    # @dir = Dir.mktmpdir("metanorma_spec")
+    @dir = tmp_directory
     FileUtils.mkdir_p("#{@dir}/spec")
     FileUtils.cp_r "spec/assets", "#{@dir}/spec/"
   end
@@ -204,5 +205,9 @@ end
   it "gives version information" do
     stdout = `metanorma -v -t iso`
     expect(stdout).to match /Metanorma::ISO \d/
+  end
+
+  def tmp_directory
+    @tmp_directory ||= Metanorma::Cli.root_path.join("tmp", "acceptance")
   end
 end
