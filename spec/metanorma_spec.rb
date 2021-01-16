@@ -219,6 +219,10 @@ end
   end
 
   def expect_files_to_exists(*files)
+    puts "Test files:"
+    puts files
+    puts dir_path.join(files.first)
+
     files.each do |file|
       file_path = dir_path.join(file).to_s
       puts file_path
