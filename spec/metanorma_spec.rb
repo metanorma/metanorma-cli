@@ -4,8 +4,8 @@ require "tmpdir"
 RSpec.describe Metanorma do
   before :all do
     # @dir = Dir.mktmpdir("metanorma_spec")
-    @dir = tmp_directory
-    spec_assets_path = tmp_directory.join("spec")
+    @dir = dir_path
+    spec_assets_path = dir_path.join("spec")
 
     FileUtils.mkdir_p(spec_assets_path)
     FileUtils.cp_r("spec/assets", spec_assets_path)
@@ -38,15 +38,11 @@ RSpec.describe Metanorma do
 
   it "processes metanorma options inside Asciidoc" do
     create_clean_test_files ASCIIDOC_PREAMBLE_HDR
-    system "metanorma #{@dir}/test.adoc --no-install-fonts"
-    Dir.chdir(@dir) do
-      expect(File.exist?("test.xml")).to be true
-      expect(File.exist?("test.doc")).to be false
-      expect(File.exist?("test.html")).to be true
-      expect(File.exist?("test.alt.html")).to be false
-      xml = File.read("test.xml")
-      expect(xml).to include "</iso-standard>"
-    end
+    system "metanorma #{@dir}/test.adoc"
+
+    expect_files_to_exists("test.xml", "test.html")
+    expect_files_to_not_exists("test.doc", "test.alt.html")
+    expect(file_content("test.xml")).to include("</iso-standard>")
   end
 
   it "processes an asciidoc ISO document" do
@@ -211,8 +207,8 @@ end
     expect(stdout).to match(/Metanorma::ISO \d/)
   end
 
-  def tmp_directory
-    @tmp_directory ||= Metanorma::Cli.root_path.join("tmp", "acceptance")
+  def dir_path
+    @dir_path ||= Metanorma::Cli.root_path.join("tmp", "acceptance")
   end
 
   def cleanup_test_files
@@ -220,5 +216,17 @@ end
       files = %w(test.xml test.html test.alt.html test.doc test.rxl test test.alt)
       FileUtils.rm_f(files)
     end
+  end
+
+  def expect_files_to_exists(*files)
+    files.each { |file| expect(File.exist?(dir_path.join(file))).to be_truthy }
+  end
+
+  def expect_files_to_not_exists(*files)
+    files.each { |file| expect(File.exist?(dir_path.join(file))).to be_falsey }
+  end
+
+  def file_content(file)
+    File.read(dir_path.join(file), encoding: "UTF-8")
   end
 end
