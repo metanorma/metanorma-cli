@@ -11,6 +11,7 @@ module Metanorma
         @asset_folder = options.fetch(:asset_folder, "documents").to_s
         @collection_name = options.fetch(:collection_name, "documents.xml")
         @manifest_file = find_realpath(options.fetch(:config, default_config))
+        @compile_options = options.select { |k, v| ["agree-to-terms", "no-install-fonts", "continue-without-fonts"].include?(k)}.map { |k, v| [k.to_sym, v] }.to_h
 
         ensure_site_asset_directory!
       end
@@ -70,9 +71,9 @@ module Metanorma
       def compile(source)
         UI.info("Compiling #{source} ...")
 
-        Metanorma::Cli::Compiler.compile(
-          source.to_s, format: :asciidoc, "output-dir" => asset_directory
-        )
+        opts = @compile_options.merge(format: :asciidoc, "output-dir" => asset_directory)
+
+        Metanorma::Cli::Compiler.compile(source.to_s, opts)
       end
 
       def convert_to_html_page(collection, page_name)

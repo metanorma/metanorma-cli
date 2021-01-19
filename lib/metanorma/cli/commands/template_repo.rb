@@ -1,9 +1,10 @@
 require "metanorma/cli/template_repo"
+require "metanorma/cli/thor_with_config"
 
 module Metanorma
   module Cli
     module Commands
-      class TemplateRepo < Thor
+      class TemplateRepo < ThorWithConfig
         desc "add NAME SOURCE", "Add new metanorma templates repository"
         option :overwrite, aliases: "-y", type: :boolean, desc: "Overwrite existing template"
 

@@ -1,14 +1,15 @@
-require "thor"
 require "metanorma/cli/compiler"
 require "metanorma/cli/generator"
 require "metanorma/cli/git_template"
+require "metanorma/cli/thor_with_config"
+require "metanorma/cli/commands/config"
 require "metanorma/cli/commands/template_repo"
 require "metanorma/cli/commands/site"
 require "metanorma"
 
 module Metanorma
   module Cli
-    class Command < Thor
+    class Command < ThorWithConfig
       desc "new NAME", "Create new Metanorma document"
       option :type, aliases: "-t", required: true, desc: "Document type"
       option :doctype, aliases: "-d", required: true, desc: "Metanorma doctype"
@@ -31,7 +32,6 @@ module Metanorma
       option :extract, aliases: "-e", desc: "Export sourcecode fragments from this document to nominated directory"
       option :version, aliases: "-v", desc: "Print version of code (accompanied with -t)"
       option "output-dir", aliases: "-o", desc: "Directory to save compiled files"
-
       option :"agree-to-terms", type: :boolean, desc: "Agree / Disagree with all third-party licensing terms presented (WARNING: do know what you are agreeing with!)"
       option :"no-install-fonts", type: :boolean, desc: "Skip the font installation process"
       option :"continue-without-fonts", type: :boolean, desc: "Continue processing even when fonts are missing"
@@ -110,6 +110,9 @@ module Metanorma
 
       desc "site", "Manage site for metanorma collections"
       subcommand :site, Metanorma::Cli::Commands::Site
+
+      desc "config", "Manage configuration file"
+      subcommand :config, Metanorma::Cli::Commands::Config
 
       private
 
