@@ -31,7 +31,7 @@ module Metanorma
       end
 
       def template_config_file
-        @template_config_file ||= Cli.home_directory.join("config.yml")
+        @template_config_file ||= Cli.config_path
       end
 
       def create_template_config

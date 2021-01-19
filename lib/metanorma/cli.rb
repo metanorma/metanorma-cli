@@ -23,6 +23,9 @@ module Metanorma
       "metanorma-itu",
     ]
 
+    CONFIG_DIRNAME = ".metanorma"
+    CONFIG_FILENAME = "config.yml"
+
     PRIVATE_SUPPORTED_GEMS = ["metanorma-ribose", "metanorma-mpfa"]
 
     def self.load_flavors(flavor_names = SUPPORTED_GEMS + PRIVATE_SUPPORTED_GEMS)
@@ -79,7 +82,20 @@ module Metanorma
     end
 
     def self.home_directory
-      Pathname.new(Dir.home).join(".metanorma")
+      Pathname.new(Dir.home).join(CONFIG_DIRNAME)
+    end
+
+    def self.global_config_path
+      home_directory.join(CONFIG_FILENAME)
+    end
+
+    def self.local_config_path
+      Pathname.new(Dir.pwd).join(CONFIG_DIRNAME, CONFIG_FILENAME)
+    end
+
+    def self.config_path(global=false)
+      return global_config_path if global
+      return local_config_path
     end
 
     def self.writable_templates_path?
