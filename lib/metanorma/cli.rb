@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "metanorma"
 require "metanorma/cli/version"
 require "metanorma/cli/errors"
@@ -93,9 +95,10 @@ module Metanorma
       Pathname.new(Dir.pwd).join(CONFIG_DIRNAME, CONFIG_FILENAME)
     end
 
-    def self.config_path(global=false)
+    def self.config_path(global = false)
       return global_config_path if global
-      return local_config_path
+
+      local_config_path
     end
 
     def self.writable_templates_path?

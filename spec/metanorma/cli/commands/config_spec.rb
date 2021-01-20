@@ -18,7 +18,7 @@ RSpec.describe "Config" do
   it "print whole config" do
     config_cli = Metanorma::Cli::Commands::Config.new
 
-    config_cli.get()
+    config_cli.get
 
     expect(File.exist?(@test_config)).to be true
   end
@@ -53,7 +53,7 @@ RSpec.describe "Config" do
     config_cli.set("cli.agree-to-terms", "true")
     config_cli.set("cli.no-install-fonts", "true")
     config_cli.set("cli.continue-without-fonts", "true")
-    
+
     result = Metanorma::Cli::Commands::Config.load_configs(
       {
         :"agree-to-terms" => false,
