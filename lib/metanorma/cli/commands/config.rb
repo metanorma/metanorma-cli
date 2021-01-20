@@ -7,7 +7,7 @@ module Metanorma
         class_option :global, aliases: "-g", type: :boolean, default: false, desc: "Use global config"
 
         desc "get NAME", "Get config value"
-        def get(name=nil)
+        def get(name = nil)
           config_path = Metanorma::Cli.config_path(options.global)
           write_default_config(config_path) unless File.exists?(config_path)
 
@@ -22,16 +22,16 @@ module Metanorma
         end
 
         desc "set NAME VALUE", "Set config value"
-        def set(name, value=nil)
+        def set(name, value = nil)
           config_path = Metanorma::Cli.config_path(options.global)
           write_default_config(config_path) unless File.exists?(config_path)
 
           config = ::YAML::load_file(config_path) || {}
 
           value = case value
-                  when 'true'
+                  when "true"
                     true
-                  when 'false'
+                  when "false"
                     false
                   else
                     value
@@ -60,12 +60,12 @@ module Metanorma
 
         def self.exit_on_failure?() true end
 
-        # priority^
-        # IDEAL: thor defaults -> global conf -> local conf -> env vars -> arguments
-        # ACTUAL: thor defaults -> arguments -> global conf -> local conf
+        # priority:
+        # IDEAL: thor defaults -> global conf -> local conf -> env vars -> passed arguments
+        # ACTUAL: all arguments -> global conf -> local conf
         # - thor doesn't provide to differentiate default values against passed args
         # - thor doesn't allow to get all args available for current command
-        def self.load_configs(options, configs=[Metanorma::Cli.global_config_path, Metanorma::Cli.local_config_path])
+        def self.load_configs(options, configs = [Metanorma::Cli.global_config_path, Metanorma::Cli.local_config_path])
           result = options.dup
           configs.each do |config_path|
             next unless File.exists?(config_path)
