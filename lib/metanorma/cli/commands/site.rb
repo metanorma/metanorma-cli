@@ -19,7 +19,8 @@ module Metanorma
         option :"continue-without-fonts", type: :boolean, desc: "Continue processing even when fonts are missing"
 
         def generate(source_path)
-          Cli::SiteGenerator.generate(source_path, options.dup)
+          opts = options.dup
+          Cli::SiteGenerator.generate(source_path, opts, filter_compile_options(opts))
           UI.say("Site has been generated at #{options[:output_dir]}")
         rescue Cli::Errors::InvalidManifestFileError
           UI.error("Invalid data in: #{options[:config]}")

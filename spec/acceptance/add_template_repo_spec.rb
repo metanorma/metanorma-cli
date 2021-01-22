@@ -6,7 +6,7 @@ RSpec.describe "Metanorma" do
     it "adds a new template to metanorma config" do
       stub_system_home_directory
 
-      command = %w( template-repo add my-iso -y https://github.com/metanorma/mn-iso)
+      command = %w(template-repo add my-iso -y https://github.com/metanorma/mn-iso)
       output = capture_stdout { Metanorma::Cli.start(command) }
 
       expect(output).to include("Template repo: my-iso has been added successfully")
@@ -15,7 +15,7 @@ RSpec.describe "Metanorma" do
     it "returns error for duplicate template" do
       stub_system_home_directory
 
-      command = %w( template-repo add my-iso https://github.com/metanorma/mn-iso)
+      command = %w(template-repo add my-iso https://github.com/metanorma/mn-iso)
       output = capture_stderr { Metanorma::Cli.start(command) }
 
       expect(output).to include("Duplicate metanorma template")

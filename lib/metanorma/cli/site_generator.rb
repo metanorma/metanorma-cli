@@ -5,19 +5,18 @@ require "fileutils"
 module Metanorma
   module Cli
     class SiteGenerator
-      def initialize(source, options = {})
+      def initialize(source, options = {}, compile_options = {})
         @source = find_realpath(source)
         @site_path = options.fetch(:output_dir, "site").to_s
         @asset_folder = options.fetch(:asset_folder, "documents").to_s
         @collection_name = options.fetch(:collection_name, "documents.xml")
         @manifest_file = find_realpath(options.fetch(:config, default_config))
-        @compile_options = options.select { |k, v| ["agree-to-terms", "no-install-fonts", "continue-without-fonts"].include?(k)}.map { |k, v| [k.to_sym, v] }.to_h
-
+        @compile_options = compile_options
         ensure_site_asset_directory!
       end
 
-      def self.generate(source, options = {})
-        new(source, options).generate
+      def self.generate(source, options = {}, compile_options = {})
+        new(source, options, compile_options).generate
       end
 
       def generate
