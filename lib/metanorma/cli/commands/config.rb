@@ -25,16 +25,9 @@ module Metanorma
           config_path = Metanorma::Cli.config_path(options.global)
           config = load_config(config_path)
 
-          value = case value
-                  when "true"
-                    true
-                  when "false"
-                    false
-                  else
-                    value
-                  end
-
-          deep_set(config, value, *dig_path(name))
+          value = try_convert_to_bool(value)
+          ypath = dig_path(name)
+          deep_set(config, value, *ypath)
 
           save_config(config, config_path)
         end
@@ -44,7 +37,8 @@ module Metanorma
           config_path = Metanorma::Cli.config_path(options.global)
           config = load_config(config_path)
 
-          deep_unset(config, *dig_path(name))
+          ypath = dig_path(name)
+          deep_unset(config, *ypath)
 
           save_config(config, config_path)
         end
@@ -61,8 +55,7 @@ module Metanorma
           configs.each do |config_path|
             next unless File.exists?(config_path)
 
-            config_str = File.read(config_path, encoding: "utf-8")
-            config_values = ::YAML::load(config_str, symbolize_names: true)[:cli] || {}
+            config_values = ::YAML::load_file(config_path).symbolize_all_keys[:cli] || {}
             result.merge!(config_values) if config_values
           end
 
@@ -90,7 +83,7 @@ module Metanorma
         def load_config(path)
           save_default_config(path) unless File.exists?(path)
 
-          ::YAML::load(File.read(path, encoding: "utf-8"), symbolize_names: true) || {}
+          ::YAML::load_file(path).symbolize_all_keys || {}
         end
 
         def dig_path(str)
@@ -111,6 +104,17 @@ module Metanorma
           keys[0...-1].reduce(hash) do |acc, h|
             acc.public_send(:[], h)
           end.delete(keys.last)
+        end
+
+        def try_convert_to_bool(value)
+          case value
+          when "true"
+            true
+          when "false"
+            false
+          else
+            value
+          end
         end
       end
     end

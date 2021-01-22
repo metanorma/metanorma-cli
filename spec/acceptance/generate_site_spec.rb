@@ -26,7 +26,7 @@ RSpec.describe "Metanorma" do
       expect(Metanorma::Cli::SiteGenerator).to have_received(:generate).with(
         source_dir.to_s,
         { output_dir: output_dir, :"continue-without-fonts" => true },
-        { :"continue-without-fonts" => true }
+        :"continue-without-fonts" => true
       )
     end
   end
