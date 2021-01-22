@@ -9,11 +9,14 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         asset_directory = output_directory.join(asset_folder)
 
         Metanorma::Cli::SiteGenerator.generate(
-          source_path, output_dir: output_directory
+          source_path,
+          { output_dir: output_directory },
+          { :"continue-without-fonts" => false }
         )
 
         expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
-          sources.first.to_s, format: :asciidoc, "output-dir" => asset_directory
+          sources.first.to_s, format: :asciidoc, "output-dir" => asset_directory,
+          :"continue-without-fonts" => false
         )
 
         expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
@@ -26,7 +29,9 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         collection_xml = "documents.xml"
 
         Metanorma::Cli::SiteGenerator.generate(
-          source_path, output_dir: output_directory
+          source_path,
+          { output_dir: output_directory },
+          { :"continue-without-fonts" => false }
         )
 
         expect(File).to have_received(:rename).with(
@@ -34,7 +39,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         )
 
         expect(Relaton::Cli::XMLConvertor).to have_received(:to_html).with(
-          collection_xml,
+          collection_xml
         )
       end
     end
@@ -46,8 +51,8 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
 
         Metanorma::Cli::SiteGenerator.generate(
           source_path,
-          output_dir: output_directory,
-          config: source_path.join("metanorma.yml"),
+          { output_dir: output_directory, config: source_path.join("metanorma.yml") },
+          { :"continue-without-fonts" => false }
         )
 
         collection = manifest["metanorma"]["collection"]
@@ -60,6 +65,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
             source_path.join(manifest_file).to_s,
             format: :asciidoc,
             "output-dir" => output_directory.join(asset_folder),
+            :"continue-without-fonts" => false
           )
         end
 

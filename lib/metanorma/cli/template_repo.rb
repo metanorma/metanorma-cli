@@ -1,5 +1,7 @@
 require "yaml"
 
+require "metanorma/cli/stringify_all_keys"
+
 module Metanorma
   module Cli
     class TemplateRepo
@@ -27,11 +29,11 @@ module Metanorma
       attr_reader :name, :source, :type, :overwrite
 
       def templates
-        @templates ||= YAML.load(template_config_file.read)
+        @templates ||= YAML.load(template_config_file.read, symbolize_names: true)
       end
 
       def template_config_file
-        @template_config_file ||= Cli.config_path
+        @template_config_file ||= Cli.config_path(true)
       end
 
       def create_template_config
@@ -45,7 +47,8 @@ module Metanorma
       end
 
       def write_to_template_config(templates)
-        File.write(template_config_file, templates.to_yaml)
+        shash = templates.stringify_all_keys
+        File.write(template_config_file, shash.to_yaml)
       end
 
       def add_new_template(name, source, type)

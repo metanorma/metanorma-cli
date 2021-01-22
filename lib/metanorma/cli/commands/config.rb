@@ -1,5 +1,7 @@
 require "pathname"
 
+require "metanorma/cli/stringify_all_keys"
+
 module Metanorma
   module Cli
     module Commands
@@ -9,24 +11,19 @@ module Metanorma
         desc "get NAME", "Get config value"
         def get(name = nil)
           config_path = Metanorma::Cli.config_path(options.global)
-          write_default_config(config_path) unless File.exists?(config_path)
+          config = load_config(config_path)
 
           if name.nil?
             print File.read(config_path, encoding: "utf-8")
           else
-            config = ::YAML::load_file(config_path) || {}
-            ypath = name.split(".").map(&:to_sym)
-
-            print(config.dig(*ypath) || "nil")
+            print(config.dig(*dig_path(name)) || "nil")
           end
         end
 
         desc "set NAME VALUE", "Set config value"
         def set(name, value = nil)
           config_path = Metanorma::Cli.config_path(options.global)
-          write_default_config(config_path) unless File.exists?(config_path)
-
-          config = ::YAML::load_file(config_path) || {}
+          config = load_config(config_path)
 
           value = case value
                   when "true"
@@ -37,25 +34,19 @@ module Metanorma
                     value
                   end
 
-          ypath = name.split(".").map(&:to_sym)
-          deep_set(config, value, *ypath)
+          deep_set(config, value, *dig_path(name))
 
-          p config
-
-          File.write(config_path, config.to_yaml, encoding: "utf-8")
+          save_config(config, config_path)
         end
 
         desc "unset [name]", "Set config [value] for [name]"
         def unset(name)
           config_path = Metanorma::Cli.config_path(options.global)
-          write_default_config(config_path) unless File.exists?(config_path)
+          config = load_config(config_path)
 
-          config = ::YAML::load_file(config_path) || {}
+          deep_unset(config, *dig_path(name))
 
-          ypath = name.split(".").map(&:to_sym)
-          deep_unset(config, *ypath)
-
-          File.write(config_path, config.to_yaml, encoding: "utf-8")
+          save_config(config, config_path)
         end
 
         def self.exit_on_failure?() true end
@@ -69,7 +60,9 @@ module Metanorma
           result = options.dup
           configs.each do |config_path|
             next unless File.exists?(config_path)
-            config_values = ::YAML::load_file(config_path)[:cli] || {}
+
+            config_str = File.read(config_path, encoding: "utf-8")
+            config_values = ::YAML::load(config_str, symbolize_names: true)[:cli] || {}
             result.merge!(config_values) if config_values
           end
 
@@ -80,17 +73,32 @@ module Metanorma
 
         private
 
-        def write_default_config(config_path)
+        def save_config(config, path)
+          shash = config.stringify_all_keys
+          File.write(path, shash.to_yaml, encoding: "utf-8")
+        end
+
+        def save_default_config(config_path)
           unless config_path.exist?
             unless config_path.dirname.exist?
               FileUtils.mkdir_p(config_path.dirname)
             end
-            File.write(config_path, { :cli => nil }.to_yaml, encoding: "utf-8")
+            save_config({ cli: nil }, config_path)
           end
         end
 
+        def load_config(path)
+          save_default_config(path) unless File.exists?(path)
+
+          ::YAML::load(File.read(path, encoding: "utf-8"), symbolize_names: true) || {}
+        end
+
+        def dig_path(str)
+          str.split(".").map(&:to_sym)
+        end
+
         def deep_set(hash, value, *keys)
-          keys[0...-1].inject(hash) do |acc, h|
+          keys[0...-1].reduce(hash) do |acc, h|
             tmp = acc.public_send(:[], h)
             if tmp.nil?
               acc[h] = tmp = Hash.new
@@ -100,7 +108,7 @@ module Metanorma
         end
 
         def deep_unset(hash, *keys)
-          keys[0...-1].inject(hash) do |acc, h|
+          keys[0...-1].reduce(hash) do |acc, h|
             acc.public_send(:[], h)
           end.delete(keys.last)
         end
