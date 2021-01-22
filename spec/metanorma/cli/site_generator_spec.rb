@@ -11,12 +11,12 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         Metanorma::Cli::SiteGenerator.generate(
           source_path,
           { output_dir: output_directory },
-          { :"continue-without-fonts" => false }
+          :"continue-without-fonts" => false
         )
 
         expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
-          sources.first.to_s, format: :asciidoc, "output-dir" => asset_directory,
-          :"continue-without-fonts" => false
+          sources.first.to_s,
+          format: :asciidoc, "output-dir" => asset_directory, :"continue-without-fonts" => false
         )
 
         expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
@@ -31,7 +31,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         Metanorma::Cli::SiteGenerator.generate(
           source_path,
           { output_dir: output_directory },
-          { :"continue-without-fonts" => false }
+          :"continue-without-fonts" => false
         )
 
         expect(File).to have_received(:rename).with(
@@ -52,7 +52,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         Metanorma::Cli::SiteGenerator.generate(
           source_path,
           { output_dir: output_directory, config: source_path.join("metanorma.yml") },
-          { :"continue-without-fonts" => false }
+          :"continue-without-fonts" => false
         )
 
         collection = manifest["metanorma"]["collection"]

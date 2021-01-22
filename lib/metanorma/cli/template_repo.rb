@@ -29,7 +29,7 @@ module Metanorma
       attr_reader :name, :source, :type, :overwrite
 
       def templates
-        @templates ||= YAML.load(template_config_file.read, symbolize_names: true)
+        @templates ||= YAML.load_file(template_config_file).symbolize_all_keys
       end
 
       def template_config_file
@@ -42,7 +42,7 @@ module Metanorma
             FileUtils.mkdir_p(template_config_file.dirname)
           end
 
-          write_to_template_config({templates: []})
+          write_to_template_config(templates: [])
         end
       end
 

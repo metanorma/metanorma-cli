@@ -14,7 +14,8 @@ module Metanorma
           default: Pathname.new(Dir.pwd).join("site").to_s,
           desc: "Output directory for generated site",
         )
-        option :"agree-to-terms", type: :boolean, desc: "Agree / Disagree with all third-party licensing terms presented (WARNING: do know what you are agreeing with!)"
+        option :"agree-to-terms", type: :boolean, desc: "Agree / Disagree with all third-party licensing terms "\
+                                                        "presented (WARNING: do know what you are agreeing with!)"
         option :"no-install-fonts", type: :boolean, desc: "Skip the font installation process"
         option :"continue-without-fonts", type: :boolean, desc: "Continue processing even when fonts are missing"
 
