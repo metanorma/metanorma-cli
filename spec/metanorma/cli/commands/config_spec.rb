@@ -26,9 +26,9 @@ RSpec.describe "Config" do
   it "set -> get" do
     config_cli = Metanorma::Cli::Commands::Config.new
 
-    config_cli.set("cli.agree-to-terms", "true")
+    config_cli.set("cli.agree_to_terms", "true")
 
-    output = capture_stdout { config_cli.get("cli.agree-to-terms") }
+    output = capture_stdout { config_cli.get("cli.agree_to_terms") }
 
     expect(output).to eq("true\n")
 
@@ -38,10 +38,10 @@ RSpec.describe "Config" do
   it "set -> unset -> get" do
     config_cli = Metanorma::Cli::Commands::Config.new
 
-    config_cli.set("cli.agree-to-terms", "true")
-    config_cli.unset("cli.agree-to-terms")
+    config_cli.set("cli.agree_to_terms", "true")
+    config_cli.unset("cli.agree_to_terms")
 
-    output = capture_stdout { config_cli.get("cli.agree-to-terms") }
+    output = capture_stdout { config_cli.get("cli.agree_to_terms") }
 
     expect(output).to eq("nil\n")
 
@@ -50,21 +50,19 @@ RSpec.describe "Config" do
 
   it "config values have bigger priority then args" do
     config_cli = Metanorma::Cli::Commands::Config.new
-    config_cli.set("cli.agree-to-terms", "true")
-    config_cli.set("cli.no-install-fonts", "true")
-    config_cli.set("cli.continue-without-fonts", "true")
+    config_cli.set("cli.agree_to_terms", "true")
+    config_cli.set("cli.no_install_fonts", "true")
+    config_cli.set("cli.continue_without_fonts", "true")
 
     result = Metanorma::Cli::Commands::Config.load_configs(
-      {
-        :"agree-to-terms" => false,
-        :"no-install-fonts" => false,
-        :"continue-without-fonts" => false,
-      },
+      { agree_to_terms: false,
+        no_install_fonts: false,
+        continue_without_fonts: false },
       [@test_config]
     )
 
-    expect(result[:"agree-to-terms"]).to be true
-    expect(result[:"no-install-fonts"]).to be true
-    expect(result[:"continue-without-fonts"]).to be true
+    expect(result[:agree_to_terms]).to be true
+    expect(result[:no_install_fonts]).to be true
+    expect(result[:continue_without_fonts]).to be true
   end
 end

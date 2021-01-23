@@ -70,7 +70,7 @@ module Metanorma
       def compile(source)
         UI.info("Compiling #{source} ...")
 
-        opts = @compile_options.merge(format: :asciidoc, "output-dir" => asset_directory)
+        opts = @compile_options.merge(format: :asciidoc, output_dir: asset_directory)
 
         Metanorma::Cli::Compiler.compile(source.to_s, opts)
       end
