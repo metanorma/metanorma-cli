@@ -39,10 +39,8 @@ module Metanorma
 
       def compile(file_name = nil)
         if file_name && !options[:version]
-          Metanorma::Cli.load_flavors
-          errs = Metanorma::Cli::Compiler.compile(file_name, options)
-          errs.each { |e| Util.log e, :error }
-          exit(1) if errs.any?
+          documents = select_wildcard_documents(file_name) || [file_name]
+          documents.each { |document| compile_document(document, options.dup) }
 
         elsif options[:version]
           invoke(:version, [], type: options[:type], format: options[:format])
@@ -197,6 +195,20 @@ module Metanorma
         end
 
         UI.table(["Type", "Input", "Supported output format"], table_data)
+      end
+
+      def select_wildcard_documents(filename)
+        if filename.include?("*")
+          Dir.glob(Pathname.new(filename))
+        end
+      end
+
+      def compile_document(filename, options)
+        Metanorma::Cli.load_flavors
+        errors = Metanorma::Cli::Compiler.compile(filename, options)
+        errors.each { |error| Util.log(error, :error) }
+
+        exit(1) if errors.any?
       end
     end
   end

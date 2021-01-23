@@ -13,6 +13,18 @@ RSpec.describe "Metanorma" do
       expect(Metanorma::Cli::Compiler,).to have_received(:compile).
         with(sample_asciidoc_file, format: :asciidoc, type: "iso")
     end
+
+    it "supports wildcard document selection" do
+      sample_file_with_wildcard = fixtures_path.join("*.adoc")
+      allow(Metanorma::Cli::Compiler).to receive(:compile).and_return([])
+
+      command = %W(compile -t iso #{sample_file_with_wildcard})
+      capture_stdout { Metanorma::Cli.start(command) }
+
+      expect(Metanorma::Cli::Compiler).to have_received(:compile).thrice
+      expect(Metanorma::Cli::Compiler).to have_received(:compile)
+        .with(sample_asciidoc_file, format: :asciidoc, type: "iso")
+    end
   end
 
   describe "failure" do
@@ -27,9 +39,11 @@ RSpec.describe "Metanorma" do
     end
   end
 
+  def fixtures_path
+    @fixtures_path ||= Metanorma::Cli.root_path.join("spec", "fixtures")
+  end
+
   def sample_asciidoc_file
-    @sample_asciidoc_file ||=
-      Metanorma::Cli.root_path.
-      join("spec", "fixtures", "sample-file.adoc").to_s
+    @sample_asciidoc_file ||= fixtures_path.join("sample-file.adoc").to_s
   end
 end
