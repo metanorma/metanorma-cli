@@ -96,7 +96,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
     end
 
     def output_directory
-      @output_directory ||= Metanorma::Cli.root_path.join("tmp")
+      @output_directory ||= @tmp_dir
     end
 
     def select_files_including_wildcard(files)

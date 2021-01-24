@@ -4,7 +4,7 @@ RSpec.describe Metanorma::Cli::Generator do
   describe ".run" do
     context "default type templates" do
       it "downloads and creates new document" do
-        document = "./tmp/my-document"
+        document = @tmp_dir.join "my-document"
 
         capture_stdout {
           Metanorma::Cli::Generator.run(
@@ -27,7 +27,7 @@ RSpec.describe Metanorma::Cli::Generator do
     #
     context "with custom template" do
       it "downloads and create new document" do
-        document = "./tmp/my-custom-csd"
+        document = @tmp_dir.join "my-custom-csd"
         template = "https://github.com/metanorma/mn-templates-csd"
 
         capture_stdout {
@@ -49,7 +49,7 @@ RSpec.describe Metanorma::Cli::Generator do
 
     context "with invalid template" do
       it "raise and throws an exception" do
-        document = "./tmp/my-invalid-document"
+        document = @tmp_dir.join "my-invalid-document"
         template = "https://github.com/metanorma/mn-templates-invalid"
 
         output = capture_stdout {
@@ -68,7 +68,7 @@ RSpec.describe Metanorma::Cli::Generator do
 
     context "with local template" do
       it "success for existing template" do
-        document = "./tmp/my-local-document"
+        document = @tmp_dir.join "my-local-document"
         template = [Dir.home, ".metanorma", "templates", "csd"].join("/")
 
         capture_stdout {
@@ -93,7 +93,7 @@ RSpec.describe Metanorma::Cli::Generator do
         allow(Metanorma::Cli).to receive(:writable_templates_path?).
           and_raise(Errno::EACCES)
 
-        document = "./tmp/my-document"
+        document = @tmp_dir.join "my-document"
 
         output = capture_stdout {
           Metanorma::Cli::Generator.run(

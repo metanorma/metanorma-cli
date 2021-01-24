@@ -1,6 +1,6 @@
 RSpec.describe "Config" do
   before :each do
-    @test_config = Pathname.new(Dir.tmpdir).join(Metanorma::Cli::CONFIG_FILENAME)
+    @test_config = @tmp_dir.join(Metanorma::Cli::CONFIG_FILENAME)
     FileUtils.rm_f(@test_config)
 
     allow(Metanorma::Cli).to receive(:config_path).and_return(@test_config)
