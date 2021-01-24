@@ -21,7 +21,7 @@ jobs:
           curl -LO --retry 3 https://raw.githubusercontent.com/metanorma/metanorma-build-scripts/master/trigger-gh-actions.sh
           [[ -f ".github/workflows/dependent_repos.env" ]] && source .github/workflows/dependent_repos.env
           CLIENT_PAYLOAD=$(cat <<EOF
-          "{ "ref": "${{ github.event.client_payload.ref }}", "repo": "${GITHUB_REPOSITORY}" }"
+          "{ "ref": "${{ github.event.client_payload.sha }}", "repo": "${GITHUB_REPOSITORY}" }"
           EOF
           )
           for repo in $TEMPLATE_REPOS" $SAMPLES_REPOS"
