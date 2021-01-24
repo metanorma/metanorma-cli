@@ -10,20 +10,18 @@ module Metanorma
 
         desc "get NAME", "Get config value"
         def get(name = nil)
-          config_path = Metanorma::Cli.config_path(options.global)
-          config = load_config(config_path)
+          config, config_path = load_config(options.global)
 
           if name.nil?
-            print File.read(config_path, encoding: "utf-8")
+            UI.say File.read(config_path, encoding: "utf-8")
           else
-            print(config.dig(*dig_path(name)) || "nil")
+            UI.say(config.dig(*dig_path(name)) || "nil")
           end
         end
 
         desc "set NAME VALUE", "Set config value"
         def set(name, value = nil)
-          config_path = Metanorma::Cli.config_path(options.global)
-          config = load_config(config_path)
+          config, config_path = load_config(options.global)
 
           value = try_convert_to_bool(value)
           ypath = dig_path(name)
@@ -34,8 +32,7 @@ module Metanorma
 
         desc "unset [name]", "Set config [value] for [name]"
         def unset(name)
-          config_path = Metanorma::Cli.config_path(options.global)
-          config = load_config(config_path)
+          config, config_path = load_config(options.global)
 
           ypath = dig_path(name)
           deep_unset(config, *ypath)
@@ -56,10 +53,8 @@ module Metanorma
             next unless File.exists?(config_path)
 
             config_values = ::YAML::load_file(config_path).symbolize_all_keys[:cli] || {}
-            result.merge!(config_values) if config_values
+            result.merge!(config_values)
           end
-
-          # TODO override with env vars
 
           result
         end
@@ -80,10 +75,11 @@ module Metanorma
           end
         end
 
-        def load_config(path)
-          save_default_config(path) unless File.exists?(path)
+        def load_config(global_config)
+          config_path = Metanorma::Cli.config_path(global_config)
+          save_default_config(config_path) unless File.exists?(config_path)
 
-          ::YAML::load_file(path).symbolize_all_keys || {}
+          [::YAML::load_file(config_path).symbolize_all_keys || {}, config_path]
         end
 
         def dig_path(str)
