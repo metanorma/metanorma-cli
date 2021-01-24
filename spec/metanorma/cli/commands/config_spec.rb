@@ -30,7 +30,7 @@ RSpec.describe "Config" do
 
     output = capture_stdout { config_cli.get("cli.agree-to-terms") }
 
-    expect(output).to eq("true")
+    expect(output).to eq("true\n")
 
     expect(File.exist?(@test_config)).to be true
   end
@@ -43,7 +43,7 @@ RSpec.describe "Config" do
 
     output = capture_stdout { config_cli.get("cli.agree-to-terms") }
 
-    expect(output).to eq("nil")
+    expect(output).to eq("nil\n")
 
     expect(File.exist?(@test_config)).to be true
   end

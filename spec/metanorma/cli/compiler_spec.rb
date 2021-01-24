@@ -4,14 +4,14 @@ RSpec.describe Metanorma::Cli::Compiler do
   describe ".compile" do
     it "compile a document to desire formats" do
       VCR.use_cassette "workgroup_fetch" do
-      compiler = double("Metanorma::Compile", compile: nil, errors: [])
-      allow(Metanorma::Compile).to receive(:new).and_return(compiler)
+        compiler = double("Metanorma::Compile", compile: nil, errors: [])
+        allow(Metanorma::Compile).to receive(:new).and_return(compiler)
 
-      Metanorma::Cli::Compiler.compile(sample_asciidoc_file, attributes)
+        Metanorma::Cli::Compiler.compile(sample_asciidoc_file, attributes)
 
-      expect(compiler).to have_received(:compile).with(
-        sample_asciidoc_file, attributes
-      )
+        expect(compiler).to have_received(:compile).with(
+          sample_asciidoc_file, attributes
+        )
       end
     end
 
@@ -25,7 +25,6 @@ RSpec.describe Metanorma::Cli::Compiler do
       # skip "seems like it's breaking the test suite"
       # Try to update metanorma gem
       VCR.use_cassette "workgroup_fetch" do
-
         expect do
           Metanorma::Cli.start(["spec/fixtures/mn-samples-ietf-antioch.adoc", "--no-install-fonts"])
         end.to raise_error SystemExit
@@ -52,14 +51,12 @@ RSpec.describe Metanorma::Cli::Compiler do
       type: "iso",
       extract_type: [],
       extension_keys: [],
-      :"no-install-fonts" => true
+      :"no-install-fonts" => true,
     }
   end
 
   def sample_asciidoc_file
-    @sample_asciidoc_file ||=
-      Metanorma::Cli.root_path.
-      join("spec", "fixtures", "sample-file.adoc").to_s
+    @sample_asciidoc_file ||= Metanorma::Cli.root_path.join("spec", "fixtures", "sample-file.adoc").to_s
   end
 
   def delete_file_if_exist(filename)
