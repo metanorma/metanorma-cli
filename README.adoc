@@ -183,8 +183,6 @@ are `ietf`, `iso`, `gb`, `csd`, `csand`, `m3d` and `rsd`.
 
 === Compile a document collection (`metanorma collection`)
 
-(_This is placeholder for more complete documentation later._)
-
 This functionality compiles collections of Metanorma documents. It compiles
 the individual documents comprising the collection; then it compiles a document
 acting as a container for those collections. See 
@@ -198,7 +196,7 @@ which contains:
 * Metadata about the collection
 * A manifest listing the documents contained in the collection, in nested hierarchy
 * Content to put at the beginning of the collection container
-* Content to put at the endeginning of the collection container
+* Content to put at the ending of the collection container
 
 Documents within a collection
 may cross-reference each other using the syntax 
