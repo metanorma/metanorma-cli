@@ -6,7 +6,7 @@ module Metanorma
   module Cli
     module Commands
       class Site < ThorWithConfig
-        desc "generate SOURCE_PATH", "Generate site from collection"
+        desc "generate [SOURCE_PATH]", "Generate site from collection"
         option :config, aliases: "-c", desc: "Metanorma configuration file"
         option(
           :output_dir,
@@ -19,7 +19,7 @@ module Metanorma
         option :no_install_fonts, type: :boolean, desc: "Skip the font installation process"
         option :continue_without_fonts, type: :boolean, desc: "Continue processing even when fonts are missing"
 
-        def generate(source_path)
+        def generate(source_path = Dir.pwd)
           Cli::SiteGenerator.generate(source_path, options, filter_compile_options(options))
           UI.say("Site has been generated at #{options[:output_dir]}")
         rescue Cli::Errors::InvalidManifestFileError

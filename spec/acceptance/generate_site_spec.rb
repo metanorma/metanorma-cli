@@ -29,6 +29,16 @@ RSpec.describe "Metanorma" do
         continue_without_fonts: true
       )
     end
+
+    it "usages pwd as default source path" do
+      allow(Metanorma::Cli::SiteGenerator).to receive(:generate)
+      command = %w(site generate)
+      capture_stdout { Metanorma::Cli.start(command) }
+
+      expect(Metanorma::Cli::SiteGenerator).to have_received(:generate).with(
+        Dir.pwd.to_s, any_args
+      )
+    end
   end
 
   def source_dir
