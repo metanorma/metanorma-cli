@@ -11,12 +11,14 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         Metanorma::Cli::SiteGenerator.generate(
           source_path,
           { output_dir: output_directory },
-          :"continue-without-fonts" => false
+          continue_without_fonts: false
         )
 
         expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
           sources.first.to_s,
-          format: :asciidoc, "output-dir" => asset_directory, :"continue-without-fonts" => false
+          format: :asciidoc,
+          output_dir: asset_directory,
+          continue_without_fonts: false
         )
 
         expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
@@ -31,7 +33,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         Metanorma::Cli::SiteGenerator.generate(
           source_path,
           { output_dir: output_directory },
-          :"continue-without-fonts" => false
+          continue_without_fonts: false
         )
 
         expect(File).to have_received(:rename).with(
@@ -52,7 +54,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         Metanorma::Cli::SiteGenerator.generate(
           source_path,
           { output_dir: output_directory, config: source_path.join("metanorma.yml") },
-          :"continue-without-fonts" => false
+          continue_without_fonts: false
         )
 
         collection = manifest["metanorma"]["collection"]
@@ -64,8 +66,8 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
             source_path.join(manifest_file).to_s,
             format: :asciidoc,
-            "output-dir" => output_directory.join(asset_folder),
-            :"continue-without-fonts" => false
+            output_dir: output_directory.join(asset_folder),
+            continue_without_fonts: false
           )
         end
 
@@ -94,7 +96,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
     end
 
     def output_directory
-      @output_directory ||= Metanorma::Cli.root_path.join("tmp")
+      @output_directory ||= @tmp_dir
     end
 
     def select_files_including_wildcard(files)

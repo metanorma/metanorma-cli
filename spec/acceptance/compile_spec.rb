@@ -11,7 +11,7 @@ RSpec.describe "Metanorma" do
 
       expect(registered_tags[:ogc]).to eq("ogc-standard")
       expect(Metanorma::Cli::Compiler,).to have_received(:compile).
-        with(sample_asciidoc_file, "format" => :asciidoc, "type" => "iso")
+        with(sample_asciidoc_file, format: :asciidoc, type: "iso")
     end
   end
 

@@ -17,7 +17,7 @@ module Metanorma
       option :template, aliases: "-l", desc: "Git hosted remote or local FS template skeleton"
 
       def new(name)
-        create_new_document(name, options.dup)
+        create_new_document(name, options)
       end
 
       desc "compile FILENAME", "Compile to a metanorma document"
@@ -31,16 +31,16 @@ module Metanorma
       option :relaton, aliases: "-R", desc: "Export Relaton XML for document to nominated filename"
       option :extract, aliases: "-e", desc: "Export sourcecode fragments from this document to nominated directory"
       option :version, aliases: "-v", desc: "Print version of code (accompanied with -t)"
-      option "output-dir", aliases: "-o", desc: "Directory to save compiled files"
-      option :"agree-to-terms", type: :boolean, desc: "Agree / Disagree with all third-party licensing terms "\
-                                                      "presented (WARNING: do know what you are agreeing with!)"
-      option :"no-install-fonts", type: :boolean, desc: "Skip the font installation process"
-      option :"continue-without-fonts", type: :boolean, desc: "Continue processing even when fonts are missing"
+      option :output_dir, aliases: "-o", desc: "Directory to save compiled files"
+      option :agree_to_terms, type: :boolean, desc: "Agree / Disagree with all third-party licensing terms "\
+                                                    "presented (WARNING: do know what you are agreeing with!)"
+      option :no_install_fonts, type: :boolean, desc: "Skip the font installation process"
+      option :continue_without_fonts, type: :boolean, desc: "Continue processing even when fonts are missing"
 
       def compile(file_name = nil)
         if file_name && !options[:version]
           Metanorma::Cli.load_flavors
-          errs = Metanorma::Cli::Compiler.compile(file_name, options.dup)
+          errs = Metanorma::Cli::Compiler.compile(file_name, options)
           errs.each { |e| Util.log e, :error }
           exit(1) if errs.any?
 
@@ -57,18 +57,17 @@ module Metanorma
 
       desc "collection FILENAME", "Render HTML pages from XML/YAML colection"
       option :format, aliases: "-x", type: :string, desc: "Formats to generate"
-      option "output-folder", aliases: "-w", required: true, desc: "Directory to save compiled files"
+      option :output_folder, aliases: "-w", required: true, desc: "Directory to save compiled files"
       option :coverpage, aliases: "-c", desc: "Liquid template"
-      option :"agree-to-terms", type: :boolean, desc: "Agree / Disagree with all third-party licensing terms "\
-                                                      "presented (WARNING: do know what you are agreeing with!)"
-      option :"no-install-fonts", type: :boolean, desc: "Skip the font installation process"
-      option :"continue-without-fonts", type: :boolean, desc: "Continue processing even when fonts are missing"
+      option :agree_to_terms, type: :boolean, desc: "Agree / Disagree with all third-party licensing terms "\
+                                                    "presented (WARNING: do know what you are agreeing with!)"
+      option :no_install_fonts, type: :boolean, desc: "Skip the font installation process"
+      option :continue_without_fonts, type: :boolean, desc: "Continue processing even when fonts are missing"
 
       def collection(filename = nil)
         if filename
-          opts = options.dup
+          opts = options
           opts[:format] &&= opts[:format].split(",").map &:to_sym
-          opts[:output_folder] = opts.delete :"output-folder"
           opts[:compile] = filter_compile_options(opts)
           coll = Metanorma::Collection.parse filename
           coll.render opts
