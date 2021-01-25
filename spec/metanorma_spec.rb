@@ -25,7 +25,6 @@ RSpec.describe Metanorma do
   end
 
   it "processes an asciidoc ISO document" do
-    require "byebug"; byebug
     mock_pdf
     mock_sts
     create_clean_test_files ASCIIDOC_BLANK_HDR
