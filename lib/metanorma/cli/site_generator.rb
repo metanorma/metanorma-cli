@@ -70,9 +70,11 @@ module Metanorma
       def compile(source)
         UI.info("Compiling #{source} ...")
 
-        opts = @compile_options.merge(format: :asciidoc, output_dir: asset_directory)
+        options = @compile_options.merge(
+          format: :asciidoc, output_dir: build_asset_output_directory(source)
+        )
 
-        Metanorma::Cli::Compiler.compile(source.to_s, opts)
+        Metanorma::Cli::Compiler.compile(source.to_s, options)
       end
 
       def convert_to_html_page(collection, page_name)
@@ -127,7 +129,22 @@ module Metanorma
         asset_path = [site_path, asset_folder].join("/")
         @asset_directory = Pathname.new(Dir.pwd).join(asset_path)
 
-        FileUtils.mkdir_p(@asset_directory) unless @asset_directory.exist?
+        create_directory_if_not_present!(@asset_directory)
+      end
+
+      def create_directory_if_not_present!(directory)
+        FileUtils.mkdir_p(directory) unless directory.exist?
+      end
+
+      def build_asset_output_directory(source)
+        sub_directory = Pathname.new(source.gsub(@source.to_s, "")).dirname.to_s
+        sub_directory.gsub!("/sources", "")
+        sub_directory.slice!(0)
+
+        output_directory = asset_directory.join(sub_directory)
+        create_directory_if_not_present!(output_directory)
+
+        output_directory
       end
     end
   end
