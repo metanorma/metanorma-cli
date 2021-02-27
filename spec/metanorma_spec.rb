@@ -91,9 +91,7 @@ RSpec.describe Metanorma do
     filename = "testrelaton.xml"
     compile_doc(source_file, "-R #{file_path(filename)} -t iso -x html")
 
-    expect(
-      file_content(filename),
-    ).to include('<bibdata type="standard">')
+    expect(file_content(filename)).to include('<bibdata type="standard">')
   end
 
   it "exports bibdata as rxl" do
@@ -153,11 +151,40 @@ RSpec.describe Metanorma do
     output_file = "extract/sourcecode/sourcecode-0000.txt"
 
     expect_files_to_not_exists("extract/image/image-0000.png")
-    expect(file_content(output_file, false) + "\n").to eq(code_block)
+    expect(file_content(output_file, temp: false)).to eq(code_block)
+  end
+
+  it "config handle not existing values in global config" do
+    stdout = `metanorma config get --global cli.not_exists`
+    expect(stdout).to eq("nil\n")
+  end
+
+  it "config test set global config" do
+    `metanorma config set --global cli.test true`
+    stdout = `metanorma config get --global cli.test`
+    expect(stdout).to eq("true\n")
+    `metanorma config unset --global cli.test`
+    stdout = `metanorma config get --global cli.test`
+    expect(stdout).to eq("nil\n")
+  end
+
+  it "config test set local value" do
+    Dir.mktmpdir("rspec-") do |dir|
+      Dir.chdir(dir) do
+        `metanorma config set cli.not_exists true`
+        stdout = `metanorma config get cli.not_exists`
+        expect(stdout).to eq("true\n")
+      end
+    end
+  end
+
+  it "config handle not existing values in local config" do
+    stdout = `metanorma config get cli.not_exists`
+    expect(stdout).to eq("nil\n")
   end
 
   def code_block
-    <<~OUTPUT
+    <<~OUTPUT.strip
       def ruby(x)
         if x < 0 && x > 1
           return
@@ -166,16 +193,16 @@ RSpec.describe Metanorma do
     OUTPUT
   end
 
-  def file_content(file, temp = true)
-    File.read(file_path(file, temp))
+  def file_content(file, temp: true)
+    File.read(file_path(file, temp: temp))
   end
 
   def cleanup_test_files
     FileUtils.rm_f(Dir.glob(file_path("test**")))
   end
 
-  def file_path(file, temp = true)
-    temp == true ? output_path.join(file) : file
+  def file_path(file, temp: true)
+    temp ? output_path.join(file) : file
   end
 
   def source_file

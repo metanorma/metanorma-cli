@@ -37,11 +37,12 @@ RSpec.describe Metanorma::Cli::Compiler do
 
     it "write files to specified output dir" do
       VCR.use_cassette "workgroup_fetch" do
-        Metanorma::Cli.start(["spec/fixtures/sample-file.adoc", "-o", "spec/assets", "--no-install-fonts"])
-        expect(File.exist?("spec/assets/sample-file.html")).to be true
-        expect(File.exist?("spec/assets/sample-file.xml")).to be true
-        expect(File.exist?("spec/assets/sample-file.presentation.xml")).to be true
-        Dir["spec/assets/sample-file.*"].each { |f| File.delete f }
+        Dir.mktmpdir("rspec-") do |dir|
+          Metanorma::Cli.start(["spec/fixtures/sample-file.adoc", "-o", dir, "--no-install-fonts"])
+          expect(File.exist?("#{dir}/sample-file.html")).to be true
+          expect(File.exist?("#{dir}/sample-file.xml")).to be true
+          expect(File.exist?("#{dir}/sample-file.presentation.xml")).to be true
+        end
       end
     end
   end
