@@ -16,7 +16,7 @@ RSpec.describe "Metanorma" do
       )
 
       expect(Metanorma::Cli::Compiler).to have_received(:compile)
-        .at_least(:twice)
+        .at_least(:once)
         .with(
           kind_of(String),
           hash_including(format: :asciidoc, output_dir: kind_of(Pathname))
@@ -39,10 +39,10 @@ RSpec.describe "Metanorma" do
       )
 
       expect(Metanorma::Cli::Compiler).to have_received(:compile)
-        .at_least(:twice)
+        .at_least(:once)
         .with(
           kind_of(String),
-          hash_including(format: :asciidoc, output_dir: kind_of(Pathname))
+          hash_including(format: :asciidoc, output_dir: kind_of(Pathname), continue_without_fonts: true)
         )
     end
 
@@ -58,6 +58,6 @@ RSpec.describe "Metanorma" do
   end
 
   def source_dir
-    @source_dir ||= Metanorma::Cli.root_path.join("tmp")
+    @source_dir ||= Pathname.new Dir.tmpdir
   end
 end
