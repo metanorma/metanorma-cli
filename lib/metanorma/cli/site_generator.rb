@@ -10,7 +10,11 @@ module Metanorma
         @site_path = options.fetch(:output_dir, "site").to_s
         @asset_folder = options.fetch(:asset_folder, "documents").to_s
         @collection_name = options.fetch(:collection_name, "documents.xml")
+
         @manifest_file = find_realpath(options.fetch(:config, default_config))
+        @template_dir = options.fetch(:template_dir, template_data("path"))
+        @stylesheet = options.fetch(:stylesheet, template_data("stylesheet"))
+
         @compile_options = compile_options
         ensure_site_asset_directory!
       end
@@ -31,8 +35,8 @@ module Metanorma
 
       private
 
-      attr_reader :source, :asset_folder, :asset_directory
-      attr_reader :site_path, :manifest_file, :collection_name
+      attr_reader :source, :asset_folder, :asset_directory, :site_path
+      attr_reader :manifest_file, :collection_name, :stylesheet, :template_dir
 
       def find_realpath(source_path)
         Pathname.new(source_path.to_s).realpath if source_path
@@ -80,8 +84,13 @@ module Metanorma
       def convert_to_html_page(collection, page_name)
         UI.info("Generating html site in #{site_path} ...")
 
-        Relaton::Cli::XMLConvertor.to_html(collection)
+        Relaton::Cli::XMLConvertor.to_html(collection, stylesheet, template_dir)
         File.rename(Pathname.new(collection).sub_ext(".html").to_s, page_name)
+      end
+
+      def template_data(node)
+        template_node = manifest[:template]
+        template_node&.fetch(node.to_s, nil)
       end
 
       def manifest
@@ -109,6 +118,8 @@ module Metanorma
           collection_organization: extract_config_data(
             manifest["metanorma"]["collection"], "organization"
           ),
+
+          template: extract_config_data(manifest["metanorma"], "template"),
         }
       rescue NoMethodError
         raise Errors::InvalidManifestFileError.new("Invalid manifest file")
