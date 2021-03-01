@@ -61,6 +61,26 @@ RSpec.describe "Metanorma" do
         Dir.pwd.to_s, any_args
       )
     end
+
+    it "supports custom template for site" do
+      template_dir = "./tmp/template"
+      stylesheet_path = "./tmp/template/style.css"
+      allow(Metanorma::Cli::SiteGenerator).to receive(:generate)
+
+      command = %W(
+        site generate #{source_dir}
+        --template-dir #{template_dir}
+        --stylesheet #{stylesheet_path}
+      )
+
+      capture_stdout { Metanorma::Cli.start(command) }
+
+      expect(Metanorma::Cli::SiteGenerator).to have_received(:generate).with(
+        source_dir.to_s,
+        hash_including(template_dir: template_dir, stylesheet: stylesheet_path),
+        {}
+      )
+    end
   end
 
   def source_dir

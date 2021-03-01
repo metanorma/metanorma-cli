@@ -35,3 +35,7 @@ metanorma:
   collection:
     organization: "Metanorma : Organization name sample"
     name: "Metanorma: Sample collection name from metanorma.yml"
+
+  template:
+      path: your-custom-template-path
+      stylesheet: stylesheed-file-path

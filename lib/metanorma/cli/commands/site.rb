@@ -18,6 +18,8 @@ module Metanorma
                                                       "presented (WARNING: do know what you are agreeing with!)"
         option :no_install_fonts, type: :boolean, desc: "Skip the font installation process"
         option :continue_without_fonts, type: :boolean, desc: "Continue processing even when fonts are missing"
+        option :stylesheet, alias: "-s", desc: "Stylesheet file path for rendering HTML page"
+        option :template_dir, alias: "-t", desc: "Liquid template directory to render site design"
 
         def generate(source_path = Dir.pwd)
           Cli::SiteGenerator.generate(source_path, options, filter_compile_options(options))

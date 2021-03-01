@@ -41,7 +41,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         )
 
         expect(Relaton::Cli::XMLConvertor).to have_received(:to_html).with(
-          collection_xml
+          collection_xml, nil, nil
         )
       end
     end
@@ -80,6 +80,42 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           "documents.xml",
           title: collection["name"],
           organization: collection["organization"],
+        )
+      end
+    end
+
+    context "custom site template" do
+      it "respectes template options and pass it down to relaton" do
+        stub_external_interface_calls
+
+        template_dir = "template-dir-as-option"
+        stylesheet_path = "stylesheet-as-option"
+
+        Metanorma::Cli::SiteGenerator.generate(
+          source_path,
+          output_dir: output_directory,
+          template_dir: template_dir,
+          stylesheet: stylesheet_path
+        )
+
+        expect(Relaton::Cli::XMLConvertor).to have_received(:to_html).with(
+          "documents.xml", stylesheet_path, template_dir
+        )
+      end
+
+      it "allows us to use manifest file for template" do
+        stub_external_interface_calls
+
+        Metanorma::Cli::SiteGenerator.generate(
+          source_path,
+          output_dir: output_directory,
+          config: source_path.join("metanorma.yml")
+        )
+
+        expect(Relaton::Cli::XMLConvertor).to have_received(:to_html).with(
+          "documents.xml",
+          manifest["metanorma"]["template"]["stylesheet"],
+          manifest["metanorma"]["template"]["path"]
         )
       end
     end
