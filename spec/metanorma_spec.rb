@@ -179,8 +179,11 @@ RSpec.describe Metanorma do
   end
 
   it "config handle not existing values in local config" do
-    stdout = `metanorma config get cli.not_exists`
-    expect(stdout).to eq("nil\n")
+    Dir.mktmpdir("rspec-") do |dir|
+      Dir.chdir(dir) do
+        expect(`metanorma config get cli.not_exists`).to eq("nil\n")
+      end
+    end
   end
 
   def code_block

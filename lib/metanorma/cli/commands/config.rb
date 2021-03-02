@@ -78,13 +78,13 @@ module Metanorma
         def load_config(global_config, create_default_config: true)
           config_path = Metanorma::Cli.config_path(global_config)
 
-          if File.exists?(config_path)
-            [::YAML::load_file(config_path).symbolize_all_keys || {}, config_path]
-          else
-            config_path = Metanorma::Cli.config_path(true) unless create_default_config
-            save_default_config(config_path)
-            [{}, config_path]
+          unless File.exists?(config_path) || create_default_config
+            config_path = Metanorma::Cli.config_path(true)
           end
+
+          save_default_config(config_path)
+
+          [::YAML::load_file(config_path).symbolize_all_keys || {}, config_path]
         end
 
         def dig_path(str)
