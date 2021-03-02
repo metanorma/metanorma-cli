@@ -12,21 +12,19 @@ RSpec.describe "Collection" do
     Metanorma::Cli.start [
       "collection", "collection1.yml", "-x", "html", "-w", RESULTS, "-c", "collection_cover.html", "--no-install-fonts"
     ]
-    expect(File.exist?("#{RESULTS}/index.html")).to be true
-    expect(File.exist?("#{RESULTS}/dummy.html")).to be true
-    expect(File.exist?("#{RESULTS}/rice-amd.final.html")).to be true
-    expect(File.exist?("#{RESULTS}/rice-en.final.html")).to be true
-    expect(File.exist?("#{RESULTS}/rice1-en.final.html")).to be true
+    expect_results
   end
 
   it "Render HTML from XML" do
     Metanorma::Cli.start [
       "collection", "collection1.xml", "-x", "html", "-w", RESULTS, "-c", "collection_cover.html", "--no-install-fonts"
     ]
-    expect(File.exist?("#{RESULTS}/index.html")).to be true
-    expect(File.exist?("#{RESULTS}/dummy.html")).to be true
-    expect(File.exist?("#{RESULTS}/rice-amd.final.html")).to be true
-    expect(File.exist?("#{RESULTS}/rice-en.final.html")).to be true
-    expect(File.exist?("#{RESULTS}/rice1-en.final.html")).to be true
+    expect_results
+  end
+
+  def expect_results
+    %w[index.html dummy.html rice-amd.final.html rice-en.final.html rice1-en.final.html].each do |file|
+      expect(File.exist?(File.join(RESULTS, file))).to be_truthy
+    end
   end
 end

@@ -6,17 +6,14 @@ RSpec.describe Metanorma::Cli::Generator do
       it "downloads and creates new document" do
         document = @tmp_dir.join "my-document"
 
-        capture_stdout {
-          Metanorma::Cli::Generator.run(
-            document, type: "csd", doctype: "standard",
-            overwrite: true
-          )
-        }
+        Metanorma::Cli::Generator.run(
+          document,
+          type: "csd",
+          doctype: "standard",
+          overwrite: true
+        )
 
         expect_document_to_include_base_templates(document)
-        expect(file_exits?(document, "README.adoc")).to be_truthy
-        expect(file_exits?(document, "document.adoc")).to be_truthy
-        expect(file_exits?(document, "sections/01-scope.adoc")).to be_truthy
       end
     end
 
@@ -30,20 +27,15 @@ RSpec.describe Metanorma::Cli::Generator do
         document = @tmp_dir.join "my-custom-csd"
         template = "https://github.com/metanorma/mn-templates-csd"
 
-        capture_stdout {
-          Metanorma::Cli::Generator.run(
-            document,
-            type: "custom-csd",
-            overwrite: true,
-            doctype: "standard",
-            template: template,
-          )
-        }
+        Metanorma::Cli::Generator.run(
+          document,
+          type: "custom-csd",
+          overwrite: true,
+          doctype: "standard",
+          template: template
+        )
 
         expect_document_to_include_base_templates(document)
-        expect(file_exits?(document, "README.adoc")).to be_truthy
-        expect(file_exits?(document, "document.adoc")).to be_truthy
-        expect(file_exits?(document, "sections/01-scope.adoc")).to be_truthy
       end
     end
 
@@ -52,15 +44,15 @@ RSpec.describe Metanorma::Cli::Generator do
         document = @tmp_dir.join "my-invalid-document"
         template = "https://github.com/metanorma/mn-templates-invalid"
 
-        output = capture_stdout {
+        output = capture_stdout do
           Metanorma::Cli::Generator.run(
             document,
             type: "new-csd",
             overwrite: true,
             doctype: "standard",
-            template: template,
+            template: template
           )
-        }
+        end
 
         expect(output).to include("Unable to generate document:")
       end
@@ -71,35 +63,30 @@ RSpec.describe Metanorma::Cli::Generator do
         document = @tmp_dir.join "my-local-document"
         template = [Dir.home, ".metanorma", "templates", "csd"].join("/")
 
-        capture_stdout {
-          Metanorma::Cli::Generator.run(
-            document,
-            type: "csd",
-            overwrite: true,
-            doctype: "standard",
-            template: template,
-          )
-        }
+        Metanorma::Cli::Generator.run(
+          document,
+          type: "csd",
+          overwrite: true,
+          doctype: "standard",
+          template: template
+        )
 
         expect_document_to_include_base_templates(document)
-        expect(file_exits?(document, "README.adoc")).to be_truthy
-        expect(file_exits?(document, "document.adoc")).to be_truthy
-        expect(file_exits?(document, "sections/01-scope.adoc")).to be_truthy
       end
     end
 
     context "no write permission" do
       it "says it out loud with error message" do
-        allow(Metanorma::Cli).to receive(:writable_templates_path?).
-          and_raise(Errno::EACCES)
+        allow(Metanorma::Cli).to receive(:writable_templates_path?)
+          .and_raise(Errno::EACCES)
 
         document = @tmp_dir.join "my-document"
 
-        output = capture_stdout {
+        output = capture_stdout do
           Metanorma::Cli::Generator.run(
             document, type: "csd", doctype: "standard"
           )
-        }
+        end
 
         expect(output).to include("The current user does not have permission to write to this path")
       end
@@ -127,6 +114,10 @@ RSpec.describe Metanorma::Cli::Generator do
   def expect_document_to_include_base_templates(document)
     base_templates.each do |template|
       expect(file_exits?(document, template)).to be_truthy, lambda { template }
+    end
+
+    %w[README.adoc document.adoc sections/01-scope.adoc].each do |file|
+      expect(file_exits?(document, file)).to be_truthy
     end
   end
 end

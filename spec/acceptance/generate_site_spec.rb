@@ -1,9 +1,15 @@
 require "spec_helper"
 
 RSpec.describe "Metanorma" do
+  around(:each) do |example|
+    Dir.mktmpdir("rspec-") do |dir|
+      Dir.chdir(dir) { example.run }
+    end
+  end
+
   describe "site generate" do
     it "generate a mini site" do
-      output_dir = source_dir.join("site").to_s
+      output_dir = Dir.pwd
       allow(Metanorma::Cli::SiteGenerator).to receive(:generate).and_call_original
       allow(Metanorma::Cli::Compiler).to receive(:compile)
       command = %W(site generate #{source_dir} -o #{output_dir})
@@ -24,7 +30,7 @@ RSpec.describe "Metanorma" do
     end
 
     it "generate a mini site with extra compile args" do
-      output_dir = source_dir.join("site").to_s
+      output_dir = Dir.pwd
       allow(Metanorma::Cli::SiteGenerator).to receive(:generate).and_call_original
       allow(Metanorma::Cli::Compiler).to receive(:compile)
       command = %W(site generate #{source_dir} -o #{output_dir} --continue-without-fonts)
@@ -48,8 +54,8 @@ RSpec.describe "Metanorma" do
 
     it "usages pwd as default source path" do
       allow(Metanorma::Cli::SiteGenerator).to receive(:generate)
-      command = %w(site generate)
-      capture_stdout { Metanorma::Cli.start(command) }
+
+      Metanorma::Cli.start(%w(site generate))
 
       expect(Metanorma::Cli::SiteGenerator).to have_received(:generate).with(
         Dir.pwd.to_s, any_args
@@ -58,6 +64,6 @@ RSpec.describe "Metanorma" do
   end
 
   def source_dir
-    @source_dir ||= Pathname.new Dir.tmpdir
+    @source_dir ||= File.expand_path(File.join(File.dirname(__dir__), "fixtures"))
   end
 end
