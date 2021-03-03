@@ -10,9 +10,9 @@ module Metanorma
 
         desc "get NAME", "Get config value"
         def get(name = nil)
-          config, config_path = load_config(options.global)
+          config, config_path = load_config(options[:global], create_default_config: false)
 
-          if name.nil?
+          if name.nil? && File.exists?(config_path)
             UI.say File.read(config_path, encoding: "utf-8")
           else
             UI.say(config.dig(*dig_path(name)) || "nil")
@@ -21,7 +21,7 @@ module Metanorma
 
         desc "set NAME VALUE", "Set config value"
         def set(name, value = nil)
-          config, config_path = load_config(options.global)
+          config, config_path = load_config(options[:global])
 
           value = try_convert_to_bool(value)
           ypath = dig_path(name)
@@ -32,7 +32,7 @@ module Metanorma
 
         desc "unset [name]", "Set config [value] for [name]"
         def unset(name)
-          config, config_path = load_config(options.global)
+          config, config_path = load_config(options[:global])
 
           ypath = dig_path(name)
           deep_unset(config, *ypath)
@@ -75,9 +75,14 @@ module Metanorma
           end
         end
 
-        def load_config(global_config)
+        def load_config(global_config, create_default_config: true)
           config_path = Metanorma::Cli.config_path(global_config)
-          save_default_config(config_path) unless File.exists?(config_path)
+
+          unless File.exists?(config_path) || create_default_config
+            config_path = Metanorma::Cli.config_path(true)
+          end
+
+          save_default_config(config_path)
 
           [::YAML::load_file(config_path).symbolize_all_keys || {}, config_path]
         end
