@@ -15,6 +15,12 @@ module Metanorma
         new.say(["[info]", message].join(": "))
       end
 
+      def self.debug(message, enabled: false)
+        if enabled
+          new.say(["[debug]", message].join(": "))
+        end
+      end
+
       def self.error(message)
         new.error(message)
       end

@@ -1,53 +1,20 @@
 # frozen_string_literal: true
 
 require "metanorma"
+require "metanorma/flavor"
+
 require "metanorma/cli/version"
 require "metanorma/cli/errors"
 require "metanorma/cli/command"
 
 module Metanorma
   module Cli
-    SUPPORTED_GEMS = [
-      "metanorma-iso",
-      "metanorma-iec",
-      "metanorma-ietf",
-      #"metanorma-gb",
-      "metanorma-bipm",
-      "metanorma-cc",
-      "metanorma-csa",
-      "metanorma-iho",
-      "metanorma-m3aawg",
-      "metanorma-generic",
-      "metanorma-standoc",
-      "metanorma-un",
-      "metanorma-nist",
-      "metanorma-ogc",
-      "metanorma-itu",
-    ]
 
     CONFIG_DIRNAME = ".metanorma"
     CONFIG_FILENAME = "config.yml"
 
-    PRIVATE_SUPPORTED_GEMS = ["metanorma-ribose", "metanorma-mpfa"]
-
-    def self.load_flavors(flavor_names = SUPPORTED_GEMS + PRIVATE_SUPPORTED_GEMS)
-      flavor_names.each do |flavor|
-        begin
-          require flavor
-        rescue LoadError
-          unless PRIVATE_SUPPORTED_GEMS.include?(flavor)
-            $stderr.puts "[metanorma] Error: flavor gem #{flavor} not present"
-          end
-        end
-      end
-    end
-
-    def self.load_all_flavors
-      flavor_names = Gem::Specification.find_all do |g|
-        g.name =~ /\Ametanorma-.*\Z/
-      end.map(&:name)
-
-      load_flavors(flavor_names)
+    def self.load_flavors
+      Metanorma::Flavor.load_flavors
     end
 
     # Invoking commands
