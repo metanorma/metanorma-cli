@@ -25,9 +25,8 @@ build:
     - curl -Ls https://raw.githubusercontent.com/metanorma/vista-fonts-installer/master/vista-fonts-installer.sh | bash
     - curl -L --retry 3 https://raw.githubusercontent.com/metanorma/metanorma-build-scripts/master/gemfile-to-bundle-add.sh | bash
     - bundle install
-    - make clean all
-    - make published
-    - mv published public
+    - metanorma site generate sources --output-dir public
+
   artifacts:
     paths:
       - public
