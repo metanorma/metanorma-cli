@@ -10,6 +10,9 @@ require "metanorma"
 module Metanorma
   module Cli
     class Command < ThorWithConfig
+      class_option :no_progress, aliases: "-s", type: :boolean, default: true,
+                                 desc: "Don't show progress for long running tasks (like download)"
+
       desc "new NAME", "Create new Metanorma document"
       option :type, aliases: "-t", required: true, desc: "Document type"
       option :doctype, aliases: "-d", required: true, desc: "Metanorma doctype"

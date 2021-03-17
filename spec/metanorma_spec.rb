@@ -186,6 +186,11 @@ RSpec.describe Metanorma do
     end
   end
 
+  it "metanorma-cli accept --no-progress argument" do
+    create_clean_test_files ASCIIDOC_BLANK_HDR
+    compile_doc(source_file, "-t iso -x xml,doc --no-progress")
+  end
+
   def code_block
     <<~OUTPUT.strip
       def ruby(x)
@@ -222,7 +227,7 @@ RSpec.describe Metanorma do
   end
 
   def compile_doc(source_file, options = "")
-    system("metanorma compile #{options} #{source_file} --agree-to-terms")
+    system("metanorma compile #{options} #{source_file} --no-install-fonts")
   end
 
   def expect_files_to_exists(*files)
