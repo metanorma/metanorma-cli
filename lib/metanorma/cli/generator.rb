@@ -39,7 +39,7 @@ module Metanorma
       # ooption, and in that case it will use that template.
       #
       def self.run(name, type:, doctype:, **options)
-        new(name, options.merge(type: type, doctype: doctype)).run
+        new(name, **options.merge(type: type, doctype: doctype)).run
       end
 
       private
