@@ -53,6 +53,7 @@ RSpec.describe Metanorma::Cli::Compiler do
       extract_type: [],
       extension_keys: [],
       no_install_fonts: true,
+      no_progress: true,
     }
   end
 

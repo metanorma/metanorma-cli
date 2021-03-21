@@ -100,13 +100,9 @@ RSpec.describe Metanorma::Cli::Generator do
   def base_templates
     @base_templates ||= [
       "Gemfile",
-      "Makefile",
       ".gitignore",
       ".github/workflows/docker.yml",
-      ".github/workflows/macos.yml",
-      ".github/workflows/ubuntu.yml",
-      ".github/workflows/windows.yml",
-      "Makefile.win",
+      ".github/workflows/generate.yml",
       ".gitlab-ci.yml",
     ]
   end

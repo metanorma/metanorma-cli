@@ -15,7 +15,7 @@ module Metanorma
 
         def filter_compile_options(options)
           options.select do |k, _|
-            %w[agree_to_terms no_install_fonts continue_without_fonts].include?(k)
+            %w[agree_to_terms no_install_fonts continue_without_fonts no_progress].include?(k)
           end.symbolize_all_keys
         end
       end
