@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "simplecov", "~> 0.15"
   # need for dev because locally compiled metanorma-iso does not have css
   spec.add_development_dependency "sassc"
+  spec.add_development_dependency "rubocop", "~> 1.5.2"
 
   spec.add_runtime_dependency "thor", "~> 1.0"
   spec.add_runtime_dependency "metanorma-iso", "~> 1.7.0"

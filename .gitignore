@@ -22,3 +22,5 @@
 relaton/
 
 *.gem
+
+.rubocop-https--*
