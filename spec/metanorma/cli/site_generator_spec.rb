@@ -26,6 +26,31 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         )
       end
 
+      it "pass --no-progress option to compiler" do
+        asset_folder = "documents"
+        stub_external_interface_calls
+        asset_directory = output_directory.join(asset_folder)
+
+        Metanorma::Cli::SiteGenerator.generate(
+          source_path,
+          { output_dir: output_directory },
+          continue_without_fonts: false,
+          no_progress: false
+        )
+
+        expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
+          sources.first.to_s,
+          format: :asciidoc,
+          output_dir: asset_directory,
+          continue_without_fonts: false,
+          no_progress: false
+        )
+
+        expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
+          asset_folder, "documents.xml", title: "", organization: ""
+        )
+      end
+
       it "converts collection xml to html and renames it to index" do
         stub_external_interface_calls
         collection_xml = "documents.xml"
