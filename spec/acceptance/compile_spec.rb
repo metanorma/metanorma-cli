@@ -37,6 +37,19 @@ RSpec.describe "Metanorma" do
         expect(error.status).to eq(Errno::ENOENT::Errno)
       end
     end
+
+    it "returns with 1 status when metanorma can't handle compilation" do
+      begin
+        capture_stdout {
+          Metanorma::Cli.start(
+            %W(compile #{fixtures_path.join("mn-samples-ietf-antioch.adoc")})
+          )
+        }
+
+      rescue SystemExit => error
+        expect(error.status).to eq(1)
+      end
+    end
   end
 
   def fixtures_path

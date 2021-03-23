@@ -15,26 +15,6 @@ RSpec.describe Metanorma::Cli::Compiler do
       end
     end
 
-    # @TODO: What exactly are we testing here?
-    # The script should exit with non zero status when errors like following occur:
-    #   [metanorma] Error: xmlrfc2 format is not supported for this standard.
-    #   [metanorma] Error: nits format is not supported for this standard.
-    # See issue 151.
-    #
-    it "compile with errors" do
-      # skip "seems like it's breaking the test suite"
-      # Try to update metanorma gem
-      VCR.use_cassette "workgroup_fetch" do
-        expect do
-          Metanorma::Cli.start(["spec/fixtures/mn-samples-ietf-antioch.adoc", "--no-install-fonts"])
-        end.to raise_error SystemExit
-
-        delete_file_if_exist("mn-samples-ietf-antioch.err")
-        delete_file_if_exist("mn-samples-ietf-antioch.rfc.xml")
-        delete_file_if_exist("mn-samples-ietf-antioch.")
-      end
-    end
-
     it "write files to specified output dir" do
       VCR.use_cassette "workgroup_fetch" do
         Dir.mktmpdir("rspec-") do |dir|

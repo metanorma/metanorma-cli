@@ -44,6 +44,9 @@ module Metanorma
         c = Compile.new
         c.compile(file, serialize_options)
         c.errors
+
+      rescue Errno::ENOENT => error
+        [ error ]
       end
 
       def serialize_options
