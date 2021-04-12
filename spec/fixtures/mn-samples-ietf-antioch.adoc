@@ -21,7 +21,7 @@
 :comments: yes
 :notedraftinprogress: yes
 :smart-quotes: false
-:docfile: document.adoc
+:docfile: mn-samples-ietf-antioch.adoc
 :mn-document-class: ietf
 :mn-output-extensions: xmlrfc2,txt,html,nits
 //:mn-output-extensions: rfc,xml,txt,html,rxl
