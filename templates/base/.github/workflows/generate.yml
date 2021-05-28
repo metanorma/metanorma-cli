@@ -11,6 +11,7 @@ on:
       - .github/workflows/test.yml
       - .github/workflows/docker.yml
       - .github/workflows/docker-pres_xml.yml
+  workflow_dispatch:
 
 jobs:
   test-linux:
@@ -40,4 +41,6 @@ jobs:
 
       - uses: actions-mn/setup@master
 
-      - run: metanorma site generate . -o published -c metanorma.yml --agree-to-terms
+      - uses: actions-mn/cli/site-gen@main
+        with:
+          agree-to-terms: true
