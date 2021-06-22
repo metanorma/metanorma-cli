@@ -10,7 +10,6 @@ on:
       - .gitlab-ci.yml
       - .github/workflows/test.yml
       - .github/workflows/docker.yml
-      - .github/workflows/docker-pres_xml.yml
   workflow_dispatch:
 
 jobs:
@@ -38,6 +37,15 @@ jobs:
           path: ~/.fontist
           key: fontist-${{ runner.os }}
           restore-keys: fontist-${{ runner.os }}
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.metanorma-ietf-workgroup-cache.json
+          key: metanorma-ietf-workgroup-cache
+          restore-keys: metanorma-ietf-workgroup-cache
+
+      - if: matrix.os == 'windows-latest'
+        run: rm Gemfile
 
       - uses: actions-mn/setup@master
 
