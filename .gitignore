@@ -20,6 +20,7 @@
 .rspec_status
 .vscode/
 relaton/
+*.log
 
 *.gem
 
