@@ -1,0 +1,60 @@
+directives:
+  - documents-inline
+
+bibdata:
+  title:
+    - language: en
+      content: The International System of Units (SI)
+    - language: fr
+      content: Le Système international d’unités (SI)
+  type: collection
+  docid:
+    type: bipm
+    id: sibrochure
+  edition: 9
+  date:
+    - type: updated
+      value: 2019-05-20
+  copyright:
+    owner:
+      name: Bureau International des Poids et Mesures
+      abbreviation: BIPM
+    from: 2019
+
+# TODO, was CLI option, not yet supported
+output_dir: bilingual-brochure
+
+# TODO, was CLI option, not yet supported
+formats:
+  - xml
+  - html
+  - presentation
+  - pdf
+
+manifest:
+  level: brochure
+  title: Brochure/Brochure
+
+  # TODO, not yet supported
+  # Option 1, specify built files
+  # Option 2, specify source if not built
+  documents:  # was `docref`
+    - source: si-brochure-fr.adoc
+      identifier: si-brochure-fr
+
+      # was `fileref`
+      rendered: site/documents/si-brochure-fr.xml
+
+    - identifier: si-brochure-en
+      source: si-brochure-en.adoc
+      rendered: site/documents/si-brochure-en.xml
+
+# TODO, was CLI option, not yet supported
+cover: collection_cover.html
+
+prefatory-content:
+|
+
+
+final-content:
+|

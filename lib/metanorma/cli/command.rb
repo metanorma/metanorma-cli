@@ -5,6 +5,7 @@ require "metanorma/cli/thor_with_config"
 require "metanorma/cli/commands/config"
 require "metanorma/cli/commands/template_repo"
 require "metanorma/cli/commands/site"
+require "metanorma/cli/collection_parser"
 
 module Metanorma
   module Cli
