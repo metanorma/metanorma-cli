@@ -9,7 +9,7 @@ RSpec.describe Metanorma::Cli::CollectionParser do
 
   def sample_collection_file
     @sample_collection_file ||= Metanorma::Cli.root_path.join(
-      "collection_with_options.yml",
+      "spec", "fixtures", "collection_with_options.yml",
     )
   end
 end
