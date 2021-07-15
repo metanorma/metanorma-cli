@@ -11,8 +11,10 @@ $:.unshift File.expand_path("../../lib", bin_file)
 # Fixes https://github.com/rubygems/rubygems/issues/1420
 require "rubygems/specification"
 
-class Gem::Specification
-  def this; self; end
+module Gem
+  class Specification
+    def this; self; end
+  end
 end
 
 # start up the CLI
