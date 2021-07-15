@@ -17,4 +17,18 @@ end
 
 # start up the CLI
 require "metanorma/cli"
-Metanorma::Cli.start(ARGV)
+metanorma_cli = proc { Metanorma::Cli.start(ARGV) }
+if ENV["SOCKS_PROXY"]
+  require "socksify"
+  require "uri"
+  begin
+    proxy = URI.parse(ENV["SOCKS_PROXY"])
+    Socksify::proxy(proxy.host, proxy.port, &metanorma_cli)
+  rescue URI::InvalidURIError
+    warn "Value of ENV.SOCKS_PROXY=#{ENV['SOCKS_PROXY']} is invalid! Droping it"
+    ENV.delete("SOCKS_PROXY")
+    metanorma_cli.call
+  end
+else
+  metanorma_cli.call
+end
