@@ -37,7 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "sassc"
 
   spec.add_runtime_dependency "metanorma-ietf", "~> 2.3.0"
-  spec.add_runtime_dependency "metanorma-iso", "~> 1.8.0"
+  spec.add_runtime_dependency "metanorma-iso", "~> 1.9.0"
   spec.add_runtime_dependency "thor", "~> 1.0"
   # spec.add_runtime_dependency "metanorma-gb", "~> 1.5.0"
   spec.add_runtime_dependency "metanorma-cc", "~> 1.7.0"
