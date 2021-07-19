@@ -10,16 +10,15 @@ module Metanorma
 
       def remove!
         remove_template
-        return true
+        true
       end
 
       def download
         remove!
         clone_git_template(options[:repo])
-
       rescue Git::GitExecuteError
         UI.say("Invalid template reoository!")
-        return nil
+        nil
       end
 
       def find_or_download
@@ -86,7 +85,7 @@ module Metanorma
           iso: "https://github.com/metanorma/mn-templates-iso",
           iec: "https://github.com/metanorma/mn-templates-iec",
           itu: "https://github.com/metanorma/mn-templates-itu",
-          ietf: "https://github.com/metanorma/mn-templates-ietf"
+          ietf: "https://github.com/metanorma/mn-templates-ietf",
         }
       end
 

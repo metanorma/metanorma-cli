@@ -58,4 +58,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "metanorma-ogc", "~> 1.3.0"
   spec.add_runtime_dependency "metanorma-un", "~> 0.6.0"
   spec.add_runtime_dependency "relaton-cli", ">= 0.8.2"
+
+  spec.add_runtime_dependency "socksify"
 end
