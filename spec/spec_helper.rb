@@ -16,7 +16,7 @@ require "metanorma/cli"
 require "fileutils"
 require "rexml/document"
 require "mn2pdf"
-require "mn2sts"
+require "mnconvert"
 
 Dir["./spec/support/**/*.rb"].sort.each { |file| require file }
 
@@ -168,7 +168,7 @@ def mock_pdf
 end
 
 def mock_sts
-  allow(::Mn2sts).to receive(:convert) do |url, output, c, d|
+  allow(::MnConvert).to receive(:convert) do |url, output, c|
     FileUtils.cp(url.gsub(/"/, ""), output.gsub(/"/, ""))
   end
 end
