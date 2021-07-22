@@ -25,6 +25,11 @@ if ENV["SOCKS_PROXY"]
   require "uri"
   begin
     proxy = URI.parse(ENV["SOCKS_PROXY"])
+    if proxy.userinfo
+      user, pass = proxy.userinfo.split(":")
+      TCPSocket::socks_username = user
+      TCPSocket::socks_password = pass
+    end
     Socksify::proxy(proxy.host, proxy.port, &metanorma_cli)
   rescue URI::InvalidURIError
     warn "Value of ENV.SOCKS_PROXY=#{ENV['SOCKS_PROXY']} is invalid! Droping it"

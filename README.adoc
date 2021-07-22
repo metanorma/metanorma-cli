@@ -324,6 +324,18 @@ the site generation process. You can check more details here: link:./spec/fixtur
 metanorma site generate SOURCE_PATH -o OUTPUT_PATH -c metanorma.yml
 ----
 
+=== Using with proxy
+
+`metanorma` can read proxy settings from environemnt variables:
+
+* `HTTP_PROXY`
+* `SOCKS_PROXY`
+
+`metanorma` uses git under the hood. So proxy must be configured in `~/.gitconfig` separately.
+Check https://gist.github.com/evantoli/f8c23a37eb3558ab8765 for more details
+
+Also as for regular URL you can pass username and password, like `http://username:password@example.com/` for SOCKS it's similar
+
 == Credits
 
 This gem is developed, maintained and funded by https://www.metanorma.com/docs/getting-started/[Ribose Inc.]
