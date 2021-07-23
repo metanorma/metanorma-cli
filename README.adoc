@@ -326,15 +326,18 @@ metanorma site generate SOURCE_PATH -o OUTPUT_PATH -c metanorma.yml
 
 === Using with proxy
 
-`metanorma` can read proxy settings from environemnt variables:
+The `metanorma` command can read proxy settings from the following
+environment variables:
 
-* `HTTP_PROXY`
+* `HTTPS_PROXY` and `HTTP_PROXY`
 * `SOCKS_PROXY`
 
-`metanorma` uses git under the hood. So proxy must be configured in `~/.gitconfig` separately.
-Check https://gist.github.com/evantoli/f8c23a37eb3558ab8765 for more details
+Please refer to our https://www.metanorma.org/blog/2021-07-20/metanorma-with-proxies/[announcement on proxy support] for details.
 
-Also as for regular URL you can pass username and password, like `http://username:password@example.com/` for SOCKS it's similar
+NOTE: Since `metanorma` uses Git for templates (and fonts via Fontist, which also relies on Git),
+Git must also be configured to use proxies. Please refer to
+https://gist.github.com/evantoli/f8c23a37eb3558ab8765[this Gist by evantoli] for details.
+
 
 == Credits
 
