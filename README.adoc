@@ -185,7 +185,7 @@ are `ietf`, `iso`, `gb`, `csd`, `csand`, `m3d` and `rsd`.
 
 This functionality compiles collections of Metanorma documents. It compiles
 the individual documents comprising the collection; then it compiles a document
-acting as a container for those collections. See 
+acting as a container for those collections. See
 https://github.com/metanorma/metanorma/wiki/Metanorma-collections[],
 https://github.com/metanorma/metanorma-cli/blob/master/spec/fixtures/collection1.yml[]
 
@@ -199,7 +199,7 @@ which contains:
 * Content to put at the ending of the collection container
 
 Documents within a collection
-may cross-reference each other using the syntax 
+may cross-reference each other using the syntax
 `* [[[myanchor,repo:(current-metanorma-collection/mydoc)]]]`,
 as proposed in https://github.com/metanorma/metanorma/issues/57, where
 `mydoc` is be the value of docref/identifier corresponding to the target document,
@@ -329,8 +329,8 @@ metanorma site generate SOURCE_PATH -o OUTPUT_PATH -c metanorma.yml
 The `metanorma` command can read proxy settings from the following
 environment variables:
 
-* `HTTPS_PROXY` and `HTTP_PROXY`
-* `SOCKS_PROXY`
+* `HTTP_PROXY` for HTTPS and HTTP proxies
+* `SOCKS_PROXY` for SOCKS proxies
 
 Please refer to our https://www.metanorma.org/blog/2021-07-20/metanorma-with-proxies/[announcement on proxy support] for details.
 
