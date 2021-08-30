@@ -11,14 +11,14 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         Metanorma::Cli::SiteGenerator.generate(
           source_path,
           { output_dir: output_directory },
-          continue_without_fonts: false
+          continue_without_fonts: false,
         )
 
         expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
           sources.first.to_s,
           format: :asciidoc,
           output_dir: asset_directory,
-          continue_without_fonts: false
+          continue_without_fonts: false,
         )
 
         expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
@@ -35,7 +35,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           source_path,
           { output_dir: output_directory },
           continue_without_fonts: false,
-          no_progress: false
+          no_progress: false,
         )
 
         expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
@@ -43,7 +43,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           format: :asciidoc,
           output_dir: asset_directory,
           continue_without_fonts: false,
-          no_progress: false
+          no_progress: false,
         )
 
         expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
@@ -58,7 +58,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         Metanorma::Cli::SiteGenerator.generate(
           source_path,
           { output_dir: output_directory },
-          continue_without_fonts: false
+          continue_without_fonts: false,
         )
 
         expect(File).to have_received(:rename).with(
@@ -78,8 +78,9 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
 
         Metanorma::Cli::SiteGenerator.generate(
           source_path,
-          { output_dir: output_directory, config: source_path.join("metanorma.yml") },
-          continue_without_fonts: false
+          { output_dir: output_directory,
+            config: source_path.join("metanorma.yml") },
+          continue_without_fonts: false,
         )
 
         collection = manifest["metanorma"]["collection"]
@@ -92,7 +93,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
             source_path.join(manifest_file).to_s,
             format: :asciidoc,
             output_dir: output_directory.join(asset_folder),
-            continue_without_fonts: false
+            continue_without_fonts: false,
           )
         end
 
@@ -110,7 +111,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
     end
 
     context "custom site template" do
-      it "respectes template options and pass it down to relaton" do
+      it "respects template options and pass it down to relaton" do
         stub_external_interface_calls
 
         template_dir = "template-dir-as-option"
@@ -120,7 +121,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           source_path,
           output_dir: output_directory,
           template_dir: template_dir,
-          stylesheet: stylesheet_path
+          stylesheet: stylesheet_path,
         )
 
         expect(Relaton::Cli::XMLConvertor).to have_received(:to_html).with(
@@ -134,13 +135,13 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         Metanorma::Cli::SiteGenerator.generate(
           source_path,
           output_dir: output_directory,
-          config: source_path.join("metanorma.yml")
+          config: source_path.join("metanorma.yml"),
         )
 
         expect(Relaton::Cli::XMLConvertor).to have_received(:to_html).with(
           "documents.xml",
           manifest["metanorma"]["template"]["stylesheet"],
-          manifest["metanorma"]["template"]["path"]
+          manifest["metanorma"]["template"]["path"],
         )
       end
     end
