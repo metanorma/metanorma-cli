@@ -69,6 +69,39 @@ option.
 metanorma setup --agree-to-terms
 ----
 
+=== External dependencies
+
+Metanorma CLI has optional and required dependencies. Check out full list to make sure which one is important for you
+
+[cols="1,1,1"]
+|===
+|Dependency |Mandatory | Target component / purpose
+
+|https://git-scm.com/[`git`]
+| :white_check_mark:
+|`metarnoma-cli`, https://github.com/fontist/fontist[`fontist`]
+
+|https://www.oracle.com/java/technologies/[`java`]
+| :white_check_mark:
+|https://github.com/metanorma/mn2pdf[`mn2pdf`], https://github.com/metanorma/metanorma-standoc[`metanorma-standoc`]
+
+|https://xml2rfc.tools.ietf.org/[`xml2rfc`] (`python`)
+| :white_large_square:
+|https://github.com/metanorma/metanorma-ietf[`metanorma-ietf`]
+
+|https://inkscape.org/[`inkscape`]
+| :white_large_square:
+|https://github.com/metanorma/isodoc[`isodoc`], SVG to EMF functionality
+
+|http://www.plantuml.com/[`plantuml`]
+| :white_large_square:
+|https://github.com/metanorma/metanorma-standoc[`metanorma-standoc`]
+
+|https://graphviz.org/[`graphviz`]
+| :white_large_square:
+|https://github.com/lutaml/lutaml[`lutaml`]
+|===
+
 
 === Generate a new Metanorma document using a template  (`metanorma new`)
 
