@@ -71,15 +71,16 @@ metanorma setup --agree-to-terms
 
 === External dependencies
 
-Metanorma CLI has optional and required dependencies. Check out full list to make sure which one is important for you
+The Metanorma toolchain supports certain features when optional dependencies
+are installed. Please refer to the following table for them.
 
 [cols="1,1,1"]
 |===
-|Dependency |Mandatory | Target component / purpose
+|Dependency |Mandatory? | Target component / purpose
 
 |https://git-scm.com/[`git`]
 | :white_check_mark:
-|`metarnoma-cli`, https://github.com/fontist/fontist[`fontist`]
+|`metarnoma-cli` (templates), https://github.com/fontist/fontist[`fontist`]
 
 |https://www.oracle.com/java/technologies/[`java`]
 | :white_check_mark:
@@ -91,15 +92,16 @@ Metanorma CLI has optional and required dependencies. Check out full list to mak
 
 |https://inkscape.org/[`inkscape`]
 | :white_large_square:
-|https://github.com/metanorma/isodoc[`isodoc`], SVG to EMF functionality
+|https://github.com/metanorma/isodoc[`isodoc`], SVG to EMF functionality (for inserting SVGs into Word)
+
+|https://graphviz.org/[`graphviz`]
+| :white_check_mark:
+|https://github.com/lutaml/lutaml[`lutaml`] generation of LutaML diagrams
 
 |http://www.plantuml.com/[`plantuml`]
 | :white_large_square:
-|https://github.com/metanorma/metanorma-standoc[`metanorma-standoc`]
+|https://github.com/metanorma/metanorma-standoc[`metanorma-standoc`] generation of PlantUML diagrams
 
-|https://graphviz.org/[`graphviz`]
-| :white_large_square:
-|https://github.com/lutaml/lutaml[`lutaml`]
 |===
 
 
