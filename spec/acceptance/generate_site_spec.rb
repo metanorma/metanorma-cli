@@ -49,7 +49,11 @@ RSpec.describe "Metanorma" do
         .at_least(:once)
         .with(
           kind_of(String),
-          hash_including(format: :asciidoc, output_dir: kind_of(Pathname), continue_without_fonts: true)
+          hash_including(
+            format: :asciidoc,
+            output_dir: kind_of(Pathname),
+            continue_without_fonts: true,
+          ),
         )
     end
 
@@ -85,6 +89,6 @@ RSpec.describe "Metanorma" do
   end
 
   def source_dir
-    @source_dir ||= File.expand_path(File.join(File.dirname(__dir__), "fixtures"))
+    @source_dir ||= Metanorma::Cli.root_path.join("spec", "fixtures")
   end
 end
