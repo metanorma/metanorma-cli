@@ -1,20 +1,61 @@
 = Installation
 
-You can get the `metanorma` command-line executable by installing this Ruby gem.
+You can get the `metanorma` command-line executable by installing this `Ruby` gem.
 
 [IMPORTANT]
 ====
-To install the Metanorma toolchain we recommend to use one of the ways described in
+To install the Metanorma toolchain we recommend using one of the ways described in
 https://www.metanorma.com/author/topics/install/[Metanorma installation] topic.
 Installing this gem by hand may not be the easiest way.
 
 When following this installation method, to start building documents you may have to take care
 of manually installing some required third-party software as well.
-Which exactly depends on what documents you’re building, below notes cover some of that.
+This exactly depends on what documents you’re building, below notes cover some of that.
 ====
 
 
+== Install Ruby
+
+== macOS
+
+Ruby already pre-installed, but it's may be outdated. So recommended to install it from https://brew.sh/[`brew`]
+
+[source,console]
+----
+xcode-select —install
+brew install rbenv
+rbenv install 2.7.4
+----
+
+== Linux
+
+Ruby maybe not pre-installed on your Linux distribution, https://www.ruby-lang.org/en/documentation/installation[follow the official guide] to install it
+
+== Windows
+
+Ruby is not pre-installed on Windows in comparison to macOS and most Linux
+
+Probably the easiest way to install it with `RubyInstaller` (as described in https://www.ruby-lang.org/en/documentation/installation[the official guide])
+
+If you need some automated way to install, we recommend using https://chocolatey.org/install[chocolatey] and commands below:
+
+[source,console]
+----
+choco install -y msys2 ruby
+refreshenv
+ridk install 3
+----
+
+Those commands will work with PowerShell and CMD
+
+== Other
+
+If you have some issues with Ruby installation checkout https://www.ruby-lang.org/en/documentation/installation[the official guide]
+
+
 == Installing the Metanorma CLI gem
+
+Once Ruby is installed, you can get metanorma
 
 [source,console]
 ----
@@ -29,18 +70,11 @@ Installing the gem will also install all officially supported Metanorma flavors
 
 === Java
 
-You will have to have a Java runtime installed. (Use `brew cask install java` on macOS.)
+You will have to have a Java runtime installed. Use
 
-=== Puppeteer
-
-*If you are going to generate PDFs from HTML* (which applies to CalConnect Standard Documents),
-you will also need to install the https://github.com/GoogleChrome/puppeteer[Puppeteer] Node library.
-
-* Ensure you have Node of at least version 7.6.0:
-** https://nodejs.org/en/download/
-** On macOS you should be able to `brew install node`
-* Ensure you have NPM: https://docs.npmjs.com/getting-started/installing-node
-* Install Puppeteer globally in your system: `npm install -g --save --save-exact puppeteer`
+* `brew cask install java` - on macOS
+* Linux is diverse, you can follow https://www.java.com/en/download/help/linux_install.html[the official instructions]
+* `choco install -y javaruntime` - on Windows
 
 === PlantUML
 
@@ -50,12 +84,61 @@ PlantUML will have to be installed.
 * `brew install plantuml` on MacOS.
 * For Linux, link the PlantUML jar file into a command line executable; see
 `.travis.yml` for an example.
+* `choco install -y plantuml`
 
 If PlantUML is not installed locally, the source PlantUML is incorporated into
 the output document as sourcecode.
 
+=== Graphviz
 
-== Installation notes for Windows
+Needed by `LutaML` to draw diagrams
 
-To be able to compile gem with a native extension you must have `RIDK` installed.
-If you are installing metanorma with chocolatey installation script will do this for you
+* `brew install graphviz` - on macOS
+* `choco install -y graphviz` - on Windows
+
+For Linux use https://graphviz.org/download/#linux[available packages] (`apt` or `yum`)
+
+=== xml2rfc
+
+`xml2rfc` is Python's package which required for `IETF`
+
+To install python:
+
+* `brew install python3` - on macOS
+* `choco install -y python` - on Windows
+
+Then install `xml2rfc` with:
+
+[source,console]
+----
+pip3 install xml2rfc
+----
+
+=== Inkscape
+
+Optional dependency. Inkscape is needed for `SVG` to `EMF` functionality. 
+
+* `brew install inkscape` - on macOS
+* `choco install -y python` - on Windows
+* https://inkscape.org/release/[Linux instructions]
+
+=== LaTeXML
+
+Optional dependency. `LaTeXML` is needed for Metanorma for LaTeX functionality.
+
+Most of the packages from various package manager listed on https://dlmf.nist.gov/LaTeXML/get.html are outdated
+
+Originally `LaTeXML` is a `perl` module so more reliable way to install it with https://metacpan.org/dist/App-cpanminus/view/bin/cpanm[`cpanm` package manager]
+
+[source,console]
+----
+curl -L https://cpanmin.us | perl - --sudo App::cpanminus
+cpanm --notest LaTeXML
+# or
+cpanm --notest git://github.com/brucemiller/LaTeXML.git@9a0e7dc5
+----
+
+But it also can be installed with (but always check the version, because it may be outdated):
+* `snap install latexml` - on Linux
+* `choco install -y latexml` - on Windows
+* `brew install latexml` - on macOS

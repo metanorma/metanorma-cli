@@ -51,24 +51,20 @@ $ metanorma -t mpfd -r metanorma-mpfd mpfd-bpn.adoc
 
 [source,sh]
 ----
-$ metanorma -h
-Usage: metanorma [options] <file>
-  -t, --type TYPE                       Type of standard to generate: rfc2, rfc3, iso, gb, csd, csand, m3d
-  -x, --extensions EXT1,EXT2,... | all  Type of extension to generate per type:
-  {
-    :rfc2=>{:xmlrfc=>"v2.xml"},
-    :rfc3=>{:xmlrfc=>"v3.xml"},
-    :iso=>{:html=>"html", :html_alt=>"alt.html", :doc=>"doc"},
-    :gb=>{:html=>"html", :doc=>"doc"},
-    :csd=>{:html=>"html", :pdf=>"pdf"},
-    :csand=>{:html=>"html"},
-    :m3d=>{:html=>"html", :doc=>"doc"},
-    :rsd=>{:html=>"html"}
-  }
-  In addition, xml (outside of rfc2, rfc3) generates IsoDoc XML. If the argument is "all" or the option is
-  missing, all available extensions are generated.
-  -f, --format FORMAT              Format of source file: asciidoc (current default, only format supported)
-  -r, --require LIBRARY            Require LIBRARY prior to execution
-  -w, --wrapper                    Create wrapper folder for HTML output
-  -h, --help                       Show this message
+$ metanorma help
+Commands:
+  metanorma collection FILENAME -w, --output-folder=OUTPUT_FOLDER  # Render HTML pages from XML/YAML colection
+  metanorma compile FILENAME                                       # Compile to a metanorma document
+  metanorma config                                                 # Manage configuration file
+  metanorma help [COMMAND]                                         # Describe available commands or one specific command
+  metanorma list-doctypes                                          # List supported doctypes
+  metanorma list-extensions                                        # List supported extensions
+  metanorma new NAME -d, --doctype=DOCTYPE -t, --type=TYPE         # Create new Metanorma document
+  metanorma site                                                   # Manage site for metanorma collections
+  metanorma template-repo                                          # Manage metanorma templates repository
+  metanorma version                                                # Version of the code
+
+Options:
+  -s, [--no-progress], [--no-no-progress]  # Don't show progress for long running tasks (like download)
+                                           # Default: true
 ----
