@@ -25,7 +25,7 @@ gem install metanorma-cli
 This will install the `metanorma` executable, which you can use with all
 officially supported Metanorma flavors (such as ISO, CalConnect, IETF, etc).
 
-However, a number of dependencies (such as Puppeteer and LaTeXML) are not
+However, a number of <<external-dependencies,dependencies>> are not
 installed with this gem, and have to be installed separately.
 The process of installing the full suite can be a little more complex.
 
