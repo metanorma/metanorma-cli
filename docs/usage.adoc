@@ -15,7 +15,7 @@ or
 $ metanorma --type iso -x html iso-my-standard-document.adoc
 ----
 
-if type and extensions not defined in adoc header
+if type and extensions are not defined in adoc header
 
 == Full syntax & options
 
