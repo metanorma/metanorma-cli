@@ -78,6 +78,7 @@ module Metanorma
           format: :asciidoc, output_dir: build_asset_output_directory(source)
         )
 
+        options[:baseassetpath] = Pathname.new(source.to_s).dirname.to_s
         Metanorma::Cli::Compiler.compile(source.to_s, options)
       end
 

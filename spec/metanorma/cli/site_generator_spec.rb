@@ -16,6 +16,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
 
         expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
           sources.first.to_s,
+          baseassetpath: source_path.to_s,
           format: :asciidoc,
           output_dir: asset_directory,
           continue_without_fonts: false,
@@ -40,6 +41,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
 
         expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
           sources.first.to_s,
+          baseassetpath: source_path.to_s,
           format: :asciidoc,
           output_dir: asset_directory,
           continue_without_fonts: false,
@@ -91,6 +93,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         manifest_files.each do |manifest_file|
           expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
             source_path.join(manifest_file).to_s,
+            baseassetpath: source_path.to_s,
             format: :asciidoc,
             output_dir: output_directory.join(asset_folder),
             continue_without_fonts: false,
