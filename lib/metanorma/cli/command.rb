@@ -1,5 +1,6 @@
 require "metanorma/cli/compiler"
 require "metanorma/cli/generator"
+require "metanorma/cli/collection"
 require "metanorma/cli/git_template"
 require "metanorma/cli/thor_with_config"
 require "metanorma/cli/commands/config"
@@ -67,12 +68,11 @@ module Metanorma
 
       def collection(filename = nil)
         if filename
-          opts = options
-          opts[:format] &&= opts[:format].split(",").map &:to_sym
-          opts[:compile] = filter_compile_options(opts)
-          coll = Metanorma::Collection.parse filename
-          coll.render opts
-        else UI.say("Need to specify a file to process")
+          coll_options = options.dup
+          coll_options[:compile] = filter_compile_options(coll_options)
+          Metanorma::Cli::Collection.render(filename, coll_options)
+        else
+          UI.say("Need to specify a file to process")
         end
       rescue ArgumentError => e
         UI.say e.message

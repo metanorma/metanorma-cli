@@ -1,30 +1,18 @@
-RESULTS = "spec/results".freeze
+require "spec_helper"
 
-RSpec.describe "Collection" do
-  around(:each) do |example|
-    Dir.mktmpdir("rspec-") do |dir|
-      FileUtils.cp Dir.glob("spec/fixtures/*"), dir
-      Dir.chdir(dir) { example.run }
+RSpec.describe Metanorma::Cli::Collection do
+  describe ".render" do
+    context "with specified options" do
+      it "compiles and renders the collection files" do
+        allow(Metanorma::Collection).to receive_message_chain(:parse, :render)
+        Metanorma::Cli::Collection.render(collection_file, format: "html")
+      end
     end
   end
 
-  it "render HTML from YAML" do
-    Metanorma::Cli.start [
-      "collection", "collection1.yml", "-x", "html", "-w", RESULTS, "-c", "collection_cover.html", "--no-install-fonts"
-    ]
-    expect_results
-  end
-
-  it "Render HTML from XML" do
-    Metanorma::Cli.start [
-      "collection", "collection1.xml", "-x", "html", "-w", RESULTS, "-c", "collection_cover.html", "--no-install-fonts"
-    ]
-    expect_results
-  end
-
-  def expect_results
-    %w[index.html dummy.html rice-amd.final.html rice-en.final.html rice1-en.final.html].each do |file|
-      expect(File.exist?(File.join(RESULTS, file))).to be_truthy
-    end
+  def collection_file
+    @collection_file ||= Metanorma::Cli.root_path.join(
+      "spec", "fixtures", "collection1.yml"
+    )
   end
 end
