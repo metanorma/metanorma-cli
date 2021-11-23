@@ -162,14 +162,14 @@ ISOXML_BLANK_HDR = <<~"HDR"
 HDR
 
 def mock_pdf
-  allow(::Mn2pdf).to receive(:convert) do |url, output, c, d|
+  allow(::Mn2pdf).to receive(:convert) do |url, output, _c, _d|
     FileUtils.cp(url.gsub(/"/, ""), output.gsub(/"/, ""))
   end
 end
 
 def mock_sts
-  allow(::MnConvert).to receive(:convert) do |url, output, c|
+  allow(::MnConvert).to receive(:convert) do |url, opts|
+    output = opts[:output_file] || "fake.xml"
     FileUtils.cp(url.gsub(/"/, ""), output.gsub(/"/, ""))
   end
 end
-

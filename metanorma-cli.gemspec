@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rubocop", "~> 1.5.2"
   spec.add_development_dependency "sassc"
 
+  spec.add_runtime_dependency "mnconvert"
   spec.add_runtime_dependency "metanorma-ietf", "~> 2.5.0"
   spec.add_runtime_dependency "metanorma-iso", "~> 1.10.0"
   spec.add_runtime_dependency "thor", "~> 1.0"
