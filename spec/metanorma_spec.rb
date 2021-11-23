@@ -192,6 +192,22 @@ RSpec.describe Metanorma do
     compile_doc(source_file, "-t iso -x xml,doc --no-progress")
   end
 
+  %w[rfc sts].each do |type|
+    it "metanorma-cli convert #{type}" do
+      input_fname = "mnconvert_#{type}.xml"
+      input = File.join(File.dirname(__FILE__), "assets", input_fname)
+      Dir.mktmpdir("rspec-") do |dir|
+        Dir.chdir(dir) do
+          tmp_input = File.join(Dir.pwd, input_fname)
+          result = File.join(Dir.pwd, "result.xml")
+          FileUtils.cp input, tmp_input
+          `metanorma convert #{tmp_input} --output-file #{result} --debug`
+          expect_files_to_exists(result)
+        end
+      end
+    end
+  end
+
   def code_block
     <<~OUTPUT.strip
       def ruby(x)

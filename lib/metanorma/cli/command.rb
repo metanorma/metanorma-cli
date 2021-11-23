@@ -5,6 +5,7 @@ require "metanorma/cli/thor_with_config"
 require "metanorma/cli/commands/config"
 require "metanorma/cli/commands/template_repo"
 require "metanorma/cli/commands/site"
+require "mnconvert"
 
 module Metanorma
   module Cli
@@ -74,6 +75,36 @@ module Metanorma
         else UI.say("Need to specify a file to process")
         end
       rescue ArgumentError => e
+        UI.say e.message
+      end
+
+      desc "convert FILENAME", "Convert STS XML to Metanorma adoc"
+      option :output_format,
+             type: :string,
+             desc: "Output format: xml|adoc|iso|niso"
+      option :output_file, type: :string, desc: "Output file"
+      option :imagesdir,
+             type: :string,
+             desc: "For STS input only: folder with images"
+      option :input_format,
+             type: :string,
+             desc: "Input format: metanorma|sts|rfc"
+      option :debug, type: :boolean, desc: "Enable debug output"
+      option :sts_type,
+             type: :string,
+             desc: "For STS input only: type of standard to generate"
+      option :check_type, type: :string, desc: "Check against XSD/DTD"
+      option :xsl_file, type: :string, desc: "Path to XSL file"
+      option :split_bibdata,
+             type: :boolean,
+             desc: "For STS input only: create MN Adoc and Relaton XML"
+      option :semantic,
+             type: :boolean,
+             desc: "For STS input only: generate semantic XML"
+
+      def convert(inputfile)
+        MnConvert.convert(inputfile, options)
+      rescue Error => e
         UI.say e.message
       end
 
