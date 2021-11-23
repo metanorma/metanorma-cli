@@ -1,4 +1,4 @@
-require "uri"
+require "uri" if /^2\./.match?(RUBY_VERSION)
 require "pathname"
 require "fileutils"
 require "metanorma/cli/ui"
