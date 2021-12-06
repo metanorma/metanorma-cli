@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
+Encoding.default_internal = "utf-8"
+Encoding.default_external = "utf-8"
+
 # resolve bin path, ignoring symlinks
 require "pathname"
 bin_file = Pathname.new(__FILE__).realpath
