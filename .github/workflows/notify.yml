@@ -30,7 +30,7 @@ jobs:
           done
 
       - name: Trigger release repositories
-        if: github.event.client_payload.ref == 'refs/heads/master' || startsWith(github.event.client_payload.ref, 'refs/tags/v')
+        if: github.event.client_payload.ref == 'refs/heads/main' || startsWith(github.event.client_payload.ref, 'refs/tags/v')
         env:
           GH_USERNAME: metanorma-ci
           GH_ACCESS_TOKEN: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
