@@ -82,6 +82,10 @@ module Metanorma
       Pathname.new(Cli.root).join("..")
     end
 
+    def self.with_indifferent_access(options)
+      Thor::CoreExt::HashWithIndifferentAccess.new(options)
+    end
+
     def self.find_command(arguments)
       commands = Metanorma::Cli::Command.all_commands.keys
       commands.select { |cmd| arguments.include?(cmd.gsub("_", "-")) == true }
