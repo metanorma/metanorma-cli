@@ -1,9 +1,11 @@
+require "yaml"
+
 module Metanorma
   module Cli
     class Collection
       def initialize(file, options)
         @file = file
-        @options = options
+        @options = Cli.with_indifferent_access(options)
       end
 
       def self.render(filename, options = {})
@@ -11,7 +13,8 @@ module Metanorma
       end
 
       def render
-        collection_file.render(collection_options)
+        extract_options_from_file
+        collection_file.render(collection_options.compact)
       end
 
       private
@@ -25,14 +28,28 @@ module Metanorma
       def collection_options
         {
           compile: options.fetch(:compile, nil),
-          coverpage: options.fetch("coverpage", nil),
-          output_folder: options.fetch("output_folder", nil),
-          format: collection_output_formats(options.fetch("format", "")),
+          coverpage: options.fetch(:coverpage, nil),
+          output_folder: options.fetch(:output_folder, nil),
+          format: collection_output_formats(options.fetch(:format, "")),
         }
       end
 
-      def collection_output_formats(format)
-        format.split(",")&.map(&:to_sym)
+      def collection_output_formats(formats)
+        if formats.is_a?(String)
+          formats = formats.split(",")
+        end
+
+        (formats || []).map { |extension| extension.strip.to_sym }
+      end
+
+      def extract_options_from_file
+        if options.empty?
+          yaml_file = YAML.safe_load(File.read(@file.to_s))
+
+          @options = Cli.with_indifferent_access(
+            yaml_file.slice("coverpage", "format", "output_folder"),
+          )
+        end
       end
     end
   end
