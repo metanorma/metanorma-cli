@@ -88,7 +88,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         collection = manifest["metanorma"]["collection"]
         manifest_files = select_files_including_wildcard(
           manifest["metanorma"]["source"]["files"],
-        )
+        ).reject { |file| file.to_s.include?("yml") }
 
         manifest_files.each do |manifest_file|
           expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
@@ -109,6 +109,25 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           "documents.xml",
           title: collection["name"],
           organization: collection["organization"],
+        )
+      end
+
+      it "also handles collection generation properly" do
+        stub_external_interface_calls
+
+        Metanorma::Cli::SiteGenerator.generate(
+          source_path,
+          {
+            output_dir: output_directory,
+            config: source_path.join("metanorma.yml"),
+          },
+          continue_without_fonts: false,
+        )
+
+        collection_file = source_path.join("collection_with_options.yml")
+
+        expect(Metanorma::Cli::Collection).to have_received(:render).with(
+          collection_file.to_s, compile: { continue_without_fonts: false }
         )
       end
     end
@@ -152,6 +171,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
     def stub_external_interface_calls
       allow(File).to receive(:rename)
       allow(Metanorma::Cli::Compiler).to receive(:compile)
+      allow(Metanorma::Cli::Collection).to receive(:render)
       allow(Relaton::Cli::XMLConvertor).to receive(:to_html)
       allow(Relaton::Cli::RelatonFile).to receive(:concatenate)
     end

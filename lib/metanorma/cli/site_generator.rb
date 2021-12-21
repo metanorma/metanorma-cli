@@ -6,6 +6,7 @@ module Metanorma
   module Cli
     class SiteGenerator
       def initialize(source, options = {}, compile_options = {})
+        @collection_queue = []
         @source = find_realpath(source)
         @site_path = options.fetch(:output_dir, "site").to_s
         @asset_folder = options.fetch(:asset_folder, "documents").to_s
@@ -31,6 +32,8 @@ module Metanorma
           build_collection_file(collection_name)
           convert_to_html_page(collection_name, "index.html")
         end
+
+        dequeue_jobs
       end
 
       private
@@ -72,6 +75,10 @@ module Metanorma
       end
 
       def compile(source)
+        if collection_file?(source)
+          return
+        end
+
         UI.info("Compiling #{source} ...")
 
         options = @compile_options.merge(
@@ -157,6 +164,22 @@ module Metanorma
         create_directory_if_not_present!(output_directory)
 
         output_directory
+      end
+
+      def collection_file?(source)
+        ext = File.extname(source)&.downcase
+
+        if [".yml", ".yaml"].include?(ext)
+          @collection_queue << source
+        end
+      end
+
+      def dequeue_jobs
+        job = @collection_queue.pop
+
+        if job
+          Cli::Collection.render(job, compile: @compile_options)
+        end
       end
     end
   end
