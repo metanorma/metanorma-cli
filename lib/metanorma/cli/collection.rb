@@ -6,6 +6,7 @@ module Metanorma
       def initialize(file, options)
         @file = file
         @options = Cli.with_indifferent_access(options)
+        @compile_options = @options.delete(:compile)
       end
 
       def self.render(filename, options = {})
@@ -27,7 +28,7 @@ module Metanorma
 
       def collection_options
         {
-          compile: options.fetch(:compile, nil),
+          compile: @compile_options,
           coverpage: options.fetch(:coverpage, nil),
           output_folder: options.fetch(:output_folder, nil),
           format: collection_output_formats(options.fetch(:format, "")),

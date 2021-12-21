@@ -26,6 +26,9 @@ metanorma:
       - ./sample.adoc
       - ./sample-itu.adoc
 
+      # collection file
+      - ./collection_with_options.yml
+
 # Required: Site metadata
 #
 # The following relaton node is required for site generation.
