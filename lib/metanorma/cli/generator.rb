@@ -18,12 +18,12 @@ module Metanorma
         if Cli.writable_templates_path?
           if name && document_path.exist?
             return unless overwrite?(document_path)
+
             document_path.rmtree
           end
 
           create_metanorma_document
         end
-
       rescue Errno::EACCES
         permission_missing_error
       end
@@ -53,15 +53,22 @@ module Metanorma
       def create_metanorma_document
         type_template = type_specific_template
 
-        unless type_template.empty?
+        if type_template.empty?
+          UI.say(
+            "Unable to generate document:\n#{create_metanorma_document_error}",
+          )
+        else
           templates = base_templates.merge(type_template)
           templates.each { |source, dest| create_file(source, dest) }
-        else
-          UI.say(
-            "Unable to generate document:\n" \
-            "Templates for type #{type.to_s} cannot be found -- please provide a valid `type` or a template URL"
-          )
         end
+      end
+
+      def create_metanorma_document_error
+        type == "ogc" && doctype == "charter" and return <<~ERR
+          The template for OGC charter documents can be downloaded from https://github.com/opengeospatial/templates/tree/master/charter_templates
+        ERR
+        "Templates for type #{type} cannot be found -- "\
+          "please provide a valid `type` or a template URL"
       end
 
       def find_standard_template(type)
@@ -85,7 +92,7 @@ module Metanorma
 
       def custom_template
         if template
-          if template !~ URI::regexp
+          if !template&.match?(URI::DEFAULT_PARSER.make_regexp)
             return Pathname.new(template)
           end
 
@@ -124,13 +131,13 @@ module Metanorma
 
       def ask_to_confirm(document)
         UI.ask(
-          "You've an existing document with the #{document.to_s}\n" \
+          "You've an existing document with the #{document}\n" \
           "Still want to continue, and overwrite the existing one? (yes/no):",
         ).downcase
       end
 
       def file_creation_message(document, destination)
-        UI.say("Creating #{[document, destination].join("/").gsub("//", "/")}")
+        UI.say("Creating #{[document, destination].join('/').gsub('//', '/')}")
       end
 
       def permission_missing_error
@@ -139,7 +146,7 @@ module Metanorma
           "The current user does not have permission to write to this path:\n" \
           "#{Cli.templates_path}\n" \
           "Please ensure the path is writable by the current user, or\n" \
-          "run Metanorma using a different user with write permissions."
+          "run Metanorma using a different user with write permissions.",
         )
       end
     end

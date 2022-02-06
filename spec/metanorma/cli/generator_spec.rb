@@ -55,6 +55,26 @@ RSpec.describe Metanorma::Cli::Generator do
         end
 
         expect(output).to include("Unable to generate document:")
+        expect(output).to include("please provide a valid `type` or a template URL")
+      end
+
+      it "raise and throws a custom exception" do
+        document = @tmp_dir.join "my-invalid-document"
+        template = "https://github.com/metanorma/mn-templates-ogc"
+
+        output = capture_stdout do
+          Metanorma::Cli::Generator.run(
+            document,
+            type: "ogc",
+            overwrite: true,
+            doctype: "charter",
+            template: template
+          )
+        end
+
+        expect(output).to include("Unable to generate document:")
+        expect(output).not_to include("please provide a valid `type` or a template URL")
+        expect(output).to include("can be downloaded from")
       end
     end
 
