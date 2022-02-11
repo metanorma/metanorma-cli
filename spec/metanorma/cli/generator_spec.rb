@@ -10,7 +10,7 @@ RSpec.describe Metanorma::Cli::Generator do
           document,
           type: "csd",
           doctype: "standard",
-          overwrite: true
+          overwrite: true,
         )
 
         expect_document_to_include_base_templates(document)
@@ -32,7 +32,7 @@ RSpec.describe Metanorma::Cli::Generator do
           type: "custom-csd",
           overwrite: true,
           doctype: "standard",
-          template: template
+          template: template,
         )
 
         expect_document_to_include_base_templates(document)
@@ -50,12 +50,14 @@ RSpec.describe Metanorma::Cli::Generator do
             type: "new-csd",
             overwrite: true,
             doctype: "standard",
-            template: template
+            template: template,
           )
         end
 
         expect(output).to include("Unable to generate document:")
-        expect(output).to include("please provide a valid `type` or a template URL")
+        expect(output).to include(
+          "please provide a valid `type` or a template URL",
+        )
       end
 
       it "raise and throws a custom exception" do
@@ -68,12 +70,14 @@ RSpec.describe Metanorma::Cli::Generator do
             type: "ogc",
             overwrite: true,
             doctype: "charter",
-            template: template
+            template: template,
           )
         end
 
         expect(output).to include("Unable to generate document:")
-        expect(output).not_to include("please provide a valid `type` or a template URL")
+        expect(output).not_to include(
+          "please provide a valid `type` or a template URL",
+        )
         expect(output).to include("can be downloaded from")
       end
     end
@@ -88,7 +92,7 @@ RSpec.describe Metanorma::Cli::Generator do
           type: "csd",
           overwrite: true,
           doctype: "standard",
-          template: template
+          template: template,
         )
 
         expect_document_to_include_base_templates(document)
@@ -108,13 +112,33 @@ RSpec.describe Metanorma::Cli::Generator do
           )
         end
 
-        expect(output).to include("The current user does not have permission to write to this path")
+        expect(output).to include(
+          "The current user does not have permission to write to this path",
+        )
       end
     end
   end
 
+  it "template dir priority: common > base" do
+    document = @tmp_dir.join "priority-test"
+
+    generator = Metanorma::Cli::Generator.new(
+      document,
+      type: "csd",
+      doctype: "standard",
+      overwrite: true,
+    )
+    allow(generator).to receive(:create_file)
+
+    generator.run
+
+    expect(generator).to have_received(:create_file)
+      .once
+      .with(end_with("common/Gemfile"), "Gemfile")
+  end
+
   def file_exits?(root, filename)
-    File.exist?([root, filename].join("/"))
+    root.join(filename).exist?
   end
 
   def base_templates
@@ -133,6 +157,7 @@ RSpec.describe Metanorma::Cli::Generator do
     end
 
     %w[README.adoc document.adoc sections/01-scope.adoc].each do |file|
+      p "document=#{document} file=#{file}"
       expect(file_exits?(document, file)).to be_truthy
     end
   end
