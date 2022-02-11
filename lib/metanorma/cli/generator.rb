@@ -59,7 +59,7 @@ module Metanorma
           )
         else
           templates = base_templates.merge(type_template)
-          templates.each { |source, dest| create_file(source, dest) }
+          templates.each { |dest, source| create_file(source, dest) }
         end
       end
 
@@ -81,13 +81,17 @@ module Metanorma
 
       def base_templates
         base_template_root = Cli.base_templates_path
-        build_template_hash(dir_files(base_template_root), base_template_root)
+        build_template_hash(base_template_root)
       end
 
       def type_specific_template
-        type_template_path = custom_template || find_standard_template(type)
-        doctype_templates  = dir_files(type_template_path, doctype)
-        build_template_hash(doctype_templates, type_template_path, doctype)
+        template_path = custom_template || find_standard_template(type)
+        return {} if template_path.nil?
+
+        result = build_template_hash(template_path, doctype)
+        return result if result.empty?
+
+        result.merge(build_template_common_hash(template_path))
       end
 
       def custom_template
@@ -100,17 +104,32 @@ module Metanorma
         end
       end
 
-      def build_template_hash(elements, source_root, type = nil)
-        type_template_path = [source_root, type].join("/")
+      def build_template_common_hash(source_root)
+        common_path = Pathname.new(source_root) / "common"
+        paths = dir_files(common_path)
 
         Hash.new.tap do |hash|
-          elements.each do |element|
-            hash[element] = element.gsub(type_template_path, "")
+          paths.each do |path|
+            dest = Pathname.new(path).relative_path_from(common_path).to_s
+            hash[dest] = path
+          end
+        end
+      end
+
+      def build_template_hash(source_root, doctype = nil)
+        source_path = Pathname.new(source_root)
+        source_path /= doctype unless doctype.nil?
+        paths = dir_files(source_path)
+        Hash.new.tap do |hash|
+          paths.each do |path|
+            dest = Pathname.new(path).relative_path_from(source_path).to_s
+            hash[dest] = path
           end
         end
       end
 
       def create_file(source, destination)
+        p "source=#{source} destination=#{destination}"
         target_path = [document_path, destination].join("/")
         target_path = Pathname.new(target_path)
 
