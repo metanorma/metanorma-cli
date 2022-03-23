@@ -64,6 +64,6 @@ RSpec.describe Metanorma::Cli::Compiler do
 
   def delete_file_if_exist(filename)
     filepath = Metanorma::Cli.root_path.join("spec", "fixtures", filename).to_s
-    File.delete(filepath) if File.exists?(filepath)
+    File.delete(filepath) if File.exist?(filepath)
   end
 end
