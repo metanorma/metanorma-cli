@@ -34,7 +34,7 @@ Gem::Specification.new do |spec|
   # need for dev because locally compiled metanorma-iso does not have css
   spec.add_development_dependency "rubocop", "~> 1.5.2"
   spec.add_development_dependency "sassc"
-  spec.add_runtime_dependency "metanorma-nist", "~> 2.1.0"
+  #spec.add_runtime_dependency "metanorma-nist", "~> 2.1.0"
 
   spec.add_runtime_dependency "metanorma-ietf", "~> 3.0.0"
   spec.add_runtime_dependency "metanorma-iso", "~> 2.1.0"
