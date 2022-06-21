@@ -34,7 +34,7 @@ Gem::Specification.new do |spec|
   # need for dev because locally compiled metanorma-iso does not have css
   spec.add_development_dependency "rubocop", "~> 1.5.2"
   spec.add_development_dependency "sassc"
-  #spec.add_runtime_dependency "metanorma-nist", "~> 2.1.0"
+  # spec.add_runtime_dependency "metanorma-nist", "~> 2.1.0"
 
   spec.add_runtime_dependency "metanorma-ietf", "~> 3.0.0"
   spec.add_runtime_dependency "metanorma-iso", "~> 2.1.0"
@@ -56,10 +56,12 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "metanorma-iho", "~> 0.6.0"
   spec.add_runtime_dependency "metanorma-itu", "~> 2.1.0"
   # spec.add_runtime_dependency "metanorma-nist", "~> 2.1.0"
+  spec.add_runtime_dependency "metanorma-ieee", "~> 0.0.1"
   spec.add_runtime_dependency "metanorma-ogc", "~> 2.1.0"
   spec.add_runtime_dependency "metanorma-un", "~> 0.9.0"
   spec.add_runtime_dependency "relaton-cli", ">= 0.8.2"
 
   spec.add_runtime_dependency "socksify"
-  #spec.metadata["rubygems_mfa_required"] = "true"
+  # spec.metadata["rubygems_mfa_required"] = "true"
+  spec.metadata["rubygems_mfa_required"] = "true"
 end

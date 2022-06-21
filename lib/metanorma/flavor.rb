@@ -7,6 +7,7 @@ module Metanorma
     SUPPORTED_GEMS = [
       "metanorma-iso",
       "metanorma-iec",
+      "metanorma-ieee",
       "metanorma-ietf",
       "metanorma-bipm",
       "metanorma-cc",
@@ -36,21 +37,17 @@ module Metanorma
 
     def activate
       flavors.each do |flavor_name|
-        begin
-          gem(flavor_name)
-        rescue LoadError, MissingSpecError => _e
-          Metanorma::Cli::UI.debug("#{flavor_name} is not present!")
-        end
+        gem(flavor_name)
+      rescue LoadError, MissingSpecError => _e
+        Metanorma::Cli::UI.debug("#{flavor_name} is not present!")
       end
     end
 
     def load_flavors
       flavors.each do |flavor_name|
-        begin
-          require(flavor_name)
-        rescue LoadError => _e
-          gem_loading_error(flavor_name)
-        end
+        require(flavor_name)
+      rescue LoadError => _e
+        gem_loading_error(flavor_name)
       end
     end
 
