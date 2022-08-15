@@ -34,6 +34,8 @@ RSpec.describe "Collection" do
 
   def expect_generated_files_to_match_expectations
     expected_files.each do |file|
+      warn File.join(RESULTS, file)
+      require "debug"; binding.b
       expect(File.exist?(File.join(RESULTS, file))).to be_truthy
     end
   end
