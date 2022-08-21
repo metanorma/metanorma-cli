@@ -124,8 +124,7 @@ RSpec.describe Metanorma do
 
   it "warns when bogus standard type requested" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    stdout = `metanorma -t bogus_format #{source_file}`
-    expect(stdout).to include("loading gem `metanorma-bogus_format` failed.")
+    `metanorma -t bogus_format #{source_file}`
     expect($?.exitstatus).not_to be == 0
   end
 
