@@ -9,6 +9,6 @@ on:
 
 jobs:
   notify:
-    uses: metanorma/metanorma-build-scripts/.github/workflows/mn-processor-notify.yml@main
+    uses: metanorma/ci/.github/workflows/mn-processor-notify.yml@main
     secrets:
       pat_token: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
