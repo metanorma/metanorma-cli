@@ -15,10 +15,10 @@ on:
 
 jobs:
   release:
-    uses: metanorma/metanorma-build-scripts/.github/workflows/rubygems-release.yml@main
+    uses: metanorma/ci/.github/workflows/rubygems-release.yml@main
     with:
       next_version: ${{ github.event.inputs.next_version }}
-      event_name: ${{ github.event_name }}
     secrets:
       rubygems-api-key: ${{ secrets.METANORMA_CI_RUBYGEMS_API_KEY }}
       pat_token: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
+

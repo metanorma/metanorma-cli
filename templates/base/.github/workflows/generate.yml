@@ -14,6 +14,6 @@ on:
 
 jobs:
   test-docker:
-    uses: metanorma/metanorma-build-scripts/.github/workflows/sample-gen.yml@main
+    uses: metanorma/ci/.github/workflows/sample-gen.yml@main
     secrets:
       pat_token: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
