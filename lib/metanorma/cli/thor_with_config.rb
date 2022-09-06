@@ -1,10 +1,14 @@
 require "thor"
+require "metanorma-utils"
 
-require_relative "stringify_all_keys"
+#require_relative "stringify_all_keys"
 
 module Metanorma
   module Cli
     class ThorWithConfig < Thor
+      Hash.include Metanorma::Utils::Hash
+      Array.include Metanorma::Utils::Array
+
       no_commands do
         def options
           original_options = super.to_hash.symbolize_all_keys

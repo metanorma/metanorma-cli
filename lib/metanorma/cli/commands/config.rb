@@ -1,11 +1,15 @@
 require "pathname"
+require "metanorma-utils"
 
-require "metanorma/cli/stringify_all_keys"
+#require "metanorma/cli/stringify_all_keys"
 
 module Metanorma
   module Cli
     module Commands
       class Config < Thor
+             Hash.include Metanorma::Utils::Hash
+      Array.include Metanorma::Utils::Array
+
         class_option :global, aliases: "-g", type: :boolean, default: false, desc: "Use global config"
 
         desc "get NAME", "Get config value"

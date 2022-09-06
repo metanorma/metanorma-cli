@@ -1,10 +1,15 @@
 require "yaml"
+require "metanorma-utils"
 
-require "metanorma/cli/stringify_all_keys"
+#require "metanorma/cli/stringify_all_keys"
 
 module Metanorma
   module Cli
     class TemplateRepo
+
+      Hash.include Metanorma::Utils::Hash
+      Array.include Metanorma::Utils::Array
+
       def initialize(options = {})
         @name = options.fetch(:name)
         @source = options.fetch(:source)
