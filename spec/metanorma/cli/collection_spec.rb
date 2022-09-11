@@ -5,9 +5,16 @@ RSpec.describe Metanorma::Cli::Collection do
     context "with specified options" do
       it "compiles and renders the collection files" do
         collection = mock_collection_instance
-        Metanorma::Cli::Collection.render(collection_file, format: "html, pdf")
 
-        expect(collection).to have_received(:render).with(format: %I(html pdf))
+        Metanorma::Cli::Collection.render(
+          collection_file,
+          format: "html, pdf",
+          output_folder: "bilingual-brochure",
+        )
+
+        expect(collection).to have_received(:render).with(
+          format: %I(html pdf), output_folder: "bilingual-brochure",
+        )
       end
     end
 
@@ -22,6 +29,18 @@ RSpec.describe Metanorma::Cli::Collection do
           coverpage: "collection_cover.html",
           output_folder: "bilingual-brochure",
           format: %I(xml html presentation pdf),
+        )
+      end
+    end
+
+    context "with missing options" do
+      it "usages the source as reference for options" do
+        collection = mock_collection_instance
+
+        Metanorma::Cli::Collection.render(collection_file)
+
+        expect(collection).to have_received(:render).with(
+          hash_including(output_folder: File.dirname(collection_file.to_s)),
         )
       end
     end
