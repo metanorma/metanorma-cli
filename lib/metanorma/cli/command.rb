@@ -59,7 +59,7 @@ module Metanorma
 
       desc "collection FILENAME", "Render HTML pages from XML/YAML colection"
       option :format, aliases: "-x", type: :string, desc: "Formats to generate"
-      option :output_folder, aliases: "-w", required: true, desc: "Directory to save compiled files"
+      option :output_folder, aliases: "-w", desc: "Directory to save compiled files"
       option :coverpage, aliases: "-c", desc: "Liquid template"
       option :agree_to_terms, type: :boolean, desc: "Agree / Disagree with all third-party licensing terms "\
                                                     "presented (WARNING: do know what you are agreeing with!)"

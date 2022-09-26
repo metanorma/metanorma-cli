@@ -26,11 +26,15 @@ module Metanorma
         @collection_file ||= Metanorma::Collection.parse(file)
       end
 
+      def source_folder
+        @source_folder ||= File.dirname(File.expand_path(file))
+      end
+
       def collection_options
-        {
+        @collection_options ||= {
           compile: @compile_options,
           coverpage: options.fetch(:coverpage, nil),
-          output_folder: options.fetch(:output_folder, nil),
+          output_folder: options.fetch(:output_folder, source_folder),
           format: collection_output_formats(options.fetch(:format, "")),
         }
       end
