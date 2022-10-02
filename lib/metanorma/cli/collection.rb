@@ -6,6 +6,7 @@ module Metanorma
       def initialize(file, options)
         @file = file
         @options = Cli.with_indifferent_access(options)
+        @output_dir = @options.delete(:output_dir)
         @compile_options = @options.delete(:compile)
       end
 
@@ -33,10 +34,20 @@ module Metanorma
       def collection_options
         @collection_options ||= {
           compile: @compile_options,
+          output_folder: build_output_folder,
           coverpage: options.fetch(:coverpage, nil),
-          output_folder: options.fetch(:output_folder, source_folder),
           format: collection_output_formats(options.fetch(:format, "")),
         }
+      end
+
+      def build_output_folder
+        output_folder = options.fetch(:output_folder, nil)
+
+        if output_folder && @output_dir
+          @output_dir.join(output_folder).to_s
+        else
+          output_folder || source_folder
+        end
       end
 
       def collection_output_formats(formats)

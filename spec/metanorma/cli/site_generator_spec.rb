@@ -127,7 +127,9 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         collection_file = source_path.join("collection_with_options.yml")
 
         expect(Metanorma::Cli::Collection).to have_received(:render).with(
-          collection_file.to_s, compile: { continue_without_fonts: false }
+          collection_file.to_s,
+          output_dir: output_directory,
+          compile: { continue_without_fonts: false },
         )
       end
     end
