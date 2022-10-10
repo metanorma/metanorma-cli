@@ -20,15 +20,18 @@ RSpec.describe Metanorma::Cli::Collection do
 
     context "with embedded options" do
       it "extracts options from file and renders collection" do
+        root_path = Metanorma::Cli.root_path
         collection = mock_collection_instance
-
         collection_file = collection_file("collection_with_options.yml")
-        Metanorma::Cli::Collection.render(collection_file)
+
+        Metanorma::Cli::Collection.render(
+          collection_file, output_dir: root_path
+        )
 
         expect(collection).to have_received(:render).with(
           coverpage: "collection_cover.html",
-          output_folder: "bilingual-brochure",
           format: %I(xml html presentation pdf),
+          output_folder: root_path.join("bilingual-brochure").to_s,
         )
       end
     end

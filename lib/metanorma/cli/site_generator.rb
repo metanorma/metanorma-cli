@@ -178,7 +178,11 @@ module Metanorma
         job = @collection_queue.pop
 
         if job
-          Cli::Collection.render(job, compile: @compile_options)
+          Cli::Collection.render(
+            job,
+            compile: @compile_options,
+            output_dir: @asset_directory.join(".."),
+          )
         end
       end
     end
