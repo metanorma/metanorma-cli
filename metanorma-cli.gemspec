@@ -56,13 +56,12 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "metanorma-iho", "~> 0.6.0"
   spec.add_runtime_dependency "metanorma-itu", "~> 2.1.0"
   # spec.add_runtime_dependency "metanorma-nist", "~> 2.1.0"
-  spec.add_runtime_dependency "metanorma-ieee", "~> 0.0.1"
+  spec.add_runtime_dependency "metanorma-ieee", "~> 0.1.0"
   spec.add_runtime_dependency "metanorma-ogc", "~> 2.2.0"
   spec.add_runtime_dependency "metanorma-un", "~> 0.9.0"
   spec.add_runtime_dependency "relaton-cli", ">= 0.8.2"
 
   spec.add_runtime_dependency "socksify"
-  # spec.metadata["rubygems_mfa_required"] = "true"
   # spec.metadata["rubygems_mfa_required"] = "true"
   # NOBODY UNCOMMENTS THIS WITHOUT EXPLAINING TO ME HOW TO USE MFA
 end
