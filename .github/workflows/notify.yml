@@ -4,7 +4,7 @@ name: notify
 
 on:
   repository_dispatch:
-    types: [ tests-passed ]
+    types: [ tests-passed, release-passed ]
 
 
 jobs:
