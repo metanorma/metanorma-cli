@@ -14,7 +14,6 @@ require "bundler/setup"
 require "rspec-command"
 require "metanorma/cli"
 require "fileutils"
-require "rexml/document"
 require "mn2pdf"
 require "mnconvert"
 
