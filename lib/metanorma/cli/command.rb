@@ -36,6 +36,7 @@ module Metanorma
       option :extract, aliases: "-e", desc: "Export sourcecode fragments from this document to nominated directory"
       option :version, aliases: "-v", desc: "Print version of code (accompanied with -t)"
       option :output_dir, aliases: "-o", desc: "Directory to save compiled files"
+      option :strict, aliases: "-S", type: :boolean, desc: "Strict compilation: abort if there are any errors"
       option :agree_to_terms, type: :boolean, desc: "Agree / Disagree with all third-party licensing terms "\
                                                     "presented (WARNING: do know what you are agreeing with!)"
       option :no_install_fonts, type: :boolean, desc: "Skip the font installation process"
