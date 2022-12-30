@@ -40,6 +40,7 @@ module Metanorma
                                                     "presented (WARNING: do know what you are agreeing with!)"
       option :no_install_fonts, type: :boolean, desc: "Skip the font installation process"
       option :continue_without_fonts, type: :boolean, desc: "Continue processing even when fonts are missing"
+      option :strict, type: :boolean, desc: "Strict compilation: abort if there are any errors"
 
       def compile(file_name = nil)
         if file_name && !options[:version]
