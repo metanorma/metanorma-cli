@@ -12,7 +12,7 @@ module Metanorma
           :output_dir,
           aliases: "-o",
           default: Pathname.new(Dir.pwd).join("site").to_s,
-          desc: "Output directory for generated site"
+          desc: "Output directory for generated site",
         )
         option :agree_to_terms, type: :boolean, desc: "Agree / Disagree with all third-party licensing terms "\
                                                       "presented (WARNING: do know what you are agreeing with!)"
@@ -20,9 +20,19 @@ module Metanorma
         option :continue_without_fonts, type: :boolean, desc: "Continue processing even when fonts are missing"
         option :stylesheet, alias: "-s", desc: "Stylesheet file path for rendering HTML page"
         option :template_dir, alias: "-t", desc: "Liquid template directory to render site design"
+        option(
+          :strict,
+          aliases: "-S",
+          type: :boolean,
+          desc: "Strict compilation: abort if there are any errors",
+        )
 
         def generate(source_path = Dir.pwd)
-          Cli::SiteGenerator.generate(source_path, options, filter_compile_options(options))
+          Cli::SiteGenerator.generate(
+            source_path,
+            options,
+            filter_compile_options(options),
+          )
           UI.say("Site has been generated at #{options[:output_dir]}")
         rescue Cli::Errors::InvalidManifestFileError
           UI.error("Invalid data in: #{options[:config]}")
