@@ -1,0 +1,74 @@
+{
+	"flavor": [
+    {
+      "id": "iso",
+      "public": true,
+      "experimental": false
+    },
+    {
+      "id": "cc",
+      "public": true,
+      "experimental": false
+    },
+    {
+      "id": "iec",
+      "public": true,
+      "experimental": false
+    },
+    {
+      "id": "ogc",
+      "public": true,
+      "experimental": false
+    },
+    {
+      "id": "un",
+      "public": true,
+      "experimental": false
+    },
+    {
+      "id": "iho",
+      "public": true,
+      "experimental": false
+    },
+    {
+      "id": "ietf",
+      "public": true,
+      "experimental": false
+    },
+    {
+      "id": "bipm",
+      "public": true,
+      "experimental": false
+    },
+    {
+      "id": "itu",
+      "public": true,
+      "experimental": false
+    },
+    {
+      "id": "csa",
+      "public": true,
+      "experimental": false
+    },
+    {
+      "id": "ieee",
+      "public": true,
+      "experimental": false
+    },
+    {
+      "id": "ieee-private",
+      "public": false,
+      "experimental": false
+    },
+    {
+      "id": "m3aawg",
+      "public": true,
+      "experimental": false
+    },
+    {
+      "id": "jcgm",
+      "public": true,
+      "experimental": false
+    }
+  ]
+}

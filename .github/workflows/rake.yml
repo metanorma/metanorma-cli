@@ -9,7 +9,7 @@ on:
   pull_request:
 
 jobs:
-  notify:
+  rake:
     uses: metanorma/ci/.github/workflows/mn-processor-rake.yml@main
     secrets:
       pat_token: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
