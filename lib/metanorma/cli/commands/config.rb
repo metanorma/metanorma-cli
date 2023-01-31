@@ -16,7 +16,7 @@ module Metanorma
         def get(name = nil)
           config, config_path = load_config(options[:global], create_default_config: false)
 
-          if name.nil? && File.exists?(config_path)
+          if name.nil? && File.exist?(config_path)
             UI.say File.read(config_path, encoding: "utf-8")
           else
             UI.say(config.dig(*dig_path(name)) || "nil")
@@ -54,7 +54,7 @@ module Metanorma
         def self.load_configs(options, configs = [Metanorma::Cli.global_config_path, Metanorma::Cli.local_config_path])
           result = options.dup
           configs.each do |config_path|
-            next unless File.exists?(config_path)
+            next unless File.exist?(config_path)
 
             config_values = ::YAML::load_file(config_path).symbolize_all_keys[:cli] || {}
             result.merge!(config_values)
@@ -82,7 +82,7 @@ module Metanorma
         def load_config(global_config, create_default_config: true)
           config_path = Metanorma::Cli.config_path(global_config)
 
-          unless File.exists?(config_path) || create_default_config
+          unless File.exist?(config_path) || create_default_config
             config_path = Metanorma::Cli.config_path(true)
           end
 
