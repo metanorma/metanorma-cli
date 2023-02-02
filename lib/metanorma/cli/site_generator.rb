@@ -8,7 +8,9 @@ module Metanorma
       def initialize(source, options = {}, compile_options = {})
         @collection_queue = []
         @source = find_realpath(source)
-        @site_path = options.fetch(:output_dir, "site").to_s
+        @site_path = options.fetch(
+          :output_dir, Commands::Site::SITE_OUTPUT_DIRNAME
+        ).to_s
         @asset_folder = options.fetch(:asset_folder, "documents").to_s
         @collection_name = options.fetch(:collection_name, "documents.xml")
 
