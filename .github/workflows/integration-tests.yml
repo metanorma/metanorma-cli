@@ -18,15 +18,15 @@ jobs:
         run: echo "matrix=$(cat .github/workflows/templates-smoke-matrix.json | tr '\n' ' ')" >> $GITHUB_OUTPUT
 
   test-samples:
-    name: Test samples for ${{ matrix.flavor.id }}
-    runs-on: ubuntu-latest
+    name: Test samples-${{ matrix.flavor.id }} ${{ matrix.ruby.version }}-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     needs: build-matrices
 
     concurrency:
-      group: '${{ github.workflow }}-${{ github.job }}-${{ matrix.flavor.id }}-${{ github.head_ref || github.ref_name }}'
+      group: '${{ github.workflow }}-${{ github.job }}-${{ matrix.ruby.version }}-${{ matrix.flavor.id }}-${{ github.head_ref || github.ref_name }}'
       cancel-in-progress: true
 
-    continue-on-error: ${{ matrix.flavor.experimental }}
+    continue-on-error: ${{ matrix.flavor.experimental || matrix.ruby.experimental }}
     strategy:
       max-parallel: 5
       fail-fast: false
@@ -43,7 +43,7 @@ jobs:
 
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.1
+        ruby-version: ${{ matrix.ruby.version }}
         bundler-cache: true
 
     - uses: actions/checkout@v3
@@ -66,15 +66,15 @@ jobs:
         use-bundler: true
 
   test-templates:
-    name: Test templates for ${{ matrix.flavor.id }}
-    runs-on: ubuntu-latest
+    name: Test template-${{ matrix.flavor.id }} ${{ matrix.ruby.version }}-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     needs: build-matrices
 
     concurrency:
-      group: '${{ github.workflow }}-${{ github.job }}-${{ matrix.flavor.id }}-${{ github.head_ref || github.ref_name }}'
+      group: '${{ github.workflow }}-${{ github.job }}-${{ matrix.ruby.version }}-${{ matrix.flavor.id }}-${{ github.head_ref || github.ref_name }}'
       cancel-in-progress: true
 
-    continue-on-error: ${{ matrix.flavor.experimental }}
+    continue-on-error: ${{ matrix.flavor.experimental || matrix.ruby.experimental }}
     strategy:
       max-parallel: 5
       fail-fast: false
@@ -91,7 +91,7 @@ jobs:
 
     - uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.1
+        ruby-version: ${{ matrix.ruby.version }}
         bundler-cache: true
 
     - uses: actions-mn/cli/new@main
