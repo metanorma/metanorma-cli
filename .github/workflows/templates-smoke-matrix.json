@@ -7,18 +7,22 @@
   "ruby": [
     {
       "version": "2.7",
+      "rubygems": "default",
       "experimental": false
     },
     {
       "version": "3.0",
+      "rubygems": "latest",
       "experimental": false
     },
     {
       "version": "3.1",
+      "rubygems": "default",
       "experimental": false
     },
     {
       "version": "3.2",
+      "rubygems": "default",
       "experimental": true
     }
   ],

@@ -16,7 +16,6 @@ jobs:
 
   build-matrices:
     runs-on: ubuntu-latest
-    needs: rake
     outputs:
       samples-matrix: ${{ steps.build-samples-matrix.outputs.matrix }}
       templates-matrix: ${{ steps.build-templates-matrix.outputs.matrix }}
@@ -33,7 +32,7 @@ jobs:
     needs: build-matrices
 
     concurrency:
-      group: '${{ github.workflow }}-${{ github.job }}-${{ matrix.ruby.version }}-${{ matrix.flavor.id }}-${{ github.head_ref || github.ref_name }}'
+      group: '${{ github.workflow }}-${{ github.job }}-${{ matrix.os }}-${{ matrix.ruby.version }}-${{ matrix.flavor.id }}-${{ github.head_ref || github.ref_name }}'
       cancel-in-progress: true
 
     continue-on-error: ${{ matrix.flavor.experimental || matrix.ruby.experimental }}
@@ -82,7 +81,7 @@ jobs:
     needs: build-matrices
 
     concurrency:
-      group: '${{ github.workflow }}-${{ github.job }}-${{ matrix.ruby.version }}-${{ matrix.flavor.id }}-${{ github.head_ref || github.ref_name }}'
+      group: '${{ github.workflow }}-${{ github.job }}-${{ matrix.os }}-${{ matrix.ruby.version }}-${{ matrix.flavor.id }}-${{ matrix.flavor.type }}-${{ github.head_ref || github.ref_name }}'
       cancel-in-progress: true
 
     continue-on-error: ${{ matrix.flavor.experimental || matrix.ruby.experimental }}
