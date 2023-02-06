@@ -28,7 +28,7 @@ jobs:
         run: echo "matrix=$(cat .github/workflows/templates-smoke-matrix.json | tr '\n' ' ')" >> $GITHUB_OUTPUT
 
   test-samples:
-    name: Test samples for ${{ matrix.flavor.id }}
+    name: Test samples-${{ matrix.flavor.id }} ${{ matrix.ruby.version }}-${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     needs: build-matrices
 
@@ -54,6 +54,7 @@ jobs:
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby.version }}
+        rubygems: ${{ matrix.ruby.rubygems }}
         bundler-cache: true
 
     - uses: actions/checkout@v3
@@ -76,7 +77,7 @@ jobs:
         use-bundler: true
 
   test-templates:
-    name: Test templates for ${{ matrix.flavor.id }}
+    name: Test templates-${{ matrix.flavor.id }} ${{ matrix.ruby.version }}-${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     needs: build-matrices
 
@@ -102,6 +103,7 @@ jobs:
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby.version }}
+        rubygems: ${{ matrix.ruby.rubygems }}
         bundler-cache: true
 
     - uses: actions-mn/cli/new@main

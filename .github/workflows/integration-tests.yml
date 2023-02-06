@@ -44,6 +44,7 @@ jobs:
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby.version }}
+        rubygems: ${{ matrix.ruby.rubygems }}
         bundler-cache: true
 
     - uses: actions/checkout@v3
@@ -66,7 +67,7 @@ jobs:
         use-bundler: true
 
   test-templates:
-    name: Test template-${{ matrix.flavor.id }} ${{ matrix.ruby.version }}-${{ matrix.os }}
+    name: Test templates-${{ matrix.flavor.id }} ${{ matrix.ruby.version }}-${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     needs: build-matrices
 
@@ -92,6 +93,7 @@ jobs:
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby.version }}
+        rubygems: ${{ matrix.ruby.rubygems }}
         bundler-cache: true
 
     - uses: actions-mn/cli/new@main
