@@ -6,12 +6,14 @@ module Metanorma
   module Cli
     module Commands
       class Site < ThorWithConfig
+        SITE_OUTPUT_DIRNAME = "_site".freeze
+
         desc "generate [SOURCE_PATH]", "Generate site from collection"
         option :config, aliases: "-c", desc: "Metanorma configuration file"
         option(
           :output_dir,
           aliases: "-o",
-          default: Pathname.new(Dir.pwd).join("site").to_s,
+          default: Pathname.new(Dir.pwd).join(SITE_OUTPUT_DIRNAME).to_s,
           desc: "Output directory for generated site",
         )
         option :agree_to_terms, type: :boolean, desc: "Agree / Disagree with all third-party licensing terms "\

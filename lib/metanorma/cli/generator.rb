@@ -129,7 +129,6 @@ module Metanorma
       end
 
       def create_file(source, destination)
-        p "source=#{source} destination=#{destination}"
         target_path = [document_path, destination].join("/")
         target_path = Pathname.new(target_path)
 
