@@ -12,46 +12,46 @@
     }
   ],
   "flavor": [
-    {
-      "id": "iso",
-      "public": true,
-      "experimental": false,
-      "manifest": {
-        "metanorma": {
-          "source": {
-            "files": [
-              "sources/amendment/rice-amd-en.awi.adoc",
-              "sources/guide/document.adoc",
-              "sources/international-standard/rice-en.prf.adoc",
-              "sources/international-workshop-agreement/document.adoc",
-              "sources/publicly-available-specification/document.adoc",
-              "sources/technical-report/document.adoc",
-              "sources/technical-specification/document.adoc",
-              "sources/directives/part2/document.adoc"
-            ]
-          }
-        }
-      }
-    },
-    {
-      "id": "cc",
-      "public": true,
-      "experimental": false
-    },
-    {
-      "id": "iec",
-      "public": true,
-      "experimental": false,
-      "manifest": {
-        "metanorma": {
-          "source": {
-            "files": [
-              "sources/iec-rice-en.adoc"
-            ]
-          }
-        }
-      }
-    },
+    // {
+    //   "id": "iso",
+    //   "public": true,
+    //   "experimental": false,
+    //   "manifest": {
+    //     "metanorma": {
+    //       "source": {
+    //         "files": [
+    //           "sources/amendment/rice-amd-en.awi.adoc",
+    //           "sources/guide/document.adoc",
+    //           "sources/international-standard/rice-en.prf.adoc",
+    //           "sources/international-workshop-agreement/document.adoc",
+    //           "sources/publicly-available-specification/document.adoc",
+    //           "sources/technical-report/document.adoc",
+    //           "sources/technical-specification/document.adoc",
+    //           "sources/directives/part2/document.adoc"
+    //         ]
+    //       }
+    //     }
+    //   }
+    // },
+    // {
+    //   "id": "cc",
+    //   "public": true,
+    //   "experimental": false
+    // },
+    // {
+    //   "id": "iec",
+    //   "public": true,
+    //   "experimental": false,
+    //   "manifest": {
+    //     "metanorma": {
+    //       "source": {
+    //         "files": [
+    //           "sources/iec-rice-en.adoc"
+    //         ]
+    //       }
+    //     }
+    //   }
+    // },
     {
       "id": "iec-private",
       "private": true,
@@ -65,202 +65,202 @@
           }
         }
       }
-    },
-    {
-      "id": "ogc",
-      "public": true,
-      "experimental": false,
-      "manifest": {
-        "metanorma": {
-          "source": {
-            "files": [
-              "sources/00-027/document.adoc",
-              "sources/05-020r27/document.adoc",
-              "sources/08-062r7/document.adoc",
-              "sources/10-091r3/document.adoc",
-              "sources/style-sample/document.adoc"
-            ]
-          }
-        }
-      }
-    },
-    {
-      "id": "un",
-      "public": true,
-      "experimental": false,
-      "manifest": {
-        "metanorma": {
-          "source": {
-            "files": [
-              "sources/ECE_AGAT_2020_INF1.adoc",
-              "sources/ECE_TRADE_437E_Rec42.adoc",
-              "sources/ECE_TRADE_C_CEFACT_2018_1E.adoc"
-            ]
-          }
-        }
-      }
-    },
-    {
-      "id": "iho",
-      "public": true,
-      "experimental": false,
-      "manifest": {
-        "metanorma": {
-          "source": {
-            "files": [
-              "sources/s5-guidelines/document.adoc",
-              "sources/b12/document.adoc",
-              "sources/s102/document.adoc"
-            ]
-          }
-        }
-      }
-    },
-    {
-      "id": "ietf",
-      "public": true,
-      "experimental": false,
-      "manifest": {
-        "metanorma": {
-          "source": {
-            "files": [
-              "sources/antioch-v2/document.adoc"
-            ]
-          }
-        }
-      }
-    },
-    {
-      "id": "bipm",
-      "public": true,
-      "experimental": false,
-      "manifest": {
-        "metanorma": {
-          "source": {
-            "files": [
-              "sources/JCTLM/jctlm-ec-07.adoc",
-              "sources/brochure-its90/brochure-its90-fr.adoc",
-              "sources/guide-its90/guide-its90-01.adoc",
-              "sources/guides/guide-its90-diff.adoc",
-              "sources/working-party-notes/wpn-203.adoc",
-              "sources/cipm-mra/d-02/document.adoc",
-              "sources/monographie/bipm-1/document.adoc",
-              "sources/rapports/2015-01/document.adoc"
-            ]
-          }
-        }
-      }
-    },
-    {
-      "id": "bsi",
-      "public": false,
-      "experimental": false,
-      "manifest": {
-        "metanorma": {
-          "source": {
-            "files": [
-              "sources/bs-en-iso-13485-2012/document.adoc",
-              "sources/flex-0/document.adoc",
-              "sources/pas_2060/document.adoc",
-              "sources/bsi-iso-20400-44000-kit/bs-11000-2/document.adoc",
-              "sources/bsi-iso-44000-kit/pd-iso-tr-44000/document.adoc"
-            ]
-          }
-        }
-      }
-    },
-    {
-      "id": "itu",
-      "public": true,
-      "experimental": false,
-      "manifest": {
-        "metanorma": {
-          "source": {
-            "files": [
-              "sources/G.191.adoc",
-              "sources/T-Editing-Guidelines-201602.adoc",
-              "sources/T-REC-H.782-201811-I.MSW-E.adoc",
-              "sources/T-RES-T.1-2016-MSW-E.adoc",
-              "sources/T-TUT-CABLETV-2020.adoc",
-              "sources/Z.100-201811-AnnF1.adoc"
-            ]
-          }
-        }
-      }
-    },
-    {
-      "id": "csa",
-      "public": true,
-      "experimental": false
-    },
-    {
-      "id": "ieee",
-      "public": true,
-      "experimental": false
-    },
-    {
-      "id": "ieee-private",
-      "public": false,
-      "experimental": false,
-      "manifest": {
-        "metanorma": {
-          "source": {
-            "files": [
-              "sources/1127/document.adoc"
-            ]
-          }
-        }
-      }
-    },
-    {
-      "id": "m3aawg",
-      "public": true,
-      "experimental": false
-    },
-    {
-      "id": "jcgm",
-      "public": true,
-      "experimental": false,
-      "manifest": {
-        "metanorma": {
-          "source": {
-            "files": [
-              "sources/jcgm/100-2008-en/document.adoc"
-            ]
-          }
-        }
-      }
-    },
-    {
-      "id": "nist",
-      "public": false,
-      "experimental": false,
-      "manifest": {
-        "metanorma": {
-          "source": {
-            "files": [
-              "sources/NIST.CSWP.01262018.adoc",
-              "sources/NIST.SP.800-116r1.covers.draft-wip.adoc",
-              "sources/NIST.SP.800-116r1.covers.withdrawn-final.adoc",
-              "sources/NIST.SP.800-90B.adoc"
-            ]
-          }
-        }
-      }
-    },
-    {
-      "id": "ribose",
-      "public": true,
-      "experimental": false,
-      "manifest": {
-        "metanorma": {
-          "source": {
-            "files": [
-              "sources/nereon-syntax/rsd-nereon-configuration-syntax.adoc"
-            ]
-          }
-        }
-      }
     }
+    // {
+    //   "id": "ogc",
+    //   "public": true,
+    //   "experimental": false,
+    //   "manifest": {
+    //     "metanorma": {
+    //       "source": {
+    //         "files": [
+    //           "sources/00-027/document.adoc",
+    //           "sources/05-020r27/document.adoc",
+    //           "sources/08-062r7/document.adoc",
+    //           "sources/10-091r3/document.adoc",
+    //           "sources/style-sample/document.adoc"
+    //         ]
+    //       }
+    //     }
+    //   }
+    // },
+    // {
+    //   "id": "un",
+    //   "public": true,
+    //   "experimental": false,
+    //   "manifest": {
+    //     "metanorma": {
+    //       "source": {
+    //         "files": [
+    //           "sources/ECE_AGAT_2020_INF1.adoc",
+    //           "sources/ECE_TRADE_437E_Rec42.adoc",
+    //           "sources/ECE_TRADE_C_CEFACT_2018_1E.adoc"
+    //         ]
+    //       }
+    //     }
+    //   }
+    // },
+    // {
+    //   "id": "iho",
+    //   "public": true,
+    //   "experimental": false,
+    //   "manifest": {
+    //     "metanorma": {
+    //       "source": {
+    //         "files": [
+    //           "sources/s5-guidelines/document.adoc",
+    //           "sources/b12/document.adoc",
+    //           "sources/s102/document.adoc"
+    //         ]
+    //       }
+    //     }
+    //   }
+    // },
+    // {
+    //   "id": "ietf",
+    //   "public": true,
+    //   "experimental": false,
+    //   "manifest": {
+    //     "metanorma": {
+    //       "source": {
+    //         "files": [
+    //           "sources/antioch-v2/document.adoc"
+    //         ]
+    //       }
+    //     }
+    //   }
+    // },
+    // {
+    //   "id": "bipm",
+    //   "public": true,
+    //   "experimental": false,
+    //   "manifest": {
+    //     "metanorma": {
+    //       "source": {
+    //         "files": [
+    //           "sources/JCTLM/jctlm-ec-07.adoc",
+    //           "sources/brochure-its90/brochure-its90-fr.adoc",
+    //           "sources/guide-its90/guide-its90-01.adoc",
+    //           "sources/guides/guide-its90-diff.adoc",
+    //           "sources/working-party-notes/wpn-203.adoc",
+    //           "sources/cipm-mra/d-02/document.adoc",
+    //           "sources/monographie/bipm-1/document.adoc",
+    //           "sources/rapports/2015-01/document.adoc"
+    //         ]
+    //       }
+    //     }
+    //   }
+    // },
+    // {
+    //   "id": "bsi",
+    //   "public": false,
+    //   "experimental": false,
+    //   "manifest": {
+    //     "metanorma": {
+    //       "source": {
+    //         "files": [
+    //           "sources/bs-en-iso-13485-2012/document.adoc",
+    //           "sources/flex-0/document.adoc",
+    //           "sources/pas_2060/document.adoc",
+    //           "sources/bsi-iso-20400-44000-kit/bs-11000-2/document.adoc",
+    //           "sources/bsi-iso-44000-kit/pd-iso-tr-44000/document.adoc"
+    //         ]
+    //       }
+    //     }
+    //   }
+    // },
+    // {
+    //   "id": "itu",
+    //   "public": true,
+    //   "experimental": false,
+    //   "manifest": {
+    //     "metanorma": {
+    //       "source": {
+    //         "files": [
+    //           "sources/G.191.adoc",
+    //           "sources/T-Editing-Guidelines-201602.adoc",
+    //           "sources/T-REC-H.782-201811-I.MSW-E.adoc",
+    //           "sources/T-RES-T.1-2016-MSW-E.adoc",
+    //           "sources/T-TUT-CABLETV-2020.adoc",
+    //           "sources/Z.100-201811-AnnF1.adoc"
+    //         ]
+    //       }
+    //     }
+    //   }
+    // },
+    // {
+    //   "id": "csa",
+    //   "public": true,
+    //   "experimental": false
+    // },
+    // {
+    //   "id": "ieee",
+    //   "public": true,
+    //   "experimental": false
+    // },
+    // {
+    //   "id": "ieee-private",
+    //   "public": false,
+    //   "experimental": false,
+    //   "manifest": {
+    //     "metanorma": {
+    //       "source": {
+    //         "files": [
+    //           "sources/1127/document.adoc"
+    //         ]
+    //       }
+    //     }
+    //   }
+    // },
+    // {
+    //   "id": "m3aawg",
+    //   "public": true,
+    //   "experimental": false
+    // },
+    // {
+    //   "id": "jcgm",
+    //   "public": true,
+    //   "experimental": false,
+    //   "manifest": {
+    //     "metanorma": {
+    //       "source": {
+    //         "files": [
+    //           "sources/jcgm/100-2008-en/document.adoc"
+    //         ]
+    //       }
+    //     }
+    //   }
+    // },
+    // {
+    //   "id": "nist",
+    //   "public": false,
+    //   "experimental": false,
+    //   "manifest": {
+    //     "metanorma": {
+    //       "source": {
+    //         "files": [
+    //           "sources/NIST.CSWP.01262018.adoc",
+    //           "sources/NIST.SP.800-116r1.covers.draft-wip.adoc",
+    //           "sources/NIST.SP.800-116r1.covers.withdrawn-final.adoc",
+    //           "sources/NIST.SP.800-90B.adoc"
+    //         ]
+    //       }
+    //     }
+    //   }
+    // },
+    // {
+    //   "id": "ribose",
+    //   "public": true,
+    //   "experimental": false,
+    //   "manifest": {
+    //     "metanorma": {
+    //       "source": {
+    //         "files": [
+    //           "sources/nereon-syntax/rsd-nereon-configuration-syntax.adoc"
+    //         ]
+    //       }
+    //     }
+    //   }
+    // }
   ]
 }
