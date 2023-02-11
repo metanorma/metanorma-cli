@@ -74,14 +74,15 @@ jobs:
     - if: matrix.flavor.manifest
       run: |
         echo '${{ toJSON(matrix.flavor.manifest) }}' > manifest-smoke.json
-        echo "---"
-        cat manifest-smoke.json
         yq e -P '.' manifest-smoke.json > manifest-smoke.yml
-        echo "---"
-        cat manifest-smoke.yml
         yq eval-all '. as $item ireduce ({}; . * $item )' samples/metanorma.yml manifest-smoke.yml > samples/metanorma.yml
-        echo "---"
         cat samples/metanorma.yml
+
+    - if: matrix.flavor.private-fonts
+      run: |
+        fontist update
+        fontist repo setup metanorma https://metanorma-ci:${{ secrets.METANORMA_CI_PAT_TOKEN }}@github.com/metanorma/fontist-formulas-private
+        fontist repo update metanorma
 
     - uses: actions-mn/site-gen@v1
       with:
