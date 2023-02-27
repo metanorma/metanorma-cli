@@ -1,0 +1,56 @@
+{
+  "os": [
+    "macos-latest",
+    "ubuntu-latest",
+    "windows-latest"
+  ],
+  "ruby": [
+    {
+      "version": "2.7",
+      "rubygems": "default",
+      "experimental": false
+    }
+  ],
+  "flavor": [
+    {
+      "id": "iso",
+      "type": "iso-rice",
+      "experimental": false
+    },
+    {
+      "id": "cc",
+      "type": "admin",
+      "experimental": false
+    },
+    {
+      "id": "iec",
+      "type": "iec-rice",
+      "experimental": false
+    },
+    {
+      "id": "ogc",
+      "type": "abstract-specification-topic",
+      "experimental": false
+    },
+    {
+      "id": "un",
+      "type": "plenary",
+      "experimental": false
+    },
+    {
+      "id": "ietf",
+      "type": "rfc",
+      "experimental": false
+    },
+    {
+      "id": "itu",
+      "type": "focus-group",
+      "experimental": false
+    },
+    {
+      "id": "m3aawg",
+      "type": "best-practice",
+      "experimental": false
+    }
+  ]
+}
