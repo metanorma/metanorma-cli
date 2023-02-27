@@ -3,9 +3,8 @@
 name: notify
 
 on:
-  repository_dispatch:
-    types: [ tests-passed, release-passed ]
-
+ repository_dispatch:
+   types: [ release-passed ]
 
 jobs:
   notify:
