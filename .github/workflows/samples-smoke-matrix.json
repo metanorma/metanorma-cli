@@ -221,7 +221,7 @@
     {
       "id": "jcgm",
       "public": true,
-      "experimental": false,
+      "experimental": true,
       "manifest": {
         "metanorma": {
           "source": {
