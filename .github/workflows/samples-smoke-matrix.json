@@ -54,7 +54,7 @@
     },
     {
       "id": "iec-private",
-      "private": true,
+      "public": false,
       "experimental": true,
       "manifest": {
         "metanorma": {
