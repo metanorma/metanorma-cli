@@ -46,11 +46,6 @@
       "id": "itu",
       "type": "focus-group",
       "experimental": false
-    },
-    {
-      "id": "m3aawg",
-      "type": "best-practice",
-      "experimental": false
     }
   ]
 }
