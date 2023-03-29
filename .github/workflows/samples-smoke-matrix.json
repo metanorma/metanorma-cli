@@ -176,12 +176,12 @@
         "metanorma": {
           "source": {
             "files": [
-              "sources/G.191.adoc",
-              "sources/T-Editing-Guidelines-201602.adoc",
-              "sources/T-REC-H.782-201811-I.MSW-E.adoc",
-              "sources/T-RES-T.1-2016-MSW-E.adoc",
-              "sources/T-TUT-CABLETV-2020.adoc",
-              "sources/Z.100-201811-AnnF1.adoc"
+              "sources/G.191/en.adoc",
+              "sources/T-Editing-Guidelines-201602/en.adoc",
+              "sources/T-REC-H.792-201811/en.adoc"
+              "sources/T-RES-T.1-2016/en.adoc"
+              "sources/T-TUT-CABLETV-2020/en.adoc",
+              "sources/Z.100-201811-AnnF1/en.adoc"
             ]
           }
         }
