@@ -13,7 +13,7 @@ module Metanorma
       "metanorma-cc",
       "metanorma-csa",
       "metanorma-iho",
-      "metanorma-m3aawg",
+      # "metanorma-m3aawg", 
       "metanorma-generic",
       "metanorma-standoc",
       "metanorma-un",
@@ -23,7 +23,7 @@ module Metanorma
 
     PRIVATE_SUPPORTED_GEMS = [
       "metanorma-ribose",
-      "metanorma-mpfa",
+      # "metanorma-mpfa",
       "metanorma-nist",
     ].freeze
 
