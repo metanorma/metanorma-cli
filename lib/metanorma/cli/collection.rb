@@ -35,8 +35,8 @@ module Metanorma
         @collection_options ||= {
           compile: @compile_options,
           output_folder: build_output_folder,
-          coverpage: options.fetch(:coverpage, nil),
-          format: collection_output_formats(options.fetch(:format, "")),
+          coverpage: @options.fetch(:coverpage, nil),
+          format: collection_output_formats(@options.fetch(:format, "")),
         }
       end
 
@@ -59,13 +59,12 @@ module Metanorma
       end
 
       def extract_options_from_file
-        if options.empty?
           yaml_file = YAML.safe_load(File.read(@file.to_s))
 
           @options = Cli.with_indifferent_access(
             yaml_file.slice("coverpage", "format", "output_folder"),
           )
-        end
+          @options.merge!(options)
       end
     end
   end
