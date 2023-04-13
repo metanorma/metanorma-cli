@@ -1,50 +1,47 @@
 {
-  "os": [
-    "macos-latest",
-    "ubuntu-latest",
-    "windows-latest"
+  "type": [
+    "iso",
+    "cc",
+    "iec",
+    "ogc",
+    "un",
+    "ietf",
+    "itu"
   ],
-  "ruby": [
+  "include": [
     {
-      "version": "2.7",
-      "rubygems": "default",
-      "experimental": false
-    }
-  ],
-  "flavor": [
-    {
-      "id": "iso",
-      "type": "iso-rice",
+      "type": "iso",
+      "doctype": "iso-rice",
       "experimental": false
     },
     {
-      "id": "cc",
-      "type": "admin",
+      "type": "cc",
+      "doctype": "admin",
       "experimental": false
     },
     {
-      "id": "iec",
-      "type": "iec-rice",
+      "type": "iec",
+      "doctype": "iec-rice",
       "experimental": false
     },
     {
-      "id": "ogc",
-      "type": "abstract-specification-topic",
+      "type": "ogc",
+      "doctype": "abstract-specification-topic",
       "experimental": false
     },
     {
-      "id": "un",
-      "type": "plenary",
+      "type": "un",
+      "doctype": "plenary",
       "experimental": false
     },
     {
-      "id": "ietf",
-      "type": "rfc",
+      "type": "ietf",
+      "doctype": "rfc",
       "experimental": false
     },
     {
-      "id": "itu",
-      "type": "focus-group",
+      "type": "itu",
+      "doctype": "focus-group",
       "experimental": false
     }
   ]

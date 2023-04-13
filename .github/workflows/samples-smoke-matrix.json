@@ -1,16 +1,4 @@
 {
-  "os": [
-    "macos-latest",
-    "ubuntu-latest",
-    "windows-latest"
-  ],
-  "ruby": [
-    {
-      "version": "2.7",
-      "rubygems": "default",
-      "experimental": false
-    }
-  ],
   "flavor": [
     {
       "id": "iso",
