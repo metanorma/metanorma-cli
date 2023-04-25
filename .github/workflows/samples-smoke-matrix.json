@@ -1,16 +1,4 @@
 {
-  "os": [
-    "macos-latest",
-    "ubuntu-latest",
-    "windows-latest"
-  ],
-  "ruby": [
-    {
-      "version": "2.7",
-      "rubygems": "default",
-      "experimental": false
-    }
-  ],
   "flavor": [
     {
       "id": "iso",
@@ -41,7 +29,7 @@
     {
       "id": "iec",
       "public": true,
-      "experimental": false,
+      "experimental": true,
       "manifest": {
         "metanorma": {
           "source": {
@@ -155,7 +143,7 @@
       "id": "bsi",
       "public": false,
       "private-fonts": true,
-      "experimental": false,
+      "experimental": true,
       "manifest": {
         "metanorma": {
           "source": {
@@ -190,7 +178,7 @@
     {
       "id": "csa",
       "public": true,
-      "experimental": false
+      "experimental": true
     },
     {
       "id": "ieee",
@@ -245,7 +233,7 @@
     {
       "id": "ribose",
       "public": true,
-      "experimental": false,
+      "experimental": true,
       "manifest": {
         "metanorma": {
           "source": {
