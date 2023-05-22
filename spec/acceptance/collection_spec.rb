@@ -3,7 +3,6 @@ RESULTS = "spec/results".freeze
 RSpec.describe "Collection" do
   describe "collection" do
     it "render HTML from YAML" do
-      require "debug"; binding.b
       run_metanorma_collection("collection1.yml")
       expect_generated_files_to_match_expectations
     end
