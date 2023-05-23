@@ -59,12 +59,24 @@ module Metanorma
       end
 
       def extract_options_from_file
-          yaml_file = YAML.safe_load(File.read(@file.to_s))
+        yaml_file = if /\.ya?ml$/.match?(@file.to_s)
+                      YAML.safe_load(File.read(@file.to_s))
+                    elsif /\.xml$/.match?(@file.to_s)
+                      xml_extract_options_from_file
+                    end
 
-          @options = Cli.with_indifferent_access(
-            yaml_file.slice("coverpage", "format", "output_folder"),
-          )
-          @options.merge!(options)
+        old = options.dup
+        @options = Cli.with_indifferent_access(
+          yaml_file.slice("coverpage", "format", "output_folder"),
+        )
+        @options.merge!(old)
+      end
+
+      def xml_extract_options_from_file
+        xml = Nokogiri::XML File.read(@file.to_s, encoding: "UTF-8") { |c| c.huge }
+        { "coverpage" => xml.at("//xmlns:coverpage"),
+          "format" => xml.at("//xmlns:format"),
+          "output_folder" => xml.at("//xmlns:output_folder") }.compact
       end
     end
   end
