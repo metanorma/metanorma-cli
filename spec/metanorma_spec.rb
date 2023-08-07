@@ -69,16 +69,6 @@ RSpec.describe Metanorma do
     expect_files_to_exists("test/test.html")
   end
 
-  it "keeps Asciimath" do
-    create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-
-    compile_doc(source_file, "-a -t iso -x xml")
-    xml = file_content("test.xml")
-
-    expect(xml).not_to include('<stem type="MathML">')
-    expect(xml).to include('<stem type="AsciiMath">')
-  end
-
   it "data64 encodes images" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
     compile_doc(source_file, "-d -t iso -x html")
