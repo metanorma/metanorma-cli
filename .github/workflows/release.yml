@@ -10,8 +10,8 @@ on:
           Next release version. Possible values: x.y.z, major, minor, patch or pre|rc|etc
         required: true
         default: 'skip'
-  push:
-    tags: [ v* ]
+  repository_dispatch:
+    types: [ do-release ]
 
 jobs:
   release:
