@@ -83,21 +83,23 @@ Refer to https://www.metanorma.org/install/usage[Metanorma CLI usage].
 === General overview
 
 Once we are ready for release of `metanorma-cli`, it means:
-- required all `metanorma-cli`'s dependencies are released or ready for upcoming release
-- last `rake` workflow for `main` branch is green (can be started https://github.com/metanorma/metanorma-cli/actions/workflows/rake.yml[manually])
+
+. required all `metanorma-cli`'s dependencies are released or ready for upcoming release
+. last `rake` workflow for `main` branch is green (can be started https://github.com/metanorma/metanorma-cli/actions/workflows/rake.yml[manually])
 
 Simply bump `metanorma-cli` gem version and push. This will initiate rake workflow that:
-- run `rake` tests
-- run `template`s compilation tests
-- run `sample`s compilation tests
+
+. run `rake` tests
+. run `template`s compilation tests
+. run `sample`s compilation tests
 
 The test matrix defined as JSON files in link:./.github/workflows/samples-smoke-matrix.json[samples test matrix] and link:./.github/workflows/templates-smoke-matrix.json[templates test matrix]
 
-One all tests is passed, `packed-mn`'s and `docker`'s releases will be initiated
+One all tests is passed, `packed-mn` 's and `docker` 's releases will be initiated
 
 === Responsibility
 
-[cols="1,1,1"]
+[cols="1,1"]
 |===
 |Repositories | Responsible
 
