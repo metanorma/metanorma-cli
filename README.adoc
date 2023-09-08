@@ -107,6 +107,8 @@ One all tests is passed, `packed-mn`'s and `docker`'s releases will be initiated
 |`packed-mn`, `docker`, `chocolatey`, `snap`, `brew` and any other unusual CI failures
 |@CAMOBAP
 
+|===
+
 == Credits
 
 This gem is developed, maintained and funded by https://www.metanorma.com/docs/getting-started/[Ribose Inc.]
