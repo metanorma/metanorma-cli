@@ -46,7 +46,7 @@ Gem::Specification.new do |spec|
   # spec.add_runtime_dependency 'metanorma-ribose', "~> 2.3.0"
   spec.add_runtime_dependency "metanorma-bipm", "~> 2.3.0"
   spec.add_runtime_dependency "metanorma-generic", "~> 2.5.0"
-  spec.add_runtime_dependency "metanorma-standoc", "~> 2.5.0"
+  spec.add_runtime_dependency "metanorma-standoc", "~> 2.6.0"
   # spec.add_runtime_dependency 'metanorma-mpfa', "~> 0.9.0"
   spec.add_runtime_dependency "git", "~> 1.5"
   spec.add_runtime_dependency "metanorma", "~> 1.6.0"
