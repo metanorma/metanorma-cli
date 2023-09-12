@@ -216,7 +216,7 @@
     {
       "id": "nist",
       "public": false,
-      "experimental": false,
+      "experimental": true,
       "manifest": {
         "metanorma": {
           "source": {
