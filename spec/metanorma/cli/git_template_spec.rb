@@ -42,7 +42,8 @@ RSpec.describe Metanorma::Cli::GitTemplate do
         Metanorma::Cli::GitTemplate.download("csd", repo: template_repo)
       }
 
-      expect(output).to include("Invalid template reoository!")
+      expect(output).to include("Invalid template repository:")
+      expect(output).to include("Repository not found")
     end
   end
 end

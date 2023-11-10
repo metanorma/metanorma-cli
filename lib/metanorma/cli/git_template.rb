@@ -16,8 +16,8 @@ module Metanorma
       def download
         remove!
         clone_git_template(options[:repo])
-      rescue Git::GitExecuteError
-        UI.say("Invalid template reoository!")
+      rescue Git::GitExecuteError => e
+        UI.say("Invalid template repository: #{e}!")
         nil
       end
 
