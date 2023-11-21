@@ -1,3 +1,4 @@
 gem "isodoc", git: "https://github.com/metanorma/isodoc", branch: "fix/xslt-memory"
+gem "relaton-bib", git: "https://github.com/relaton/relaton-bib", branch: "fix/xslt-memory"
 gem "html2doc", git: "https://github.com/metanorma/html2doc", branch: "main"
 

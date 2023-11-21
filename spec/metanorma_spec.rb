@@ -233,7 +233,7 @@ RSpec.describe Metanorma do
   end
 
   def compile_doc(source_file, options = "")
-    system("metanorma compile #{options} #{source_file} --no-install-fonts")
+    system("bundle exec metanorma compile #{options} #{source_file} --no-install-fonts")
   end
 
   def expect_files_to_exists(*files)
