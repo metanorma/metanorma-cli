@@ -8,6 +8,6 @@ source "https://rubygems.pkg.github.com/metanorma" do
   gem "metanorma-nist"
 end
 
-gemspec
+eval_gemfile "Gemfile.devel"# if File.exist? "Gemfile.devel"
 
-eval_gemfile "Gemfile.devel" if File.exist? "Gemfile.devel"
+gemspec
