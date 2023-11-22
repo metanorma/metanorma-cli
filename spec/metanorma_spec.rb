@@ -98,29 +98,29 @@ RSpec.describe Metanorma do
 
   it "warns when no standard type provided" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    stdout = `bundle exec metanorma #{source_file} --no-install-fonts`
+    stdout = `metanorma #{source_file} --no-install-fonts`
     expect(stdout).to include "Please specify a standard type"
   end
 
   it "warns when bogus standard type requested" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    `bundle exec metanorma -t bogus_format #{source_file}`
+    `metanorma -t bogus_format #{source_file}`
     expect($?.exitstatus).not_to be == 0
   end
 
   it "warns when bogus format requested" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
-    stdout = `bundle exec metanorma -t iso -f bogus_format #{source_file}`
+    stdout = `metanorma -t iso -f bogus_format #{source_file}`
     expect(stdout).to include("Only source file format currently supported")
   end
 
   it "warns when no file provided" do
-    stdout = `bundle exec metanorma -t iso -x html`
+    stdout = `metanorma -t iso -x html`
     expect(stdout).to include "Need to specify a file to process"
   end
 
   it "gives version information" do
-    stdout = `bundle exec metanorma -v -t iso`
+    stdout = `metanorma -v -t iso`
     expect(stdout).to match(/Metanorma::ISO \d/)
   end
 
@@ -135,24 +135,24 @@ RSpec.describe Metanorma do
   end
 
   it "config handle not existing values in global config" do
-    stdout = `bundle exec metanorma config get --global cli.not_exists`
+    stdout = `metanorma config get --global cli.not_exists`
     expect(stdout).to eq("nil\n")
   end
 
   it "config test set global config" do
-    `bundle exec metanorma config set --global cli.test true`
-    stdout = `bundle exec metanorma config get --global cli.test`
+    `metanorma config set --global cli.test true`
+    stdout = `metanorma config get --global cli.test`
     expect(stdout).to eq("true\n")
-    `bundle exec metanorma config unset --global cli.test`
-    stdout = `bundle exec metanorma config get --global cli.test`
+    `metanorma config unset --global cli.test`
+    stdout = `metanorma config get --global cli.test`
     expect(stdout).to eq("nil\n")
   end
 
   it "config test set local value" do
     Dir.mktmpdir("rspec-") do |dir|
       Dir.chdir(dir) do
-        `bundle exec metanorma config set cli.not_exists true`
-        stdout = `bundle exec metanorma config get cli.not_exists`
+        `metanorma config set cli.not_exists true`
+        stdout = `metanorma config get cli.not_exists`
         expect(stdout).to eq("true\n")
       end
     end
@@ -161,7 +161,7 @@ RSpec.describe Metanorma do
   it "config handle not existing values in local config" do
     Dir.mktmpdir("rspec-") do |dir|
       Dir.chdir(dir) do
-        expect(`bundle exec metanorma config get cli.not_exists`).to eq("nil\n")
+        expect(`metanorma config get cli.not_exists`).to eq("nil\n")
       end
     end
   end
@@ -197,7 +197,7 @@ RSpec.describe Metanorma do
           tmp_input = File.join(Dir.pwd, input_fname)
           result = File.join(Dir.pwd, "result.xml")
           FileUtils.cp input, tmp_input
-          `bundle exec metanorma convert #{tmp_input} --output-file #{result} --debug`
+          `metanorma convert #{tmp_input} --output-file #{result} --debug`
           expect_files_to_exists(result)
         end
       end
@@ -240,7 +240,7 @@ RSpec.describe Metanorma do
   end
 
   def compile_doc(source_file, options = "")
-    system("bundle exec metanorma compile #{options} #{source_file} --no-install-fonts")
+    system("metanorma compile #{options} #{source_file} --no-install-fonts")
   end
 
   def expect_files_to_exists(*files)
