@@ -172,13 +172,11 @@ RSpec.describe Metanorma do
   end
 
   # COMMENT context "with -r option specified" do
-  # context is ignoring the needed "bundle install", and therefore can GO TO HELL. REMOVED.
   # moving this text to end of suite instead
 =begin
-  #context "with -r option specified" do
-  xit "with -r option specified loads the libary and compile document" do
+  context "with -r option specified" do
+  it "with -r option specified loads the libary and compile document" do
     create_clean_test_files ASCIIDOC_PREAMBLE_HDR
-    require "debug"; binding.b
     system "bundle install"
     compile_doc(source_file, "-t iso -r metanorma-iso --no-install-fonts")
 
@@ -186,8 +184,9 @@ RSpec.describe Metanorma do
     expect_files_to_not_exists("test.doc", "test.alt.html")
     expect(file_content("test.xml")).to include("</iso-standard>")
   end
-  #end
+  end
 =end
+
   %w[rfc sts].each do |type|
     it "metanorma-cli convert #{type}" do
       input_fname = "mnconvert_#{type}.xml"
