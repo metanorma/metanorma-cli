@@ -173,7 +173,6 @@ RSpec.describe Metanorma do
 
   # COMMENT context "with -r option specified" do
   # moving this text to end of suite instead
-=begin
   context "with -r option specified" do
   it "with -r option specified loads the libary and compile document" do
     create_clean_test_files ASCIIDOC_PREAMBLE_HDR
@@ -185,7 +184,6 @@ RSpec.describe Metanorma do
     expect(file_content("test.xml")).to include("</iso-standard>")
   end
   end
-=end
 
   %w[rfc sts].each do |type|
     it "metanorma-cli convert #{type}" do
