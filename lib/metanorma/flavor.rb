@@ -13,6 +13,7 @@ module Metanorma
       "metanorma-cc",
       "metanorma-csa",
       "metanorma-iho",
+      "metanorma-jis",
       # "metanorma-m3aawg", 
       "metanorma-generic",
       "metanorma-standoc",

@@ -54,6 +54,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "metanorma-itu", "~> 2.3.0"
   # spec.add_runtime_dependency "metanorma-nist", "~> 2.3.0"
   spec.add_runtime_dependency "metanorma-ieee", "~> 1.1.0"
+  spec.add_runtime_dependency "metanorma-jis", "~> 0.1.0"
   spec.add_runtime_dependency "metanorma-ogc", "~> 2.4.0"
   spec.add_runtime_dependency "metanorma-un", "~> 0.11.0"
   spec.add_runtime_dependency "relaton-cli", ">= 0.8.2"
