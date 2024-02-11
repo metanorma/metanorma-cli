@@ -96,6 +96,41 @@ RSpec.describe "Metanorma" do
     end
   end
 
+  describe "failure" do
+    before do
+      fatals = [
+        "Fatal error 1",
+        "Fatal error 2",
+        "Fatal error 3",
+      ]
+      allow(Metanorma::Cli::Compiler).to receive(:compile)
+        .and_return(fatals, [])
+    end
+
+    it "returns non-zero status code on fatal error" do
+      command = %W(site generate #{source_dir})
+
+      expect { Metanorma::Cli.start(command) }
+        .to raise_error(SystemExit) { |e|
+          expect(e.status).to eq(-1)
+        }
+    end
+
+    it "print UI.error on fatal errors" do
+      command = %W(site generate #{source_dir})
+
+      exit_called = false
+      output = capture_stderr do
+        Metanorma::Cli.start(command)
+      rescue SystemExit
+        exit_called = true
+      end
+
+      expect(exit_called).to eq(true)
+      expect(output).to include("Fatal compilation error(s)")
+    end
+  end
+
   def source_dir
     @source_dir ||= File.expand_path(File.join(File.dirname(__dir__), "fixtures"))
   end

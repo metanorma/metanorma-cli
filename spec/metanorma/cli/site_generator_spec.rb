@@ -170,6 +170,24 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
       end
     end
 
+    it "raise error on fatal errors" do
+      stub_external_interface_calls
+      fatals = [
+        "Fatal error 1",
+        "Fatal error 2",
+        "Fatal error 3",
+      ]
+
+      allow(Metanorma::Cli::Compiler).to receive(:compile).and_return(fatals)
+      expect do
+        Metanorma::Cli::SiteGenerator.generate(
+          source_path,
+          { output_dir: output_directory },
+          continue_without_fonts: false,
+        )
+      end.to raise_error(Metanorma::Cli::Errors::FatalCompilationError)
+    end
+
     def stub_external_interface_calls
       allow(File).to receive(:rename)
       allow(Metanorma::Cli::Compiler).to receive(:compile)
