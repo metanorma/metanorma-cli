@@ -38,8 +38,7 @@ module Metanorma
       UI.say("Error: #{e}. \nNot sure what to run? try: metanorma help")
       exit(Errno::ENOENT::Errno)
     rescue Errors::FatalCompilationError => e
-      UI.error(e.message)
-      exit(-1)
+      print_fatal_summary(e)
     end
 
     def self.root
@@ -93,6 +92,13 @@ module Metanorma
     def self.find_command(arguments)
       commands = Metanorma::Cli::Command.all_commands.keys
       commands.select { |cmd| arguments.include?(cmd.gsub("_", "-")) == true }
+    end
+
+    def self.print_fatal_summary(error)
+      $stdout.flush
+      $stderr.flush
+      UI.error(error.message)
+      exit(-1)
     end
   end
 end
