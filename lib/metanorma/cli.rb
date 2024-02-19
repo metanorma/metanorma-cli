@@ -34,9 +34,11 @@ module Metanorma
       Metanorma::Cli::Command.start(arguments)
     rescue Interrupt, SignalException => _e
       UI.say("Process cancelled, exiting.")
-    rescue Errors::FileNotFoundError => error
-      UI.say("Error: #{error}. \nNot sure what to run? try: metanorma help")
+    rescue Errors::FileNotFoundError => e
+      UI.say("Error: #{e}. \nNot sure what to run? try: metanorma help")
       exit(Errno::ENOENT::Errno)
+    rescue Errors::FatalCompilationError => e
+      print_fatal_summary(e)
     end
 
     def self.root
@@ -72,11 +74,11 @@ module Metanorma
     def self.writable_templates_path?
       parent_directory = templates_path.join("..", "..")
 
-      unless parent_directory && parent_directory.writable?
+      unless parent_directory&.writable?
         raise Errno::EACCES, "No permission to write in this directory"
       end
 
-      return true
+      true
     end
 
     def self.root_path
@@ -90,6 +92,13 @@ module Metanorma
     def self.find_command(arguments)
       commands = Metanorma::Cli::Command.all_commands.keys
       commands.select { |cmd| arguments.include?(cmd.gsub("_", "-")) == true }
+    end
+
+    def self.print_fatal_summary(error)
+      $stdout.flush
+      $stderr.flush
+      UI.error(error.message)
+      exit(-1)
     end
   end
 end

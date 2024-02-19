@@ -28,7 +28,12 @@ module Metanorma
 
       def generate
         site_directory = asset_directory.join("..")
-        select_source_files.each { |source| compile(source) }
+
+        fatals = select_source_files.map { |source| compile(source) }
+          .flatten
+          .compact
+
+        raise Errors::FatalCompilationError, fatals unless fatals.empty?
 
         Dir.chdir(site_directory) do
           build_collection_file(collection_name)
