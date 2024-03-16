@@ -89,7 +89,8 @@ module Metanorma
         UI.info("Compiling #{source} ...")
 
         options = @compile_options.merge(
-          format: :asciidoc, output_dir: build_asset_output_directory(source)
+          format: :asciidoc, output_dir: build_asset_output_directory(source),
+          site_generate: true
         )
 
         options[:baseassetpath] = Pathname.new(source.to_s).dirname.to_s
