@@ -10,7 +10,8 @@ RSpec.describe "Metanorma" do
   describe "site generate" do
     it "generate a mini site" do
       output_dir = Dir.pwd
-      allow(Metanorma::Cli::SiteGenerator).to receive(:generate).and_call_original
+      allow(Metanorma::Cli::SiteGenerator).to receive(:generate)
+        .and_call_original
       allow(Metanorma::Cli::Compiler).to receive(:compile)
       command = %W(site generate #{source_dir} -o #{output_dir})
 
@@ -18,20 +19,23 @@ RSpec.describe "Metanorma" do
 
       expect(output).to include("Site has been generated at #{output_dir}")
       expect(Metanorma::Cli::SiteGenerator).to have_received(:generate).with(
-        source_dir.to_s, { output_dir: output_dir, no_progress: true }, no_progress: true
+        source_dir.to_s, { output_dir: output_dir,
+                           no_progress: true }, no_progress: true
       )
 
       expect(Metanorma::Cli::Compiler).to have_received(:compile)
         .at_least(:once)
         .with(
           kind_of(String),
-          hash_including(format: :asciidoc, output_dir: kind_of(Pathname))
+          hash_including(format: :asciidoc, output_dir: kind_of(Pathname),
+                         site_generate: true),
         )
     end
 
     it "generate a mini site with extra compile args" do
       output_dir = Dir.pwd
-      allow(Metanorma::Cli::SiteGenerator).to receive(:generate).and_call_original
+      allow(Metanorma::Cli::SiteGenerator).to receive(:generate)
+        .and_call_original
       allow(Metanorma::Cli::Compiler).to receive(:compile)
       command = %W(site generate #{source_dir} -o #{output_dir}
                    --continue-without-fonts -S)
@@ -132,6 +136,7 @@ RSpec.describe "Metanorma" do
   end
 
   def source_dir
-    @source_dir ||= File.expand_path(File.join(File.dirname(__dir__), "fixtures"))
+    @source_dir ||=
+      File.expand_path(File.join(File.dirname(__dir__), "fixtures"))
   end
 end

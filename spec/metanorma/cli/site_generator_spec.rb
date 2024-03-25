@@ -20,6 +20,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           format: :asciidoc,
           output_dir: asset_directory,
           continue_without_fonts: false,
+          site_generate: true,
         )
 
         expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
@@ -46,6 +47,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           output_dir: asset_directory,
           continue_without_fonts: false,
           no_progress: false,
+          site_generate: true,
         )
 
         expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
@@ -97,6 +99,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
             format: :asciidoc,
             output_dir: output_directory.join(asset_folder),
             continue_without_fonts: false,
+            site_generate: true,
           )
         end
 
