@@ -11,8 +11,8 @@ require "mnconvert"
 module Metanorma
   module Cli
     class Command < ThorWithConfig
-      class_option :no_progress, aliases: "-s", type: :boolean, default: true,
-                                 desc: "Don't show progress for long running tasks (like download)"
+      class_option :progress, aliases: "-s", type: :boolean, default: false,
+                              desc: "Show progress for long running tasks (like download)"
 
       desc "new NAME", "Create new Metanorma document"
       option :type, aliases: "-t", required: true, desc: "Document type"
@@ -39,7 +39,7 @@ module Metanorma
       option :strict, aliases: "-S", type: :boolean, desc: "Strict compilation: abort if there are any errors"
       option :agree_to_terms, type: :boolean, desc: "Agree / Disagree with all third-party licensing terms "\
                                                     "presented (WARNING: do know what you are agreeing with!)"
-      option :no_install_fonts, type: :boolean, desc: "Skip the font installation process"
+      option :install_fonts, type: :boolean, default: true, desc: "Install required fonts"
       option :continue_without_fonts, type: :boolean, desc: "Continue processing even when fonts are missing"
 
       def compile(file_name = nil)
@@ -64,7 +64,7 @@ module Metanorma
       option :coverpage, aliases: "-c", desc: "Liquid template"
       option :agree_to_terms, type: :boolean, desc: "Agree / Disagree with all third-party licensing terms "\
                                                     "presented (WARNING: do know what you are agreeing with!)"
-      option :no_install_fonts, type: :boolean, desc: "Skip the font installation process"
+      option :install_fonts, type: :boolean, default: true, desc: "Install required fonts"
       option :continue_without_fonts, type: :boolean, desc: "Continue processing even when fonts are missing"
       option :strict, aliases: "-S", type: :boolean, \
                       desc: "Strict compilation: abort if there are any errors"

@@ -18,7 +18,7 @@ module Metanorma
         )
         option :agree_to_terms, type: :boolean, desc: "Agree / Disagree with all third-party licensing terms "\
                                                       "presented (WARNING: do know what you are agreeing with!)"
-        option :no_install_fonts, type: :boolean, desc: "Skip the font installation process"
+        option :install_fonts, type: :boolean, default: true, desc: "Install required fonts"
         option :continue_without_fonts, type: :boolean, desc: "Continue processing even when fonts are missing"
         option :stylesheet, alias: "-s", desc: "Stylesheet file path for rendering HTML page"
         option :template_dir, alias: "-t", desc: "Liquid template directory to render site design"

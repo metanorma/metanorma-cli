@@ -51,18 +51,18 @@ RSpec.describe "Config" do
   it "config values have bigger priority then args" do
     config_cli = Metanorma::Cli::Commands::Config.new
     config_cli.set("cli.agree_to_terms", "true")
-    config_cli.set("cli.no_install_fonts", "true")
+    config_cli.set("cli.install_fonts", "true")
     config_cli.set("cli.continue_without_fonts", "true")
 
     result = Metanorma::Cli::Commands::Config.load_configs(
       { agree_to_terms: false,
-        no_install_fonts: false,
+        install_fonts: true,
         continue_without_fonts: false },
       [@test_config]
     )
 
     expect(result[:agree_to_terms]).to be true
-    expect(result[:no_install_fonts]).to be true
+    expect(result[:install_fonts]).to be true
     expect(result[:continue_without_fonts]).to be true
   end
 end

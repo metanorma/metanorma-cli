@@ -37,7 +37,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           source_path,
           { output_dir: output_directory },
           continue_without_fonts: false,
-          no_progress: false,
+          progress: false,
         )
 
         expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
@@ -46,7 +46,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           format: :asciidoc,
           output_dir: asset_directory,
           continue_without_fonts: false,
-          no_progress: false,
+          progress: false,
           site_generate: true,
         )
 

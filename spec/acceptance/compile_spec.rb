@@ -10,8 +10,14 @@ RSpec.describe "Metanorma" do
       registered_tags = Metanorma::Registry.instance.root_tags
 
       expect(registered_tags[:ogc]).to eq("ogc-standard")
-      expect(Metanorma::Cli::Compiler,).to have_received(:compile).
-        with(sample_asciidoc_file, format: :asciidoc, type: "iso", no_progress: true)
+      expect(Metanorma::Cli::Compiler).to have_received(:compile)
+        .with(
+          sample_asciidoc_file,
+          format: :asciidoc,
+          type: "iso",
+          progress: false,
+          install_fonts: true,
+        )
     end
 
     it "supports wildcard document selection" do
@@ -23,7 +29,13 @@ RSpec.describe "Metanorma" do
 
       expect(Metanorma::Cli::Compiler).to have_received(:compile).thrice
       expect(Metanorma::Cli::Compiler).to have_received(:compile)
-        .with(sample_asciidoc_file, format: :asciidoc, type: "iso", no_progress: true)
+        .with(
+          sample_asciidoc_file,
+          format: :asciidoc,
+          type: "iso",
+          progress: false,
+          install_fonts: true,
+        )
     end
   end
 
