@@ -1,0 +1,2 @@
+gem 'plurimath', github: 'plurimath/plurimath', branch: 'updates/symbols_support'
+
