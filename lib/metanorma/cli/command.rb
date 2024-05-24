@@ -149,6 +149,10 @@ module Metanorma
       desc "config", "Manage configuration file"
       subcommand :config, Metanorma::Cli::Commands::Config
 
+      def self.exit_on_failure?
+        true
+      end
+
       private
 
       def single_type_extensions(type)
