@@ -19,8 +19,16 @@ RSpec.describe "Metanorma" do
 
       expect(output).to include("Site has been generated at #{output_dir}")
       expect(Metanorma::Cli::SiteGenerator).to have_received(:generate).with(
-        source_dir.to_s, { output_dir: output_dir,
-                           no_progress: true }, no_progress: true
+        source_dir.to_s,
+        {
+          output_dir: output_dir,
+          progress: false,
+          install_fonts: true,
+        },
+        {
+          progress: false,
+          install_fonts: true,
+        },
       )
 
       expect(Metanorma::Cli::Compiler).to have_received(:compile)
@@ -47,13 +55,15 @@ RSpec.describe "Metanorma" do
         source_dir.to_s,
         {
           output_dir: output_dir,
-          no_progress: true,
+          progress: false,
           continue_without_fonts: true,
           strict: true,
+          install_fonts: true,
         },
         continue_without_fonts: true,
-        no_progress: true,
+        progress: false,
         strict: true,
+        install_fonts: true,
       )
 
       expect(Metanorma::Cli::Compiler).to have_received(:compile)
@@ -95,7 +105,8 @@ RSpec.describe "Metanorma" do
       expect(Metanorma::Cli::SiteGenerator).to have_received(:generate).with(
         source_dir.to_s,
         hash_including(template_dir: template_dir, stylesheet: stylesheet_path),
-        no_progress: true,
+        progress: false,
+        install_fonts: true,
       )
     end
   end

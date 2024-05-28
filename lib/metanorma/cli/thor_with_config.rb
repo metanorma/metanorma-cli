@@ -18,9 +18,9 @@ module Metanorma
         def filter_compile_options(options)
           copts = %w[
             agree_to_terms
-            no_install_fonts
+            install_fonts
             continue_without_fonts
-            no_progress
+            progress
             strict
           ]
           options.select { |k, _| copts.include?(k) }.symbolize_all_keys

@@ -53,8 +53,8 @@ RSpec.describe Metanorma::Cli::Compiler do
       type: "iso",
       extract_type: [],
       extension_keys: [],
-      no_install_fonts: true,
-      no_progress: true,
+      install_fonts: false,
+      progress: false,
     }
   end
 
