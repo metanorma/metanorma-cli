@@ -28,7 +28,6 @@ RSpec.describe "Collection" do
       -c collection_cover.html
       --no-install-fonts
     )
-
     capture_stdout { Metanorma::Cli.start(command) }
   end
 

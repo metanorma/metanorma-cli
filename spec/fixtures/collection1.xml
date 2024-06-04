@@ -1,4 +1,4 @@
-<metanorma-collection xmlns="http://metanorma.org">
+<metanorma-collection>
   <bibdata type="collection">
   <fetched>2020-07-14</fetched>
   <title type="title-main" format="text/plain" language="en">ISO Collection 1</title>
@@ -20,22 +20,22 @@
     </owner>
   </copyright>
 </bibdata>
-  <manifest>
-<level>collection</level>
+  <entry>
+<type>collection</type>
 <title>ISO Collection</title>
-<manifest>
-<level>subcollection</level>
+<entry>
+<type>subcollection</type>
 <title>Standards</title>
-<docref fileref="rice-en.final.xml"><identifier>ISO 17301-1:2016</identifier></docref>
-<docref fileref="dummy.xml"><identifier>ISO 17302</identifier></docref>
-<docref fileref="rice1-en.final.xml"><identifier>ISO 1701:1974</identifier></docref>
-</manifest>
-<manifest>
-<level>subcollection</level>
+<entry fileref="rice-en.final.xml"><identifier>ISO 17301-1:2016</identifier></entry>
+<entry fileref="dummy.xml"><identifier>ISO 17302</identifier></entry>
+<entry fileref="rice1-en.final.xml"><identifier>ISO 1701:1974</identifier></entry>
+</entry>
+<entry>
+<type>subcollection</type>
 <title>Amendments</title>
-<docref fileref="rice-amd.final.xml"><identifier>ISO 17301-1:2016/Amd.1:2017</identifier></docref>
-</manifest>
-</manifest>
+<entry fileref="rice-amd.final.xml"><identifier>ISO 17301-1:2016/Amd.1:2017</identifier></entry>
+</entry>
+</entry>
 
   <prefatory-content>
 
@@ -44,7 +44,7 @@
 <p id="_3b32037c-7f5f-4743-8f64-00af1b63aa82">Welcome to our collection</p>
 </clause>
 </prefatory-content>
-  
+
   <final-content>
 
 <clause id="_exordium" inline-header="false" obligation="normative">
