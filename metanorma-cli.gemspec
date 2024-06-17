@@ -35,6 +35,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rubocop", "~> 1.5.2"
   spec.add_development_dependency "sassc"
 
+  # TEMPORARY
+  spec.add_runtime_dependency "html2doc", "= 1.8.3"
   spec.add_runtime_dependency "metanorma-ietf", "~> 3.3.0"
   spec.add_runtime_dependency "metanorma-iso", "~> 2.7.3"
   spec.add_runtime_dependency "mnconvert"
