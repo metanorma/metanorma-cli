@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
 
   spec.require_paths = ["lib"]
-  spec.required_ruby_version = ">= 2.7.0"
+  spec.required_ruby_version = ">= 3.1.0"
 
   spec.add_development_dependency "debug"
   spec.add_development_dependency "rake", "~> 13.0"
@@ -38,7 +38,7 @@ Gem::Specification.new do |spec|
   # TEMPORARY
   spec.add_runtime_dependency "html2doc", "= 1.8.3"
   spec.add_runtime_dependency "metanorma-ietf", "~> 3.3.0"
-  spec.add_runtime_dependency "metanorma-iso", "~> 2.7.3"
+  spec.add_runtime_dependency "metanorma-iso", "~> 2.8.0"
   spec.add_runtime_dependency "mnconvert"
   # spec.add_runtime_dependency "thor", "~> 1.0" # inherited from vectory
   # spec.add_runtime_dependency "metanorma-gb", "~> 1.5.0"
@@ -48,7 +48,7 @@ Gem::Specification.new do |spec|
   # spec.add_runtime_dependency 'metanorma-ribose', "~> 2.3.0"
   spec.add_runtime_dependency "metanorma-bipm", "~> 2.4.0"
   spec.add_runtime_dependency "metanorma-generic", "~> 2.6.2"
-  spec.add_runtime_dependency "metanorma-standoc", "~> 2.8.4"
+  spec.add_runtime_dependency "metanorma-standoc", "~> 2.9.0"
   # spec.add_runtime_dependency 'metanorma-mpfa', "~> 0.9.0"
   spec.add_runtime_dependency "git", "~> 1.5"
   spec.add_runtime_dependency "metanorma", "~> 2.0.0"
