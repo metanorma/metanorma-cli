@@ -35,8 +35,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rubocop", "~> 1.5.2"
   spec.add_development_dependency "sassc"
 
-  # TEMPORARY
-  spec.add_runtime_dependency "html2doc", "= 1.8.3"
   spec.add_runtime_dependency "metanorma-ietf", "~> 3.3.0"
   spec.add_runtime_dependency "metanorma-iso", "~> 2.8.0"
   spec.add_runtime_dependency "mnconvert"
@@ -56,7 +54,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "metanorma-itu", "~> 2.4.0"
   # spec.add_runtime_dependency "metanorma-nist", "~> 2.3.0"
   spec.add_runtime_dependency "metanorma-ieee", "~> 1.2.0"
-  spec.add_runtime_dependency "metanorma-jis", "~> 0.2.0"
+  spec.add_runtime_dependency "metanorma-jis", "~> 0.3.0"
   spec.add_runtime_dependency "metanorma-ogc", "~> 2.5.0"
   spec.add_runtime_dependency "metanorma-un", "~> 0.12.0"
   spec.add_runtime_dependency "relaton-cli", ">= 0.8.2"
