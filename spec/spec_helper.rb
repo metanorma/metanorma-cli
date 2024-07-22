@@ -16,6 +16,7 @@ require "metanorma/cli"
 require "fileutils"
 require "mn2pdf"
 require "mnconvert"
+require "xml-c14n"
 
 Dir["./spec/support/**/*.rb"].sort.each { |file| require file }
 
@@ -51,18 +52,15 @@ RSpec.configure do |config|
   config.include RSpecCommand
 end
 
-def xmlpp(xml)
-  xsl = <<~XSL
-    <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-      <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
-      <xsl:strip-space elements="*"/>
-      <xsl:template match="/">
-        <xsl:copy-of select="."/>
-      </xsl:template>
-    </xsl:stylesheet>
-  XSL
-  Nokogiri::XSLT(xsl).transform(Nokogiri::XML(xml, &:noblanks))
-    .to_xml(indent: 2, encoding: "UTF-8")
+def strip_guid(xml)
+  xml.gsub(%r{ id="_[^"]+"}, ' id="_"')
+    .gsub(%r{ target="_[^"]+"}, ' target="_"')
+    .gsub(%r( href="#_?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12,13}"), ' href="#_"')
+    .gsub(%r( id="[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12,13}"), ' id="_"')
+    .gsub(%r( id="ftn[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{13}"), ' id="ftn_"')
+    .gsub(%r( id="fn:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{13}"), ' id="fn:_"')
+    .gsub(%r( reference="[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"), ' reference="_"')
+    .gsub(%r[ src="([^/]+)/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.], ' src="\\1/_.')
     .gsub(%r{<fetched>[^<]+</fetched>}, "<fetched/>")
     .gsub(%r{ schema-version="[^"]+"}, "")
 end
