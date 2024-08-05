@@ -121,7 +121,7 @@
     {
       "id": "bipm",
       "public": true,
-      "experimental": true,
+      "experimental": false,
       "manifest": {
         "metanorma": {
           "source": {
@@ -143,7 +143,7 @@
       "id": "bsi",
       "public": false,
       "private-fonts": true,
-      "experimental": true,
+      "experimental": false,
       "manifest": {
         "metanorma": {
           "source": {
@@ -216,7 +216,7 @@
     {
       "id": "nist",
       "public": false,
-      "experimental": true,
+      "experimental": false,
       "manifest": {
         "metanorma": {
           "source": {
@@ -233,7 +233,7 @@
     {
       "id": "ribose",
       "public": true,
-      "experimental": true,
+      "experimental": false,
       "manifest": {
         "metanorma": {
           "source": {
