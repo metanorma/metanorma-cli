@@ -40,8 +40,6 @@ jobs:
       group: 'fonts-check-${{ matrix.flavor }}'
       cancel-in-progress: true
 
-    continue-on-error: true
-
     strategy:
       max-parallel: 5
       fail-fast: false
@@ -61,6 +59,7 @@ jobs:
         bundler-cache: true
 
     - run: |
+        [ "${{ matrix.flavor }}" = "bsi" ] && rm -f Gemfile.lock
         bundle add metanorma-${{ matrix.flavor }}
         bundle exec bin/font-test ${{ matrix.flavor }}
 

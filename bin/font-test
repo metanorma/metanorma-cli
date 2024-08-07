@@ -26,6 +26,12 @@ flavors.each do |flavor|
     processor = Object
       .const_get(processor_class)
       .new
+
+    unless processor.respond_to?(:fonts_manifest)
+      puts "#{flavor} don't require any fonts"
+      exit(0)
+    end
+
     manifest = processor.fonts_manifest
 
     Fontist::Manifest::Install.from_hash(
