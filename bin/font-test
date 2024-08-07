@@ -14,7 +14,7 @@ flavors.each do |flavor|
     processor = Object
       .const_get("Metanorma::#{flavor.capitalize}::Processor")
       .new
-    manifest = { "Some": nil, "Fake": nil, "Fonts": nil}# processor.fonts_manifest
+    manifest = processor.fonts_manifest
 
     Fontist::Manifest::Install.from_hash(
       manifest,
