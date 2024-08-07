@@ -11,21 +11,17 @@ Fontist::Formula.update_formulas_repo
 flavors.each do |flavor|
   begin
     gem_name = "metanorma-#{flavor}"
-
-    unless Gem::Specification.find_all_by_name(gem_name).any?
-      puts "Installing #{gem_name}..."
-      system("gem install #{gem_name}")
-      Gem.clear_paths
-    end
+    require gem_name
 
     submodule = case flavor
-                when "iso", "ice", "ogc", "csa", "ribose"
+                when "iso", "iec", "ietf", "ogc", "csa", "ribose"
                   flavor.capitalize
+                when "jcgm"
+                  "JIS"
                 else
                   flavor.upcase
                 end
     processor_class = "Metanorma::#{submodule}::Processor"
-    require gem_name
 
     processor = Object
       .const_get(processor_class)
