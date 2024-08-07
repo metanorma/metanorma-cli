@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 require "fontist"
+require "rubygems"
 require "yaml"
 
 flavors = ARGV
@@ -9,10 +10,25 @@ Fontist::Formula.update_formulas_repo
 
 flavors.each do |flavor|
   begin
-    require "metanorma-#{flavor}"
+    gem_name = "metanorma-#{flavor}"
+
+    unless Gem::Specification.find_all_by_name(gem_name).any?
+      puts "Installing #{gem_name}..."
+      system("gem install #{gem_name}")
+      Gem.clear_paths
+    end
+
+    submodule = case flavor
+                when "iso", "ice", "ogc", "csa", "ribose"
+                  flavor.capitalize
+                else
+                  flavor.upcase
+                end
+    processor_class = "Metanorma::#{submodule}::Processor"
+    require gem_name
 
     processor = Object
-      .const_get("Metanorma::#{flavor.capitalize}::Processor")
+      .const_get(processor_class)
       .new
     manifest = processor.fonts_manifest
 
@@ -27,7 +43,7 @@ flavors.each do |flavor|
     STDERR.puts "Could not load gem '#{gem_name}': #{e.message}"
     exit(1)
   rescue NameError => e
-    STDERR.puts "Could not find class '#{class_name}': #{e.message}"
+    STDERR.puts "Could not find class '#{processor_class}': #{e.message}"
     exit(1)
   rescue => e
     if e.class.to_s.start_with?("Fontist::Errors::")
