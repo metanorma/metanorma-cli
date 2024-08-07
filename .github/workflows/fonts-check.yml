@@ -59,8 +59,11 @@ jobs:
         bundler-cache: true
 
     - run: |
-        [ "${{ matrix.flavor }}" = "bsi" ] && rm -f Gemfile.lock
-        bundle add metanorma-${{ matrix.flavor }}
+        if [ "${{ matrix.flavor }}" = "bsi" ]; then
+          bundle add metanorma-${{ matrix.flavor }} --source "https://rubygems.pkg.github.com/metanorma"
+        else
+          bundle add metanorma-${{ matrix.flavor }}
+        fi
         bundle exec bin/font-test ${{ matrix.flavor }}
 
   create-issue:
@@ -72,7 +75,6 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const { context, github } = require('@actions/github');
           const failedJobs = context.payload.jobs.filter(job => job.conclusion === 'failure');
           if (failedJobs.length > 0) {
             const workflowUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
