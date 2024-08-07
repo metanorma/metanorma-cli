@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+require "fontist"
+require "yaml"
+
+flavors = ARGV
+
+Fontist::Formula.update_formulas_repo
+
+flavors.each do |flavor|
+  begin
+    require "metanorma-#{flavor}"
+
+    processor = Object
+      .const_get("Metanorma::#{flavor.capitalize}::Processor")
+      .new
+    manifest = { "Some": nil, "Fake": nil, "Fonts": nil}# processor.fonts_manifest
+
+    Fontist::Manifest::Install.from_hash(
+      manifest,
+      confirmation: "yes",
+    )
+
+    puts "#{flavor}-related fonts:"
+    puts Fontist::Manifest::Locations.from_hash(manifest).to_yaml
+  rescue LoadError => e
+    STDERR.puts "Could not load gem '#{gem_name}': #{e.message}"
+    exit(1)
+  rescue NameError => e
+    STDERR.puts "Could not find class '#{class_name}': #{e.message}"
+    exit(1)
+  rescue => e
+    if e.class.to_s.start_with?("Fontist::Errors::")
+      STDERR.puts "Fontist failed with: #{e.message}"
+    else
+      STDERR.puts "Unknown error: #{e.message}"
+    end
+    exit(1)
+  end
+end
