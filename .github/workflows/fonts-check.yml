@@ -58,6 +58,11 @@ jobs:
         ruby-version: ${{ needs.prepare.outputs.default-ruby-version }}
         bundler-cache: true
 
+    - if: ${{ matrix.flavor == 'bsi' }}
+      uses: metanorma/ci/fontist-setup@main
+      with:
+        private-fonts-pat: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
+
     - run: |
         if [ "${{ matrix.flavor }}" = "bsi" ]; then
           bundle add metanorma-${{ matrix.flavor }} --source "https://rubygems.pkg.github.com/metanorma"
@@ -75,7 +80,13 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const failedJobs = context.payload.jobs.filter(job => job.conclusion === 'failure');
+          const runId = context.runId; // context.payload.workflow_run.id;
+          const { data: jobs } = await github.actions.listJobsForWorkflowRun({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            run_id: runId,
+          });
+          const failedJobs = jobs.filter(job => job.conclusion === 'failure');
           if (failedJobs.length > 0) {
             const workflowUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
 
