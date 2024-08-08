@@ -76,48 +76,33 @@ jobs:
     needs: test-flavor-fonts
     if: failure()
     steps:
-    - uses: actions/github-script@v6
+    - uses: actions/github-script@v7
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
         script: |
-          const runId = context.runId; // context.payload.workflow_run.id;
-          const { data: jobs } = await github.actions.listJobsForWorkflowRun({
+          const workflowUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+          const issueTitle = 'Font check failed';
+          const issueBody = `Font check failed failed for ${workflowUrl}`;
+
+          const { data: issues } = await github.rest.issues.listForRepo({
             owner: context.repo.owner,
             repo: context.repo.repo,
-            run_id: runId,
+            state: 'open'
           });
-          const failedJobs = jobs.filter(job => job.conclusion === 'failure');
-          if (failedJobs.length > 0) {
-            const workflowUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
 
-            const issueTitle = 'Font check failed';
-            const issueBody = `The following jobs in the matrix have failed:
-
-            ${failedJobs.map(job => `- ${job.name}`).join('\n')}
-
-            ${workflowUrl}
-            `;
-
-            const { data: issues } = await github.issues.listForRepo({
+          if (issues.find(issue => issue.title === issueTitle)) {
+            await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              state: 'open'
+              issue_number: existingIssue.number,
+              body: issueBody
             });
-
-            if (issues.find(issue => issue.title === issueTitle)) {
-              await github.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: existingIssue.number,
-                body: issueBody
-              });
-            } else {
-              await github.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title: issueTitle,
-                body: issueBody,
-                assignees: ['CAMOBAP']
-              });
-            }
+          } else {
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: issueTitle,
+              body: issueBody,
+              assignees: ['CAMOBAP']
+            });
           }
