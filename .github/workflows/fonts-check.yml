@@ -24,8 +24,9 @@ jobs:
         run: |
           cat .github/workflows/samples-smoke-matrix.json | \
             jq -r '.flavor[].id' | \
-            sed '/-private$/d'   | \
-            sed 's/jcgm/jis/g'   | \
+            sed 's/-private$//g'   | \
+            sed 's/jcgm/bipm/g'   | \
+            sort | uniq | \
             jq -R -s -c 'split("\n") | map(select(length > 0))' > flavors.json
           cat flavors.json
 

@@ -17,7 +17,7 @@ flavors.each do |flavor|
                 when "iso", "iec", "ietf", "ogc", "csa", "ribose"
                   flavor.capitalize
                 when "jcgm"
-                  "JIS"
+                  "BIPM"
                 else
                   flavor.upcase
                 end
