@@ -1,0 +1,109 @@
+name: fonts-check
+
+on:
+  schedule:
+  - cron: '0 0 * * *'
+  workflow_dispatch:
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    uses: metanorma/ci/.github/workflows/prepare-rake.yml@main
+
+  list-flavors:
+    runs-on: ubuntu-latest
+    outputs:
+      flavors: ${{ steps.result.outputs.list }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: result
+        run: |
+          cat .github/workflows/samples-smoke-matrix.json | \
+            jq -r '.flavor[].id' | \
+            sed 's/-private$//g'   | \
+            sed 's/jcgm/bipm/g'   | \
+            sort | uniq | \
+            jq -R -s -c 'split("\n") | map(select(length > 0))' > flavors.json
+          cat flavors.json
+
+          echo "list=$(cat flavors.json tr '\n' ' ')" >> $GITHUB_OUTPUT
+
+  test-flavor-fonts:
+    name: Test fonts for ${{ matrix.flavor }}
+    runs-on: ubuntu-latest
+    needs: [prepare, list-flavors]
+
+    concurrency:
+      group: 'fonts-check-${{ matrix.flavor }}'
+      cancel-in-progress: true
+
+    strategy:
+      max-parallel: 5
+      fail-fast: false
+      matrix:
+        flavor: ${{ fromJson(needs.list-flavors.outputs.flavors) }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: metanorma/ci/gh-rubygems-setup-action@main
+      with:
+        token: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
+
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ needs.prepare.outputs.default-ruby-version }}
+        bundler-cache: true
+
+    - if: ${{ matrix.flavor == 'bsi' }}
+      uses: metanorma/ci/fontist-setup@main
+      with:
+        private-fonts-pat: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
+
+    - run: |
+        if [ "${{ matrix.flavor }}" = "bsi" ]; then
+          bundle add metanorma-${{ matrix.flavor }} --source "https://rubygems.pkg.github.com/metanorma"
+        else
+          bundle add metanorma-${{ matrix.flavor }}
+        fi
+        bundle exec bin/font-test ${{ matrix.flavor }}
+
+  create-issue:
+    runs-on: ubuntu-latest
+    needs: test-flavor-fonts
+    if: failure()
+    steps:
+    - uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
+        script: |
+          const workflowUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+          const issueTitle = 'Font check failed';
+          const issueBody = `Font check failed failed for ${workflowUrl}`;
+
+          const { data: issues } = await github.rest.issues.listForRepo({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            state: 'open'
+          });
+
+          if (issues.find(issue => issue.title === issueTitle)) {
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: existingIssue.number,
+              body: issueBody
+            });
+          } else {
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: issueTitle,
+              body: issueBody,
+              assignees: ['CAMOBAP']
+            });
+          }
