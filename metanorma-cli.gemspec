@@ -41,12 +41,12 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "mnconvert"
   # spec.add_runtime_dependency "thor", "~> 1.0" # inherited from vectory
   # spec.add_runtime_dependency "metanorma-gb", "~> 1.5.0"
-  spec.add_runtime_dependency "metanorma-cc", "~> 2.4.0"
-  spec.add_runtime_dependency "metanorma-csa", "~> 2.4.0"
+  spec.add_runtime_dependency "metanorma-cc", "~> 2.5.0"
+  spec.add_runtime_dependency "metanorma-csa", "~> 2.5.0"
   spec.add_runtime_dependency "metanorma-iec", "~> 2.5.0"
   # spec.add_runtime_dependency 'metanorma-ribose', "~> 2.3.0"
   spec.add_runtime_dependency "metanorma-bipm", "~> 2.4.0"
-  spec.add_runtime_dependency "metanorma-generic", "~> 2.6.2"
+  spec.add_runtime_dependency "metanorma-generic", "~> 2.7.0"
   spec.add_runtime_dependency "metanorma-standoc", "~> 2.9.3"
   # spec.add_runtime_dependency 'metanorma-mpfa', "~> 0.9.0"
   spec.add_runtime_dependency "git", "~> 1.5"
@@ -57,6 +57,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "metanorma-ieee", "~> 1.2.0"
   spec.add_runtime_dependency "metanorma-jis", "~> 0.3.0"
   spec.add_runtime_dependency "metanorma-ogc", "~> 2.5.0"
+  spec.add_runtime_dependency "metanorma-plateau", "~> 0.1.0"
   spec.add_runtime_dependency "metanorma-un", "~> 0.12.0"
   spec.add_runtime_dependency "relaton-cli", ">= 0.8.2"
 
