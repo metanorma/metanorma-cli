@@ -243,6 +243,11 @@
           }
         }
       }
+    },
+    {
+      "id": "plateau",
+      "public": true,
+      "experimental": false
     }
   ]
 }

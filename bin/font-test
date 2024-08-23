@@ -14,7 +14,7 @@ flavors.each do |flavor|
     require gem_name
 
     submodule = case flavor
-                when "iso", "iec", "ietf", "ogc", "csa", "ribose"
+                when "iso", "iec", "ietf", "ogc", "csa", "ribose", "plateau"
                   flavor.capitalize
                 when "jcgm"
                   "BIPM"
