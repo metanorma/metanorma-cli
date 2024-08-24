@@ -91,7 +91,8 @@ jobs:
             state: 'open'
           });
 
-          if (issues.find(issue => issue.title === issueTitle)) {
+          const existingIssue = issues.find(issue => issue.title === issueTitle);
+          if (existingIssue) {
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
