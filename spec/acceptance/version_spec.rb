@@ -7,7 +7,7 @@ RSpec.describe "Metanorma" do
         command = %w(version -t iso)
         output = capture_stdout { Metanorma::Cli.start(command) }
 
-        expect(output).to include("Metanorma::ISO #{Metanorma::ISO::VERSION}")
+        expect(output).to include("Metanorma::Iso #{Metanorma::Iso::VERSION}")
       end
     end
 
@@ -18,8 +18,8 @@ RSpec.describe "Metanorma" do
 
         expect(output).to include("Metanorma #{Metanorma::VERSION}")
         expect(output).to include("Metanorma::Cli #{Metanorma::Cli::VERSION}")
-        expect(output).to include("Metanorma::ISO #{Metanorma::ISO::VERSION}")
-        expect(output).to include("Metanorma::CC #{Metanorma::CC::VERSION}")
+        expect(output).to include("Metanorma::Iso #{Metanorma::Iso::VERSION}")
+        expect(output).to include("Metanorma::Cc #{Metanorma::Cc::VERSION}")
         expect(output).to include("Metanorma::Ietf #{Metanorma::Ietf::VERSION}")
       end
     end

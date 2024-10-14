@@ -121,7 +121,7 @@ RSpec.describe Metanorma do
 
   it "gives version information" do
     stdout = `metanorma -v -t iso`
-    expect(stdout).to match(/Metanorma::ISO \d/)
+    expect(stdout).to match(/Metanorma::Iso \d/)
   end
 
   it "exports assets" do
