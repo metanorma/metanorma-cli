@@ -13,7 +13,15 @@ flavors.each do |flavor|
     gem_name = "metanorma-#{flavor}"
     require gem_name
 
-    processor_class = "Metanorma::#{flavor.capitalize}::Processor"
+    submodule = case flavor
+                when "un"
+                  flavor.upcase
+                when "jcgm"
+                  "Bipm"
+                else
+                  flavor.capitalize
+                end
+    processor_class = "Metanorma::#{submodule}::Processor"
 
     processor = Object
       .const_get(processor_class)
