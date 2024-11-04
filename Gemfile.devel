@@ -1,2 +1,2 @@
-gem 'plurimath', github: 'plurimath/plurimath', branch: 'updates/symbols_support'
+gem 'plurimath', github: 'plurimath/plurimath', branch: 'features/lutaml_model_for_mathml'
 
