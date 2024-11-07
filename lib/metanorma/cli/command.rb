@@ -17,8 +17,10 @@ module Metanorma
       desc "new NAME", "Create new Metanorma document"
       option :type, aliases: "-t", required: true, desc: "Document type"
       option :doctype, aliases: "-d", required: true, desc: "Metanorma doctype"
-      option :overwrite, aliases: "-y", type: :boolean, desc: "Overwrite existing document"
-      option :template, aliases: "-l", desc: "Git hosted remote or local FS template skeleton"
+      option :overwrite, aliases: "-y", type: :boolean,
+                         desc: "Overwrite existing document"
+      option :template, aliases: "-l",
+                        desc: "Git hosted remote or local FS template skeleton"
 
       def new(name)
         create_new_document(name, options)
@@ -26,21 +28,33 @@ module Metanorma
 
       desc "compile FILENAME", "Compile to a metanorma document"
       option :type, aliases: "-t", desc: "Type of standard to generate"
-      option :extensions, aliases: "-x", type: :string, desc: "Type of extension to generate per type"
-      option :format, aliases: "-f", default: :asciidoc, desc: "Format of source file: eg. asciidoc"
+      option :extensions, aliases: "-x", type: :string,
+                          desc: "Type of extension to generate per type"
+      option :format, aliases: "-f", default: :asciidoc,
+                      desc: "Format of source file: eg. asciidoc"
       option :require, aliases: "-r", desc: "Require LIBRARY prior to execution"
-      option :wrapper, aliases: "-w", type: :boolean, desc: "Create wrapper folder for HTML output"
-      option :asciimath, aliases: "-a", type: :boolean, desc: "Keep Asciimath in XML output instead of converting it to MathM"
-      option :datauriimage, aliases: "-d", type: :boolean, desc: "Encode HTML output images as data URIs"
-      option :relaton, aliases: "-R", desc: "Export Relaton XML for document to nominated filename"
-      option :extract, aliases: "-e", desc: "Export sourcecode fragments from this document to nominated directory"
-      option :version, aliases: "-v", desc: "Print version of code (accompanied with -t)"
-      option :output_dir, aliases: "-o", desc: "Directory to save compiled files"
-      option :strict, aliases: "-S", type: :boolean, desc: "Strict compilation: abort if there are any errors"
+      option :wrapper, aliases: "-w", type: :boolean,
+                       desc: "Create wrapper folder for HTML output"
+      option :asciimath, aliases: "-a", type: :boolean,
+                         desc: "Keep Asciimath in XML output instead of converting it to MathM"
+      option :datauriimage, aliases: "-d", type: :boolean,
+                            desc: "Encode HTML output images as data URIs"
+      option :relaton, aliases: "-R",
+                       desc: "Export Relaton XML for document to nominated filename"
+      option :extract, aliases: "-e",
+                       desc: "Export sourcecode fragments from this document to nominated directory"
+      option :version, aliases: "-v",
+                       desc: "Print version of code (accompanied with -t)"
+      option :output_dir, aliases: "-o",
+                          desc: "Directory to save compiled files"
+      option :strict, aliases: "-S", type: :boolean,
+                      desc: "Strict compilation: abort if there are any errors"
       option :agree_to_terms, type: :boolean, desc: "Agree / Disagree with all third-party licensing terms "\
                                                     "presented (WARNING: do know what you are agreeing with!)"
-      option :install_fonts, type: :boolean, default: true, desc: "Install required fonts"
-      option :continue_without_fonts, type: :boolean, desc: "Continue processing even when fonts are missing"
+      option :install_fonts, type: :boolean, default: true,
+                             desc: "Install required fonts"
+      option :continue_without_fonts, type: :boolean,
+                                      desc: "Continue processing even when fonts are missing"
 
       def compile(file_name = nil)
         if file_name && !options[:version]
@@ -60,12 +74,15 @@ module Metanorma
 
       desc "collection FILENAME", "Render HTML pages from XML/YAML colection"
       option :format, aliases: "-x", type: :string, desc: "Formats to generate"
-      option :output_folder, aliases: "-w", desc: "Directory to save compiled files"
+      option :output_folder, aliases: "-w",
+                             desc: "Directory to save compiled files"
       option :coverpage, aliases: "-c", desc: "Liquid template"
       option :agree_to_terms, type: :boolean, desc: "Agree / Disagree with all third-party licensing terms "\
                                                     "presented (WARNING: do know what you are agreeing with!)"
-      option :install_fonts, type: :boolean, default: true, desc: "Install required fonts"
-      option :continue_without_fonts, type: :boolean, desc: "Continue processing even when fonts are missing"
+      option :install_fonts, type: :boolean, default: true,
+                             desc: "Install required fonts"
+      option :continue_without_fonts, type: :boolean,
+                                      desc: "Continue processing even when fonts are missing"
       option :strict, aliases: "-S", type: :boolean, \
                       desc: "Strict compilation: abort if there are any errors"
 
@@ -112,14 +129,17 @@ module Metanorma
       end
 
       desc "version", "Version of the code"
-      option :type, aliases: "-t", required: false, desc: "Type of standard to generate"
-      option :format, aliases: "-f", default: :asciidoc, desc: "Format of source file: eg. asciidoc"
+      option :type, aliases: "-t", required: false,
+                    desc: "Type of standard to generate"
+      option :format, aliases: "-f", default: :asciidoc,
+                      desc: "Format of source file: eg. asciidoc"
 
       def version
         Metanorma::Cli.load_flavors
         backend_version(options[:type]) || supported_backends
-      rescue NameError => error
-        UI.say(error)
+        options[:type] or dependencies_versions
+      rescue NameError => e
+        UI.say(e)
       end
 
       desc "list-extensions", "List supported extensions"
@@ -156,8 +176,7 @@ module Metanorma
       private
 
       def single_type_extensions(type)
-        return false unless type
-
+        type or return false
         format_keys = find_backend(type).output_formats.keys
         UI.say("Supported extensions: #{join_keys(format_keys)}.")
         true
@@ -165,27 +184,23 @@ module Metanorma
 
       def all_type_extensions
         Metanorma::Cli.load_flavors
-
         message = "Supported extensions per type: \n"
         Metanorma::Registry.instance.processors.each do |type_sym, processor|
           format_keys = processor.output_formats.keys
           message += "  #{type_sym}: #{join_keys(format_keys)}.\n"
         end
-
         UI.say(message)
       end
 
       def backend_version(type)
-        if type
-          UI.say(find_backend(type).version)
-        end
+        type and UI.say(find_backend(type).version)
       end
 
       def backend_processors
-        @backend_processors ||= (
+        @backend_processors ||= begin
           Metanorma::Cli.load_flavors
           Metanorma::Registry.instance.processors
-        )
+        end
       end
 
       def find_backend(type)
@@ -196,11 +211,23 @@ module Metanorma
       def supported_backends
         UI.say("Metanorma #{Metanorma::VERSION}")
         UI.say("Metanorma::Cli #{VERSION}")
-
         Metanorma::Cli.load_flavors
-
-        Metanorma::Registry.instance.processors.map do |type, processor|
+        Metanorma::Registry.instance.processors.map do |_type, processor|
           UI.say(processor.version)
+        end
+      end
+
+      DEPENDENCY_GEMS =
+        %w(html2doc isodoc metanorma-utils mn2pdf mn-requirements isodoc-i18n
+           metanorma-plugin-datastruct metanorma-plugin-glossarist
+           metanorma-plugin-lutaml relaton-cli pubid glossarist fontist
+           plurimath lutaml expressir xmi lutaml-model emf2svg unitsml
+           vectory ogc-gml oscal).freeze
+
+      def dependencies_versions
+        versions = Gem.loaded_specs
+        DEPENDENCY_GEMS.sort.each do |k|
+          UI.say("#{k} #{versions[k].version}")
         end
       end
 
@@ -227,13 +254,10 @@ module Metanorma
 
       def print_doctypes_table(processors)
         table_data = processors.map do |type_sym, processor|
-          [
-            type_sym.to_s,
-            processor.input_format,
-            join_keys(processor.output_formats.keys),
-          ]
+          [type_sym.to_s,
+           processor.input_format,
+           join_keys(processor.output_formats.keys)]
         end
-
         UI.table(["Type", "Input", "Supported output format"], table_data)
       end
 
@@ -247,7 +271,6 @@ module Metanorma
         Metanorma::Cli.load_flavors
         errors = Metanorma::Cli::Compiler.compile(filename, options)
         errors.each { |error| Util.log(error, :error) }
-
         exit(1) if errors.any?
       end
     end

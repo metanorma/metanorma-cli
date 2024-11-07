@@ -8,6 +8,8 @@ RSpec.describe "Metanorma" do
         output = capture_stdout { Metanorma::Cli.start(command) }
 
         expect(output).to include("Metanorma::Iso #{Metanorma::Iso::VERSION}")
+        expect(output).not_to include("Metanorma::Cc #{Metanorma::Cc::VERSION}")
+        expect(output).not_to match /html2doc \d\.\d/
       end
     end
 
@@ -21,6 +23,7 @@ RSpec.describe "Metanorma" do
         expect(output).to include("Metanorma::Iso #{Metanorma::Iso::VERSION}")
         expect(output).to include("Metanorma::Cc #{Metanorma::Cc::VERSION}")
         expect(output).to include("Metanorma::Ietf #{Metanorma::Ietf::VERSION}")
+        expect(output).to match /html2doc \d\.\d/
       end
     end
   end
