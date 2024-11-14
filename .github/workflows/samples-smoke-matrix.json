@@ -73,22 +73,6 @@
       }
     },
     {
-      "id": "un",
-      "public": true,
-      "experimental": false,
-      "manifest": {
-        "metanorma": {
-          "source": {
-            "files": [
-              "sources/ECE_AGAT_2020_INF1.adoc",
-              "sources/ECE_TRADE_437E_Rec42.adoc",
-              "sources/ECE_TRADE_C_CEFACT_2018_1E.adoc"
-            ]
-          }
-        }
-      }
-    },
-    {
       "id": "iho",
       "public": true,
       "experimental": false,

@@ -4,7 +4,6 @@
     "cc",
     "iec",
     "ogc",
-    "un",
     "ietf",
     "itu"
   ],
@@ -28,11 +27,6 @@
       "type": "ogc",
       "doctype": "abstract-specification-topic",
       "experimental": false
-    },
-    {
-      "type": "un",
-      "doctype": "plenary",
-      "experimental": true
     },
     {
       "type": "ietf",
