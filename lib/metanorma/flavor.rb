@@ -17,7 +17,7 @@ module Metanorma
       # "metanorma-m3aawg", 
       "metanorma-generic",
       "metanorma-standoc",
-      "metanorma-un",
+      # "metanorma-un",
       "metanorma-ogc",
       "metanorma-itu",
       "metanorma-plateau",

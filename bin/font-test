@@ -14,8 +14,6 @@ flavors.each do |flavor|
     require gem_name
 
     submodule = case flavor
-                when "un"
-                  flavor.upcase
                 when "jcgm"
                   "Bipm"
                 else
