@@ -25,6 +25,13 @@ RSpec.describe "Metanorma" do
         expect(output).to include("Metanorma::Ietf #{Metanorma::Ietf::VERSION}")
         expect(output).to match /html2doc \d\.\d/
       end
+
+      it "not raise error about dependencies" do
+        command = %w(version)
+        output = capture_stderr { Metanorma::Cli.start(command) }
+
+        expect(output).not_to match /is not present/
+      end
     end
   end
 end

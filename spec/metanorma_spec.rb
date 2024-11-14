@@ -174,15 +174,15 @@ RSpec.describe Metanorma do
   # COMMENT context "with -r option specified" do
   # moving this text to end of suite instead
   context "with -r option specified" do
-  it "with -r option specified loads the libary and compile document" do
-    create_clean_test_files ASCIIDOC_PREAMBLE_HDR
-    system "bundle install"
-    compile_doc(source_file, "-t iso -r metanorma-iso --no-install-fonts")
+    it "with -r option specified loads the libary and compile document" do
+      create_clean_test_files ASCIIDOC_PREAMBLE_HDR
+      system "bundle install"
+      compile_doc(source_file, "-t iso -r metanorma-iso --no-install-fonts")
 
-    expect_files_to_exists("test.xml", "test.html")
-    expect_files_to_not_exists("test.doc", "test.alt.html")
-    expect(file_content("test.xml")).to include("</iso-standard>")
-  end
+      expect_files_to_exists("test.xml", "test.html")
+      expect_files_to_not_exists("test.doc", "test.alt.html")
+      expect(file_content("test.xml")).to include("</iso-standard>")
+    end
   end
 
   %w[rfc sts].each do |type|

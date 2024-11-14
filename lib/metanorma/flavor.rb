@@ -62,7 +62,7 @@ module Metanorma
     def gem_loading_error(flavor_name)
       unless PRIVATE_SUPPORTED_GEMS.include?(flavor_name)
         Metanorma::Cli::UI.error(
-          "[metanorma] Error: flavor gem #{flavor_name} not present",
+          "[metanorma] Error: flavor gem #{flavor_name} is not present!",
         )
       end
     end
