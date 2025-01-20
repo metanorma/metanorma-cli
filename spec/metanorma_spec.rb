@@ -230,6 +230,7 @@ RSpec.describe Metanorma do
   def create_clean_test_files(content)
     cleanup_test_files
     File.write(source_file, content, encoding: "UTF-8")
+    FileUtils.cp("i18n.yaml", output_path.join("i18n.yaml"))
   end
 
   def output_path
