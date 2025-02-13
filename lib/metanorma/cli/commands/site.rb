@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "pathname"
 require "metanorma/cli/site_generator"
 require "metanorma/cli/thor_with_config"
@@ -6,7 +8,7 @@ module Metanorma
   module Cli
     module Commands
       class Site < ThorWithConfig
-        SITE_OUTPUT_DIRNAME = "_site".freeze
+        SITE_OUTPUT_DIRNAME = "_site"
 
         desc "generate [SOURCE_PATH]", "Generate site from collection"
         option :config, aliases: "-c", desc: "Metanorma configuration file"
