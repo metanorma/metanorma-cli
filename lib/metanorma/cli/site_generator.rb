@@ -20,7 +20,6 @@ module Metanorma
         @stylesheet = options.fetch(:stylesheet, template_data("stylesheet"))
 
         @compile_options = compile_options
-        ensure_site_asset_directory!
       end
 
       def self.generate(source, options = {}, compile_options = {})
@@ -28,6 +27,7 @@ module Metanorma
       end
 
       def generate
+        ensure_site_asset_directory!
         site_directory = asset_directory.join("..")
 
         fatals = select_source_files.map { |source| compile(source) }
