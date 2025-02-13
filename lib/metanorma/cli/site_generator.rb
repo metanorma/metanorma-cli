@@ -12,7 +12,8 @@ module Metanorma
           :output_dir, Commands::Site::SITE_OUTPUT_DIRNAME
         ).to_s
         @asset_folder = options.fetch(:asset_folder, "documents").to_s
-        @collection_name = options.fetch(:collection_name, "documents.xml")
+        @relaton_collection_index = options.fetch(:collection_name,
+                                                  "documents.xml")
 
         @manifest_file = find_realpath(options.fetch(:config, default_config))
         @template_dir = options.fetch(:template_dir, template_data("path"))
@@ -36,8 +37,8 @@ module Metanorma
         raise Errors::FatalCompilationError, fatals unless fatals.empty?
 
         Dir.chdir(site_directory) do
-          build_collection_file(collection_name)
-          convert_to_html_page(collection_name, "index.html")
+          build_collection_file(relaton_collection_index)
+          convert_to_html_page(relaton_collection_index, "index.html")
         end
 
         dequeue_jobs
@@ -45,8 +46,8 @@ module Metanorma
 
       private
 
-      attr_reader :source, :asset_folder, :asset_directory, :site_path
-      attr_reader :manifest_file, :collection_name, :stylesheet, :template_dir
+      attr_reader :source, :asset_folder, :asset_directory, :site_path,
+                  :manifest_file, :relaton_collection_index, :stylesheet, :template_dir
 
       def find_realpath(source_path)
         Pathname.new(source_path.to_s).realpath if source_path
@@ -69,13 +70,14 @@ module Metanorma
         files.flatten.uniq.reject { |file| File.directory?(file) }
       end
 
-      def build_collection_file(collection_name)
-        collection_path = [site_path, collection_name].join("/")
+      def build_collection_file(relaton_collection_index_filename)
+        collection_path = [site_path,
+                           relaton_collection_index_filename].join("/")
         UI.info("Building collection file: #{collection_path} ...")
 
         Relaton::Cli::RelatonFile.concatenate(
           asset_folder,
-          collection_name,
+          relaton_collection_index_filename,
           title: manifest[:collection_name],
           organization: manifest[:collection_organization],
         )
@@ -97,11 +99,18 @@ module Metanorma
         Metanorma::Cli::Compiler.compile(source.to_s, options)
       end
 
-      def convert_to_html_page(collection, page_name)
+      def convert_to_html_page(relaton_index_filename, page_name)
         UI.info("Generating html site in #{site_path} ...")
 
-        Relaton::Cli::XMLConvertor.to_html(collection, stylesheet, template_dir)
-        File.rename(Pathname.new(collection).sub_ext(".html").to_s, page_name)
+        Relaton::Cli::XMLConvertor.to_html(
+          relaton_index_filename,
+          stylesheet,
+          template_dir,
+        )
+        File.rename(
+          Pathname.new(relaton_index_filename).sub_ext(".html").to_s,
+          page_name,
+        )
       end
 
       def template_data(node)
@@ -121,21 +130,24 @@ module Metanorma
         end
       end
 
-      def manifest_config(manifest)
+      def manifest_config(manifest_from_yaml)
         {
           files: extract_config_data(
-            manifest["metanorma"]["source"], "files"
+            manifest_from_yaml["metanorma"]["source"], "files"
           ) || [],
 
           collection_name: extract_config_data(
-            manifest["metanorma"]["collection"], "name"
+            manifest_from_yaml["metanorma"]["collection"], "name"
           ),
 
           collection_organization: extract_config_data(
-            manifest["metanorma"]["collection"], "organization"
+            manifest_from_yaml["metanorma"]["collection"], "organization"
           ),
 
-          template: extract_config_data(manifest["metanorma"], "template"),
+          template: extract_config_data(
+            manifest_from_yaml["metanorma"],
+            "template",
+          ),
         }
       rescue NoMethodError
         raise Errors::InvalidManifestFileError.new("Invalid manifest file")
