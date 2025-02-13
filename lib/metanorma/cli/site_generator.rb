@@ -30,11 +30,11 @@ module Metanorma
         @compile_options = compile_options
       end
 
-      def self.generate(source, options = {}, compile_options = {})
-        new(source, options, compile_options).generate
+      def self.generate!(source, options = {}, compile_options = {})
+        new(source, options, compile_options).generate!
       end
 
-      def generate
+      def generate!
         ensure_site_asset_directory!
 
 

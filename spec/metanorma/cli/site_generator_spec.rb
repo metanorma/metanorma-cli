@@ -1,14 +1,14 @@
 require "spec_helper"
 
 RSpec.describe Metanorma::Cli::SiteGenerator do
-  describe ".generate" do
+  describe ".generate!" do
     context "without manifest file" do
       it "detects input documents and generate a complete site" do
         asset_folder = "documents"
         stub_external_interface_calls
         asset_directory = output_directory.join(asset_folder)
 
-        Metanorma::Cli::SiteGenerator.generate(
+        Metanorma::Cli::SiteGenerator.generate!(
           source_path,
           { output_dir: output_directory },
           continue_without_fonts: false,
@@ -33,7 +33,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         stub_external_interface_calls
         asset_directory = output_directory.join(asset_folder)
 
-        Metanorma::Cli::SiteGenerator.generate(
+        Metanorma::Cli::SiteGenerator.generate!(
           source_path,
           { output_dir: output_directory },
           continue_without_fonts: false,
@@ -59,7 +59,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         stub_external_interface_calls
         collection_xml = "documents.xml"
 
-        Metanorma::Cli::SiteGenerator.generate(
+        Metanorma::Cli::SiteGenerator.generate!(
           source_path,
           { output_dir: output_directory },
           continue_without_fonts: false,
@@ -80,7 +80,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         asset_folder = "documents"
         stub_external_interface_calls
 
-        Metanorma::Cli::SiteGenerator.generate(
+        Metanorma::Cli::SiteGenerator.generate!(
           source_path,
           { output_dir: output_directory,
             config: source_path.join("metanorma.yml") },
@@ -118,7 +118,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
       it "also handles collection generation properly" do
         stub_external_interface_calls
 
-        Metanorma::Cli::SiteGenerator.generate(
+        Metanorma::Cli::SiteGenerator.generate!(
           source_path,
           {
             output_dir: output_directory,
@@ -144,7 +144,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         template_dir = "template-dir-as-option"
         stylesheet_path = "stylesheet-as-option"
 
-        Metanorma::Cli::SiteGenerator.generate(
+        Metanorma::Cli::SiteGenerator.generate!(
           source_path,
           output_dir: output_directory,
           template_dir: template_dir,
@@ -159,7 +159,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
       it "allows us to use manifest file for template" do
         stub_external_interface_calls
 
-        Metanorma::Cli::SiteGenerator.generate(
+        Metanorma::Cli::SiteGenerator.generate!(
           source_path,
           output_dir: output_directory,
           config: source_path.join("metanorma.yml"),
@@ -183,7 +183,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
 
       allow(Metanorma::Cli::Compiler).to receive(:compile).and_return(fatals)
       expect do
-        Metanorma::Cli::SiteGenerator.generate(
+        Metanorma::Cli::SiteGenerator.generate!(
           source_path,
           { output_dir: output_directory },
           continue_without_fonts: false,
