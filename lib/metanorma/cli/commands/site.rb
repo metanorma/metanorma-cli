@@ -32,7 +32,7 @@ module Metanorma
         )
 
         def generate(source_path = Dir.pwd)
-          Cli::SiteGenerator.generate(
+          Cli::SiteGenerator.generate!(
             source_path,
             options,
             filter_compile_options(options),
