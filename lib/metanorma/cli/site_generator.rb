@@ -140,29 +140,16 @@ module Metanorma
 
       def manifest_config(manifest_from_yaml)
         {
-          files: extract_config_data(
-            manifest_from_yaml["metanorma"]["source"], "files"
-          ) || [],
-
-          collection_name: extract_config_data(
-            manifest_from_yaml["metanorma"]["collection"], "name"
-          ),
-
-          collection_organization: extract_config_data(
-            manifest_from_yaml["metanorma"]["collection"], "organization"
-          ),
-
-          template: extract_config_data(
-            manifest_from_yaml["metanorma"],
-            "template",
-          ),
+          files: manifest_from_yaml.dig("metanorma", "source", "files") || [],
+          template: manifest_from_yaml.dig("metanorma","template"),
+          collection_name: manifest_from_yaml.dig("metanorma", "collection", "name"),
+          collection_organization: manifest_from_yaml.dig("metanorma", "collection", "organization"),
         }
+
+
+
       rescue NoMethodError
         raise Errors::InvalidManifestFileError.new("Invalid manifest file")
-      end
-
-      def extract_config_data(node, key)
-        node.dig(key)
       end
 
       def source_from_manifest
