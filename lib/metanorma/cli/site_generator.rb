@@ -5,15 +5,21 @@ require "fileutils"
 module Metanorma
   module Cli
     class SiteGenerator
+      DEFAULT_RELATON_COLLECTION_INDEX = "documents.xml"
+      DEFAULT_ASSET_FOLDER = "documents"
+      DEFAULT_SITE_INDEX = "index.html"
+      DEFAULT_CONFIG_FILE = "metanorma.yml"
+
       def initialize(source, options = {}, compile_options = {})
         @collection_queue = []
         @source = find_realpath(source)
         @site_path = options.fetch(
           :output_dir, Commands::Site::SITE_OUTPUT_DIRNAME
         ).to_s
-        @asset_folder = options.fetch(:asset_folder, "documents").to_s
+
+        @asset_folder = options.fetch(:asset_folder, DEFAULT_ASSET_FOLDER).to_s
         @relaton_collection_index = options.fetch(:collection_name,
-                                                  "documents.xml")
+                                                  DEFAULT_RELATON_COLLECTION_INDEX)
 
         @manifest_file = find_realpath(options.fetch(:config, default_config))
         @template_dir = options.fetch(:template_dir, template_data("path"))
@@ -38,7 +44,7 @@ module Metanorma
 
         Dir.chdir(site_directory) do
           build_collection_file(relaton_collection_index)
-          convert_to_html_page(relaton_collection_index, "index.html")
+          convert_to_html_page(relaton_collection_index, DEFAULT_SITE_INDEX)
         end
 
         dequeue_jobs
@@ -56,7 +62,7 @@ module Metanorma
       end
 
       def default_config
-        default_file = Pathname.new(Dir.pwd).join("metanorma.yml")
+        default_file = Pathname.new(Dir.pwd).join(DEFAULT_CONFIG_FILE)
         default_file if File.exist?(default_file)
       end
 
