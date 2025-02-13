@@ -36,14 +36,11 @@ module Metanorma
 
       def generate
         ensure_site_asset_directory!
+
+
+        compile_files!(select_source_files)
+
         site_directory = asset_directory.join("..")
-
-        fatals = select_source_files.map { |source| compile(source) }
-          .flatten
-          .compact
-
-        raise Errors::FatalCompilationError, fatals unless fatals.empty?
-
         Dir.chdir(site_directory) do
           build_collection_file(relaton_collection_index)
           convert_to_html_page(relaton_collection_index, DEFAULT_SITE_INDEX)
@@ -91,7 +88,7 @@ module Metanorma
         )
       end
 
-      def compile(source)
+      def compile_file!(source)
         if collection_file?(source)
           return
         end
@@ -99,12 +96,21 @@ module Metanorma
         UI.info("Compiling #{source} ...")
 
         options = @compile_options.merge(
-          format: :asciidoc, output_dir: build_asset_output_directory(source),
-          site_generate: true
+          format: :asciidoc,
+          output_dir: build_asset_output_directory!(source),
+          site_generate: true,
         )
 
         options[:baseassetpath] = Pathname.new(source.to_s).dirname.to_s
         Metanorma::Cli::Compiler.compile(source.to_s, options)
+      end
+
+      def compile_files!(files)
+        fatals = files.map { |source| compile_file!(source) }
+          .flatten
+          .compact
+
+        raise Errors::FatalCompilationError, fatals unless fatals.empty?
       end
 
       def convert_to_html_page(relaton_index_filename, page_name)
@@ -169,7 +175,7 @@ module Metanorma
         FileUtils.mkdir_p(directory) unless directory.exist?
       end
 
-      def build_asset_output_directory(source)
+      def build_asset_output_directory!(source)
         sub_directory = Pathname.new(source.gsub(@source.to_s, "")).dirname.to_s
         sub_directory.gsub!("/sources", "")
         sub_directory.slice!(0)
