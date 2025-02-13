@@ -42,8 +42,8 @@ module Metanorma
 
         site_directory = asset_directory.join("..")
         Dir.chdir(site_directory) do
-          build_collection_file(relaton_collection_index)
-          convert_to_html_page(relaton_collection_index, DEFAULT_SITE_INDEX)
+          build_collection_file!(relaton_collection_index)
+          convert_to_html_page!(relaton_collection_index, DEFAULT_SITE_INDEX)
         end
 
         dequeue_jobs
@@ -75,7 +75,7 @@ module Metanorma
         files.flatten.uniq.reject { |file| File.directory?(file) }
       end
 
-      def build_collection_file(relaton_collection_index_filename)
+      def build_collection_file!(relaton_collection_index_filename)
         collection_path = [site_path,
                            relaton_collection_index_filename].join("/")
         UI.info("Building collection file: #{collection_path} ...")
@@ -113,7 +113,7 @@ module Metanorma
         raise Errors::FatalCompilationError, fatals unless fatals.empty?
       end
 
-      def convert_to_html_page(relaton_index_filename, page_name)
+      def convert_to_html_page!(relaton_index_filename, page_name)
         UI.info("Generating html site in #{site_path} ...")
 
         Relaton::Cli::XMLConvertor.to_html(
