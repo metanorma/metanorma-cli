@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "webmock"
   # need for dev because locally compiled metanorma-iso does not have css
   spec.add_development_dependency "rubocop", "~> 1"
-spec.add_development_dependency "rubocop-performance"
+  spec.add_development_dependency "rubocop-performance"
   spec.add_development_dependency "sassc-embedded"
   spec.add_development_dependency "xml-c14n"
 
