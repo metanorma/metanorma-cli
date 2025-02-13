@@ -162,7 +162,7 @@ module Metanorma
       end
 
       def extract_config_data(node, key)
-        node ? node[key] : nil
+        node.dig(key)
       end
 
       def source_from_manifest
