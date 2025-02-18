@@ -22,7 +22,7 @@ RSpec.describe Metanorma do
 
     expect_files_to_exists("test.xml", "test.html")
     expect_files_to_not_exists("test.doc", "test.alt.html")
-    expect(file_content("test.xml")).to include("</iso-standard>")
+    expect(file_content("test.xml")).to include('flavor="iso"')
   end
 
   it "processes an asciidoc ISO document" do
@@ -49,7 +49,7 @@ RSpec.describe Metanorma do
 
     expect_files_to_exists("test.xml", "test.doc")
     expect_files_to_not_exists("test.html", "test.alt.html")
-    expect(file_content("test.xml")).to include("</iso-standard>")
+    expect(file_content("test.xml")).to include('flavor="iso"')
   end
 
   it "extracts isodoc options from asciidoc file" do
@@ -181,7 +181,7 @@ RSpec.describe Metanorma do
 
       expect_files_to_exists("test.xml", "test.html")
       expect_files_to_not_exists("test.doc", "test.alt.html")
-      expect(file_content("test.xml")).to include("</iso-standard>")
+      expect(file_content("test.xml")).to include('flavor="iso"')
     end
   end
 

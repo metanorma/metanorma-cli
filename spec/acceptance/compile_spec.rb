@@ -7,9 +7,7 @@ RSpec.describe "Metanorma" do
       allow(Metanorma::Cli::Compiler).to receive(:compile).and_return []
 
       capture_stdout { Metanorma::Cli.start(command) }
-      registered_tags = Metanorma::Registry.instance.root_tags
 
-      expect(registered_tags[:ogc]).to eq("ogc-standard")
       expect(Metanorma::Cli::Compiler).to have_received(:compile)
         .with(
           sample_asciidoc_file,
