@@ -20,8 +20,8 @@ module Metanorma
                                                       "presented (WARNING: do know what you are agreeing with!)"
         option :install_fonts, type: :boolean, default: true, desc: "Install required fonts"
         option :continue_without_fonts, type: :boolean, desc: "Continue processing even when fonts are missing"
-        option :stylesheet, alias: "-s", desc: "Stylesheet file path for rendering HTML page"
-        option :template_dir, alias: "-t", desc: "Liquid template directory to render site design"
+        option :stylesheet, aliases: "-s", desc: "Stylesheet file path for rendering HTML page"
+        option :template_dir, aliases: "-t", desc: "Liquid template directory to render site design"
         option(
           :strict,
           aliases: "-S",
