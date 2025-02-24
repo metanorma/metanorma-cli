@@ -46,7 +46,7 @@ module Metanorma
           convert_to_html_page!(relaton_collection_index, DEFAULT_SITE_INDEX)
         end
 
-        dequeue_jobs
+        dequeue_jobs!
       end
 
       private
@@ -194,7 +194,7 @@ module Metanorma
         end
       end
 
-      def dequeue_jobs
+      def dequeue_jobs!
         job = @collection_queue.pop
 
         if job
