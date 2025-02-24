@@ -122,8 +122,7 @@ module Metanorma
       end
 
       def template_data(node)
-        template_node = manifest[:template]
-        template_node&.fetch(node.to_s, nil)
+        manifest.dig(:template, node.to_s)
       end
 
       def manifest
