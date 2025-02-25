@@ -57,6 +57,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "metanorma-iho", "~> 1.1.0"
   spec.add_runtime_dependency "metanorma-itu", "~> 2.6.0"
   # spec.add_runtime_dependency "metanorma-nist", "~> 2.6.0"
+  spec.add_runtime_dependency "liquid", "~> 5"
   spec.add_runtime_dependency "metanorma-ieee", "~> 1.4.0"
   spec.add_runtime_dependency "metanorma-jis", "~> 0.5.0"
   spec.add_runtime_dependency "metanorma-ogc", "~> 2.7.0"
