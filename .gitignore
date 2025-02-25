@@ -24,3 +24,6 @@ relaton/
 *.gem
 
 .rubocop-https--*
+
+# Direnv
+.direnv/
