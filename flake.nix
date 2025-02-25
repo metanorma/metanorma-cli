@@ -58,9 +58,9 @@
             category = "Nix";
           }
         ] ++
-        # XXX: These won't work with ASDF shims,
-        # so only append if there is a .tool-verions file:
-        (if builtins.pathExists ./tool-versions.nix then
+        # Only append these if there is no .tool-verions file
+        # to avoid conflicts:
+        (if ! builtins.pathExists ./.tool-versions then
           [{
 
             name = "irb";
