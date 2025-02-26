@@ -87,9 +87,9 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           continue_without_fonts: false,
         )
 
-        collection = manifest["metanorma"]["collection"]
+        collection = manifest.metanorma.collection
         manifest_files = select_files_including_wildcard(
-          manifest["metanorma"]["source"]["files"],
+          manifest.metanorma.source.files,
         ).reject { |file| file.to_s.include?("yml") }
 
         manifest_files.each do |manifest_file|
@@ -110,8 +110,8 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
           asset_folder,
           "documents.xml",
-          title: collection["name"],
-          organization: collection["organization"],
+          title: collection.name,
+          organization: collection.organization,
         )
       end
 
@@ -167,8 +167,8 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
 
         expect(Relaton::Cli::XMLConvertor).to have_received(:to_html).with(
           "documents.xml",
-          manifest["metanorma"]["template"]["stylesheet"],
-          manifest["metanorma"]["template"]["path"],
+          manifest.metanorma.template.stylesheet,
+          manifest.metanorma.template.path,
         )
       end
     end
@@ -219,7 +219,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
     end
 
     def manifest
-      @manifest ||= YAML.safe_load(File.read(source_path.join("metanorma.yml")))
+      @manifest ||= Metanorma::SiteManifest.from_yaml(File.read(source_path.join("metanorma.yml")))
     end
   end
 end

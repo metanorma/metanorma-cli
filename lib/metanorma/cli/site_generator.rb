@@ -130,7 +130,7 @@ module Metanorma
       end
 
       def template_data(node)
-        manifest.dig(:template, node.to_s)
+        manifest[:template]&.public_send(node.to_s)
       end
 
       def manifest
@@ -141,24 +141,26 @@ module Metanorma
 
       def config_from_manifest
         if manifest_file
-          manifest_config(YAML.safe_load(File.read(manifest_file.to_s)))
+          manifest_config(
+            Metanorma::SiteManifest.from_yaml(
+              File.read(manifest_file.to_s),
+            ),
+          )
         end
       end
 
-      def manifest_config(manifest_from_yaml)
+      def manifest_config(manifest_model)
         {
-          files: manifest_from_yaml.dig("metanorma", "source", "files") || [],
-          template: manifest_from_yaml.dig("metanorma", "template"),
-          collection_name: manifest_from_yaml.dig(
-            "metanorma",
-            "collection",
-            "name",
-          ),
-          collection_organization: manifest_from_yaml.dig(
-            "metanorma",
-            "collection",
-            "organization",
-          ),
+          files: manifest_model.metanorma.source.files || [],
+          template: manifest_model.metanorma.template,
+          collection_name: manifest_model
+            .metanorma
+            .collection
+            .name,
+          collection_organization: manifest_model
+            .metanorma
+            .collection
+            .organization,
         }
       rescue NoMethodError
         raise Errors::InvalidManifestFileError.new("Invalid manifest file")

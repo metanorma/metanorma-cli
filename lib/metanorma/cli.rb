@@ -3,6 +3,8 @@
 require "metanorma"
 require "metanorma/flavor"
 
+require "metanorma/site_manifest"
+
 require "metanorma/cli/version"
 require "metanorma/cli/errors"
 require "metanorma/cli/command"
