@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "yaml"
 require "pathname"
 require "fileutils"
@@ -5,48 +7,52 @@ require "fileutils"
 module Metanorma
   module Cli
     class SiteGenerator
+      DEFAULT_RELATON_COLLECTION_INDEX = "documents.xml"
+      DEFAULT_ASSET_FOLDER = "documents"
+      DEFAULT_SITE_INDEX = "index.html"
+      DEFAULT_CONFIG_FILE = "metanorma.yml"
+
       def initialize(source, options = {}, compile_options = {})
         @collection_queue = []
         @source = find_realpath(source)
         @site_path = options.fetch(
           :output_dir, Commands::Site::SITE_OUTPUT_DIRNAME
         ).to_s
-        @asset_folder = options.fetch(:asset_folder, "documents").to_s
-        @collection_name = options.fetch(:collection_name, "documents.xml")
+
+        @asset_folder = options.fetch(:asset_folder, DEFAULT_ASSET_FOLDER).to_s
+        @relaton_collection_index = options.fetch(:collection_name,
+                                                  DEFAULT_RELATON_COLLECTION_INDEX)
 
         @manifest_file = find_realpath(options.fetch(:config, default_config))
         @template_dir = options.fetch(:template_dir, template_data("path"))
         @stylesheet = options.fetch(:stylesheet, template_data("stylesheet"))
 
         @compile_options = compile_options
+      end
+
+      def self.generate!(source, options = {}, compile_options = {})
+        new(source, options, compile_options).generate!
+      end
+
+      def generate!
         ensure_site_asset_directory!
-      end
 
-      def self.generate(source, options = {}, compile_options = {})
-        new(source, options, compile_options).generate
-      end
 
-      def generate
+        compile_files!(select_source_files)
+
         site_directory = asset_directory.join("..")
-
-        fatals = select_source_files.map { |source| compile(source) }
-          .flatten
-          .compact
-
-        raise Errors::FatalCompilationError, fatals unless fatals.empty?
-
         Dir.chdir(site_directory) do
-          build_collection_file(collection_name)
-          convert_to_html_page(collection_name, "index.html")
+          build_collection_file!(relaton_collection_index)
+          convert_to_html_page!(relaton_collection_index, DEFAULT_SITE_INDEX)
         end
 
-        dequeue_jobs
+        dequeue_jobs!
       end
 
       private
 
-      attr_reader :source, :asset_folder, :asset_directory, :site_path
-      attr_reader :manifest_file, :collection_name, :stylesheet, :template_dir
+      attr_reader :source, :asset_folder, :asset_directory, :site_path,
+                  :manifest_file, :relaton_collection_index, :stylesheet, :template_dir
 
       def find_realpath(source_path)
         Pathname.new(source_path.to_s).realpath if source_path
@@ -55,7 +61,7 @@ module Metanorma
       end
 
       def default_config
-        default_file = Pathname.new(Dir.pwd).join("metanorma.yml")
+        default_file = Pathname.new(Dir.pwd).join(DEFAULT_CONFIG_FILE)
         default_file if File.exist?(default_file)
       end
 
@@ -69,19 +75,20 @@ module Metanorma
         files.flatten.uniq.reject { |file| File.directory?(file) }
       end
 
-      def build_collection_file(collection_name)
-        collection_path = [site_path, collection_name].join("/")
+      def build_collection_file!(relaton_collection_index_filename)
+        collection_path = [site_path,
+                           relaton_collection_index_filename].join("/")
         UI.info("Building collection file: #{collection_path} ...")
 
         Relaton::Cli::RelatonFile.concatenate(
           asset_folder,
-          collection_name,
+          relaton_collection_index_filename,
           title: manifest[:collection_name],
           organization: manifest[:collection_organization],
         )
       end
 
-      def compile(source)
+      def compile_file!(source)
         if collection_file?(source)
           return
         end
@@ -89,24 +96,39 @@ module Metanorma
         UI.info("Compiling #{source} ...")
 
         options = @compile_options.merge(
-          format: :asciidoc, output_dir: build_asset_output_directory(source),
-          site_generate: true
+          format: :asciidoc,
+          output_dir: build_asset_output_directory!(source),
+          site_generate: true,
         )
 
         options[:baseassetpath] = Pathname.new(source.to_s).dirname.to_s
         Metanorma::Cli::Compiler.compile(source.to_s, options)
       end
 
-      def convert_to_html_page(collection, page_name)
+      def compile_files!(files)
+        fatals = files.map { |source| compile_file!(source) }
+          .flatten
+          .compact
+
+        raise Errors::FatalCompilationError, fatals unless fatals.empty?
+      end
+
+      def convert_to_html_page!(relaton_index_filename, page_name)
         UI.info("Generating html site in #{site_path} ...")
 
-        Relaton::Cli::XMLConvertor.to_html(collection, stylesheet, template_dir)
-        File.rename(Pathname.new(collection).sub_ext(".html").to_s, page_name)
+        Relaton::Cli::XMLConvertor.to_html(
+          relaton_index_filename,
+          stylesheet,
+          template_dir,
+        )
+        File.rename(
+          Pathname.new(relaton_index_filename).sub_ext(".html").to_s,
+          page_name,
+        )
       end
 
       def template_data(node)
-        template_node = manifest[:template]
-        template_node&.fetch(node.to_s, nil)
+        manifest.dig(:template, node.to_s)
       end
 
       def manifest
@@ -121,28 +143,18 @@ module Metanorma
         end
       end
 
-      def manifest_config(manifest)
+      def manifest_config(manifest_from_yaml)
         {
-          files: extract_config_data(
-            manifest["metanorma"]["source"], "files"
-          ) || [],
-
-          collection_name: extract_config_data(
-            manifest["metanorma"]["collection"], "name"
-          ),
-
-          collection_organization: extract_config_data(
-            manifest["metanorma"]["collection"], "organization"
-          ),
-
-          template: extract_config_data(manifest["metanorma"], "template"),
+          files: manifest_from_yaml.dig("metanorma", "source", "files") || [],
+          template: manifest_from_yaml.dig("metanorma","template"),
+          collection_name: manifest_from_yaml.dig("metanorma", "collection", "name"),
+          collection_organization: manifest_from_yaml.dig("metanorma", "collection", "organization"),
         }
+
+
+
       rescue NoMethodError
         raise Errors::InvalidManifestFileError.new("Invalid manifest file")
-      end
-
-      def extract_config_data(node, key)
-        node ? node[key] : nil
       end
 
       def source_from_manifest
@@ -163,7 +175,7 @@ module Metanorma
         FileUtils.mkdir_p(directory) unless directory.exist?
       end
 
-      def build_asset_output_directory(source)
+      def build_asset_output_directory!(source)
         sub_directory = Pathname.new(source.gsub(@source.to_s, "")).dirname.to_s
         sub_directory.gsub!("/sources", "")
         sub_directory.slice!(0)
@@ -182,7 +194,7 @@ module Metanorma
         end
       end
 
-      def dequeue_jobs
+      def dequeue_jobs!
         job = @collection_queue.pop
 
         if job
