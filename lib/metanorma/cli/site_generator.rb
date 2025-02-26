@@ -20,8 +20,10 @@ module Metanorma
         ).to_s
 
         @asset_folder = options.fetch(:asset_folder, DEFAULT_ASSET_FOLDER).to_s
-        @relaton_collection_index = options.fetch(:collection_name,
-                                                  DEFAULT_RELATON_COLLECTION_INDEX)
+        @relaton_collection_index = options.fetch(
+          :collection_name,
+          DEFAULT_RELATON_COLLECTION_INDEX,
+        )
 
         @manifest_file = find_realpath(options.fetch(:config, default_config))
         @template_dir = options.fetch(:template_dir, template_data("path"))
@@ -37,7 +39,6 @@ module Metanorma
       def generate!
         ensure_site_asset_directory!
 
-
         compile_files!(select_source_files)
 
         site_directory = asset_directory.join("..")
@@ -52,7 +53,8 @@ module Metanorma
       private
 
       attr_reader :source, :asset_folder, :asset_directory, :site_path,
-                  :manifest_file, :relaton_collection_index, :stylesheet, :template_dir
+                  :manifest_file, :relaton_collection_index, :stylesheet,
+                  :template_dir
 
       def find_realpath(source_path)
         Pathname.new(source_path.to_s).realpath if source_path
@@ -146,13 +148,18 @@ module Metanorma
       def manifest_config(manifest_from_yaml)
         {
           files: manifest_from_yaml.dig("metanorma", "source", "files") || [],
-          template: manifest_from_yaml.dig("metanorma","template"),
-          collection_name: manifest_from_yaml.dig("metanorma", "collection", "name"),
-          collection_organization: manifest_from_yaml.dig("metanorma", "collection", "organization"),
+          template: manifest_from_yaml.dig("metanorma", "template"),
+          collection_name: manifest_from_yaml.dig(
+            "metanorma",
+            "collection",
+            "name",
+          ),
+          collection_organization: manifest_from_yaml.dig(
+            "metanorma",
+            "collection",
+            "organization",
+          ),
         }
-
-
-
       rescue NoMethodError
         raise Errors::InvalidManifestFileError.new("Invalid manifest file")
       end
