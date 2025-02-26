@@ -8,7 +8,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Ribose Inc."]
   spec.email         = ["open.source@ribose.com"]
 
-  spec.summary       = "Metanorma is the standard of standards; the metanorma gem allows you to create any standard document type supported by Metanorma."
+  spec.summary       = "Metanorma is the standard of standards; the metanorma" \
+                       " gem allows you to create any standard document type" \
+                       " supported by Metanorma."
   spec.description   = "Executable to process any Metanorma standard."
   spec.homepage      = "https://www.metanorma.com"
   spec.license       = "BSD-2-Clause"
