@@ -20,6 +20,10 @@ require "xml-c14n"
 
 Dir["./spec/support/**/*.rb"].sort.each { |file| require file }
 
+RSpec.shared_context "global helpers" do
+  let(:tmp_dir) { Pathname.new(Dir.tmpdir) }
+end
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
@@ -38,8 +42,9 @@ RSpec.configure do |config|
     ENV["GIT_TERMINAL_PROMPT"] = "0"
   end
 
+  config.include_context "global helpers"
+
   config.before(:each) do
-    @tmp_dir = Pathname.new(Dir.tmpdir)
   end
 
   config.after(:suite) do

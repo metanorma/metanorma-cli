@@ -25,7 +25,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
     end
 
     let(:output_directory) do
-      @tmp_dir
+      tmp_dir
     end
 
     let(:source_path) do

@@ -4,7 +4,7 @@ RSpec.describe Metanorma::Cli::Generator do
   describe ".run" do
     context "default type templates" do
       it "downloads and creates new document" do
-        document = @tmp_dir.join "my-document"
+        document = tmp_dir.join "my-document"
 
         Metanorma::Cli::Generator.run(
           document,
@@ -24,7 +24,7 @@ RSpec.describe Metanorma::Cli::Generator do
     #
     context "with custom template" do
       it "downloads and create new document" do
-        document = @tmp_dir.join "my-custom-csd"
+        document = tmp_dir.join "my-custom-csd"
         template = "https://github.com/metanorma/mn-templates-csd"
 
         Metanorma::Cli::Generator.run(
@@ -41,7 +41,7 @@ RSpec.describe Metanorma::Cli::Generator do
 
     context "with invalid template" do
       it "raise and throws an exception" do
-        document = @tmp_dir.join "my-invalid-document"
+        document = tmp_dir.join "my-invalid-document"
         template = "https://github.com/metanorma/mn-templates-invalid"
 
         output = capture_stdout do
@@ -61,7 +61,7 @@ RSpec.describe Metanorma::Cli::Generator do
       end
 
       it "raise and throws a custom exception" do
-        document = @tmp_dir.join "my-invalid-document"
+        document = tmp_dir.join "my-invalid-document"
         template = "https://github.com/metanorma/mn-templates-ogc"
 
         output = capture_stdout do
@@ -84,7 +84,7 @@ RSpec.describe Metanorma::Cli::Generator do
 
     context "with local template" do
       it "success for existing template" do
-        document = @tmp_dir.join "my-local-document"
+        document = tmp_dir.join "my-local-document"
         template = [Dir.home, ".metanorma", "templates", "csd"].join("/")
 
         Metanorma::Cli::Generator.run(
@@ -104,7 +104,7 @@ RSpec.describe Metanorma::Cli::Generator do
         allow(Metanorma::Cli).to receive(:writable_templates_path?)
           .and_raise(Errno::EACCES)
 
-        document = @tmp_dir.join "my-document"
+        document = tmp_dir.join "my-document"
 
         output = capture_stdout do
           Metanorma::Cli::Generator.run(
@@ -120,7 +120,7 @@ RSpec.describe Metanorma::Cli::Generator do
   end
 
   it "template dir priority: common > base" do
-    document = @tmp_dir.join "priority-test"
+    document = tmp_dir.join "priority-test"
 
     generator = Metanorma::Cli::Generator.new(
       document,
