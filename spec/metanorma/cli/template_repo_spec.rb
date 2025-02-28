@@ -9,7 +9,7 @@ RSpec.describe Metanorma::Cli::TemplateRepo do
         stub_system_home_directory
 
         templates = Metanorma::Cli::TemplateRepo.add(
-          name, source, overwrite: true,
+          name, source, overwrite: true
         )
 
         expect(templates.last[:name]).to eq(name)

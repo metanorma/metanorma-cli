@@ -11,7 +11,6 @@ require "metanorma/cli/command"
 
 module Metanorma
   module Cli
-
     CONFIG_DIRNAME = ".metanorma"
     CONFIG_FILENAME = "config.yml"
 
@@ -93,7 +92,7 @@ module Metanorma
 
     def self.find_command(arguments)
       commands = Metanorma::Cli::Command.all_commands.keys
-      commands.select { |cmd| arguments.include?(cmd.gsub("_", "-")) == true }
+      commands.select { |cmd| arguments.include?(cmd.tr("_", "-")) == true }
     end
 
     def self.print_fatal_summary(error)

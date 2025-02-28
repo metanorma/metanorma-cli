@@ -170,13 +170,13 @@ HDR
 
 def mock_pdf
   allow(::Mn2pdf).to receive(:convert) do |url, output, _c, _d|
-    FileUtils.cp(url.gsub(/"/, ""), output.gsub(/"/, ""))
+    FileUtils.cp(url.delete('"'), output.delete('"'))
   end
 end
 
 def mock_sts
   allow(::MnConvert).to receive(:convert) do |url, opts|
     output = opts[:output_file] || "fake.xml"
-    FileUtils.cp(url.gsub(/"/, ""), output.gsub(/"/, ""))
+    FileUtils.cp(url.delete('"'), output.delete('"'))
   end
 end

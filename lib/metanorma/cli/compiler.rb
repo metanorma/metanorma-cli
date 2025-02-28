@@ -4,7 +4,6 @@ require "metanorma/cli/errors"
 module Metanorma
   module Cli
     class Compiler
-
       def initialize(file, options)
         validate_file_path(file)
         @file = file

@@ -14,7 +14,7 @@ module Metanorma
       "metanorma-csa",
       "metanorma-iho",
       "metanorma-jis",
-      # "metanorma-m3aawg", 
+      # "metanorma-m3aawg",
       "metanorma-generic",
       "metanorma-standoc",
       # "metanorma-un",

@@ -73,7 +73,7 @@ module Metanorma
       end
 
       def xml_extract_options_from_file
-        xml = Nokogiri::XML File.read(@file.to_s, encoding: "UTF-8") { |c| c.huge }
+        xml = Nokogiri::XML File.read(@file.to_s, encoding: "UTF-8", &:huge)
         { "coverpage" => xml.at("//coverpage"),
           "format" => xml.at("//format"),
           "output_folder" => xml.at("//output_folder") }.compact

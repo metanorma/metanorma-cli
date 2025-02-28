@@ -1,1 +1,1 @@
-require 'metanorma/cli'
+require "metanorma/cli"

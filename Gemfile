@@ -10,4 +10,8 @@ end
 
 gemspec
 
-eval_gemfile("Gemfile.devel") rescue nil
+begin
+  eval_gemfile("Gemfile.devel")
+rescue StandardError
+  nil
+end
