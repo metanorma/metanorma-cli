@@ -28,6 +28,8 @@ module Metanorma
         @manifest_file = find_realpath(options.fetch(:config, default_config))
         @template_dir = options.fetch(:template_dir, template_data("path"))
         @stylesheet = options.fetch(:stylesheet, template_data("stylesheet"))
+        @output_filename_template = options.fetch(:output_filename_template,
+                                                  template_data("output_filename_template"))
 
         @compile_options = compile_options
       end
@@ -54,7 +56,8 @@ module Metanorma
 
       attr_reader :source, :asset_folder, :asset_directory, :site_path,
                   :manifest_file, :relaton_collection_index, :stylesheet,
-                  :template_dir
+                  :template_dir,
+                  :output_filename_template
 
       def find_realpath(source_path)
         Pathname.new(source_path.to_s).realpath if source_path
@@ -97,7 +100,10 @@ module Metanorma
 
         UI.info("Compiling #{source} ...")
 
+        # Incorporate output_filename_template so the output file
+        # can be named as desired, using liquid template and Relaton LiquidDrop
         options = @compile_options.merge(
+          output_filename_template: output_filename_template,
           format: :asciidoc,
           output_dir: build_asset_output_directory!(source),
           site_generate: true,
@@ -151,8 +157,8 @@ module Metanorma
 
       def manifest_config(manifest_model)
         {
-          files: manifest_model.metanorma.source.files || [],
-          template: manifest_model.metanorma.template,
+          files: manifest_model&.metanorma&.source&.files || [],
+          template: manifest_model&.metanorma&.template,
           collection_name: manifest_model
             .metanorma
             .collection

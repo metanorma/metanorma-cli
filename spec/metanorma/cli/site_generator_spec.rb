@@ -28,6 +28,10 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
       tmp_dir
     end
 
+    let(:asset_directory) do
+      output_directory.join(asset_folder)
+    end
+
     let(:source_path) do
       Metanorma::Cli.root_path.join("spec", "fixtures")
     end
@@ -38,8 +42,6 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
 
     context "without manifest file" do
       it "detects input documents and generate a complete site" do
-        asset_directory = output_directory.join(asset_folder)
-
         described_class.generate!(
           source_path,
           { output_dir: output_directory },
@@ -51,6 +53,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           baseassetpath: source_path.to_s,
           format: :asciidoc,
           output_dir: asset_directory,
+          output_filename_template: nil,
           continue_without_fonts: false,
           site_generate: true,
         )
@@ -60,9 +63,27 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         )
       end
 
-      it "pass --no-progress option to compiler" do
-        asset_directory = output_directory.join(asset_folder)
+      it "passes --output-filename-template option to compiler" do
+        output_filename_template = "output_filename_template"
+        described_class.generate!(
+          source_path,
+          { output_dir: output_directory,
+            output_filename_template: output_filename_template },
+          continue_without_fonts: false,
+        )
 
+        expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
+          sources.first.to_s,
+          baseassetpath: source_path.to_s,
+          format: :asciidoc,
+          output_dir: asset_directory,
+          output_filename_template: output_filename_template,
+          continue_without_fonts: false,
+          site_generate: true,
+        )
+      end
+
+      it "pass --no-progress option to compiler" do
         described_class.generate!(
           source_path,
           { output_dir: output_directory },
@@ -75,6 +96,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           baseassetpath: source_path.to_s,
           format: :asciidoc,
           output_dir: asset_directory,
+          output_filename_template: nil,
           continue_without_fonts: false,
           progress: false,
           site_generate: true,
@@ -124,6 +146,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
             baseassetpath: source_path.to_s,
             format: :asciidoc,
             output_dir: output_directory.join(asset_folder),
+            output_filename_template: nil,
             continue_without_fonts: false,
             site_generate: true,
           )

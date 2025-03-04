@@ -20,6 +20,10 @@ module Metanorma
                default: Pathname.new(Dir.pwd).join(SITE_OUTPUT_DIRNAME).to_s,
                desc: "Output directory for generated site"
 
+        option :output_filename_template,
+               default: nil,
+               desc: "Liquid template to generate output filenames (using Relaton model)"
+
         option :agree_to_terms,
                type: :boolean,
                desc: "Agree / Disagree with all third-party licensing terms "\
