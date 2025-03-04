@@ -1,0 +1,46 @@
+name: Rubocop
+
+on: pull_request
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  rubocop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Determine Ruby version for ruby/setup-ruby
+        shell: bash
+        run: |
+          RUBY_VERSION=${{ vars.RUBY_VERSION }}
+
+          if [[ -r .rubocop.yml ]]
+          then
+            RUBY_VERSION=$( \
+              command grep \
+              -E '^\s*TargetRubyVersion:\s*[0-9]+(\.[0-9]+)*' \
+              .rubocop.yml \
+              | command awk '{print $2}' \
+            )
+          fi
+
+          if [[ -z $RUBY_VERSION ]]
+          then
+            # Let setup-ruby determine the Ruby version if no .ruby-version,
+            # .tool-versions or mise.toml file exists
+            RUBY_VERSION=default
+          fi
+
+          echo "RUBY_VERSION=$RUBY_VERSION" >> $GITHUB_ENV
+      - uses: ruby/setup-ruby@v1
+        with:
+          # input ruby-version needs to be specified if no .ruby-version,
+          # .tool-versions or mise.toml file exists
+          #
+          # Use the version that matches the one in gemspec & .rubocop.yml
+          ruby-version: ${{ env.RUBY_VERSION }}
+      - uses: reclaim-the-stack/rubocop-action@v1.1.0
