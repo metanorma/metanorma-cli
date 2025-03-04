@@ -29,7 +29,7 @@ module Metanorma
         @template_dir = options.fetch(:template_dir, template_data("path"))
         @stylesheet = options.fetch(:stylesheet, template_data("stylesheet"))
         @output_filename_template = options.fetch(:output_filename_template,
-                                                  template_data("output_filename_template"))
+                                                  template_data("output_filename"))
 
         @compile_options = compile_options
       end
@@ -141,7 +141,9 @@ module Metanorma
 
       def manifest
         @manifest ||= config_from_manifest || {
-          files: [], collection_name: "", collection_organization: ""
+          files: [],
+          collection_name: "",
+          collection_organization: "",
         }
       end
 

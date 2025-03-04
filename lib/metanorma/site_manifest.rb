@@ -16,7 +16,7 @@ module Metanorma
     class SiteTemplate < Lutaml::Model::Serializable
       attribute :path, :string
       attribute :stylesheet, :string
-      attribute :output_filename_template, :string
+      attribute :output_filename, :string
     end
 
     class Manifest < Lutaml::Model::Serializable

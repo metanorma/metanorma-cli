@@ -36,8 +36,26 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
       Metanorma::Cli.root_path.join("spec", "fixtures")
     end
 
+    let(:manifest_file_path) do
+      source_path.join("metanorma.yml")
+    end
+
+    let(:manifest_yaml) do
+      File.read(manifest_file_path)
+    end
+
     let(:manifest) do
-      Metanorma::SiteManifest.from_yaml(File.read(source_path.join("metanorma.yml")))
+      Metanorma::SiteManifest.from_yaml(manifest_yaml)
+    end
+
+    let(:sub_manifest_files) do
+      select_files_including_wildcard(
+        manifest.metanorma.source.files,
+      ).reject { |file| file.to_s.include?("yml") }
+    end
+
+    let(:collection_xml_path) do
+      "documents.xml"
     end
 
     context "without manifest file" do
@@ -59,7 +77,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         )
 
         expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
-          asset_folder, "documents.xml", title: "", organization: ""
+          asset_folder, collection_xml_path, title: "", organization: ""
         )
       end
 
@@ -103,13 +121,11 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         )
 
         expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
-          asset_folder, "documents.xml", title: "", organization: ""
+          asset_folder, collection_xml_path, title: "", organization: ""
         )
       end
 
       it "converts collection xml to html and renames it to index" do
-        collection_xml = "documents.xml"
-
         described_class.generate!(
           source_path,
           { output_dir: output_directory },
@@ -117,11 +133,11 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         )
 
         expect(File).to have_received(:rename).with(
-          Pathname.new(collection_xml).sub_ext(".html").to_s, "index.html"
+          Pathname.new(collection_xml_path).sub_ext(".html").to_s, "index.html"
         )
 
         expect(Relaton::Cli::XMLConvertor).to have_received(:to_html).with(
-          collection_xml, nil, nil
+          collection_xml_path, nil, nil
         )
       end
     end
@@ -136,11 +152,8 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         )
 
         collection = manifest.metanorma.collection
-        manifest_files = select_files_including_wildcard(
-          manifest.metanorma.source.files,
-        ).reject { |file| file.to_s.include?("yml") }
 
-        manifest_files.each do |manifest_file|
+        sub_manifest_files.each do |manifest_file|
           expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
             source_path.join(manifest_file).to_s,
             baseassetpath: source_path.to_s,
@@ -153,18 +166,78 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         end
 
         expect(Metanorma::Cli::Compiler).to have_received(:compile).exactly(
-          manifest_files.uniq.count,
+          sub_manifest_files.uniq.count,
         ).times
 
         expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
           asset_folder,
-          "documents.xml",
+          collection_xml_path,
           title: collection.name,
           organization: collection.organization,
         )
       end
 
-      it "also handles collection generation properly" do
+      context "with manifest specifying template.output_filename" do
+        let(:template_output_filename) { "{{ document.title }}" }
+        let(:collection_name) { "My Collection" }
+        let(:collection_org) { "My Organization" }
+        let(:template_stylesheet) { "stylesheet.css" }
+        let(:template_path) { "path/to/template" }
+        let(:manifest_yaml) { <<~YAML }
+          metanorma:
+            source:
+              files:
+                - "*.adoc"
+            collection:
+              name: #{collection_name.inspect}
+              organization: #{collection_org.inspect}
+            template:
+              stylesheet: #{template_stylesheet.inspect}
+              output_filename: #{template_output_filename.inspect}
+              path: #{template_path.inspect}
+        YAML
+
+        it "handles output_filename_template from manifest" do
+          allow(File).to receive(:read).with(manifest_file_path.to_s).and_return(manifest_yaml)
+          described_class.generate!(
+            source_path,
+            { output_dir: output_directory,
+              config: manifest_file_path },
+            continue_without_fonts: false,
+          )
+
+          sub_manifest_files.each do |manifest_file|
+            expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
+              source_path.join(manifest_file).to_s,
+              baseassetpath: source_path.to_s,
+              format: :asciidoc,
+              output_dir: output_directory.join(asset_folder),
+              output_filename_template: template_output_filename,
+              continue_without_fonts: false,
+              site_generate: true,
+            )
+
+            expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
+              asset_folder,
+              collection_xml_path,
+              title: collection_name,
+              organization: collection_org,
+            )
+
+            expect(File).to have_received(:rename).with(
+              Pathname.new(collection_xml_path).sub_ext(".html").to_s, "index.html"
+            )
+
+            expect(Relaton::Cli::XMLConvertor).to have_received(:to_html).with(
+              collection_xml_path,
+              template_stylesheet,
+              template_path,
+            )
+          end
+        end
+      end
+
+      it "handles collection generation properly" do
         described_class.generate!(
           source_path,
           {
@@ -197,7 +270,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         )
 
         expect(Relaton::Cli::XMLConvertor).to have_received(:to_html).with(
-          "documents.xml", stylesheet_path, template_dir
+          collection_xml_path, stylesheet_path, template_dir
         )
       end
 
@@ -209,7 +282,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         )
 
         expect(Relaton::Cli::XMLConvertor).to have_received(:to_html).with(
-          "documents.xml",
+          collection_xml_path,
           manifest.metanorma.template.stylesheet,
           manifest.metanorma.template.path,
         )
