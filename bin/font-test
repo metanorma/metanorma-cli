@@ -7,6 +7,12 @@ require "yaml"
 
 flavors = ARGV
 
+def die(message)
+  warn message
+  warn "Aborting..."
+  exit(1)
+end
+
 Fontist::Formula.update_formulas_repo
 
 flavors.each do |flavor|
@@ -40,16 +46,13 @@ flavors.each do |flavor|
   puts "#{flavor}-related fonts:"
   puts Fontist::Manifest::Locations.from_hash(manifest).to_yaml
 rescue LoadError => e
-  warn "Could not load gem '#{gem_name}': #{e.message}"
-  exit(1)
+  die "Could not load gem '#{gem_name}': #{e.message}"
 rescue NameError => e
-  warn "Could not find class '#{processor_class}': #{e.message}"
-  exit(1)
+  die "Could not find class '#{processor_class}': #{e.message}"
 rescue StandardError => e
   if e.class.to_s.start_with?("Fontist::Errors::")
-    warn "Fontist failed with: #{e.message}"
+    die "Fontist failed with: #{e.message}"
   else
-    warn "Unknown error: #{e.message}"
+    die "Unknown error: #{e.message}"
   end
-  exit(1)
 end
