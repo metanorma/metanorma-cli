@@ -26,7 +26,7 @@ flavors.each do |flavor|
     .new
 
   unless processor.respond_to?(:fonts_manifest)
-    puts "#{flavor} don't require any fonts"
+    puts "#{flavor} does not require any fonts.  Skipping."
     exit(0)
   end
 
