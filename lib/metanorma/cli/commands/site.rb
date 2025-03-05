@@ -22,12 +22,14 @@ module Metanorma
 
         option :output_filename_template,
                default: nil,
-               desc: "Liquid template to generate output filenames (using Relaton model)"
+               desc: "Liquid template to generate output filenames" \
+                     " (using Relaton model)"
 
         option :agree_to_terms,
                type: :boolean,
-               desc: "Agree / Disagree with all third-party licensing terms "\
-                                                           "presented (WARNING: do know what you are agreeing with!)"
+               desc: "Agree / Disagree with all third-party licensing" \
+                     " terms presented (WARNING: do know what you are" \
+                     " agreeing with!)"
         option :install_fonts,
                type: :boolean,
                default: true,

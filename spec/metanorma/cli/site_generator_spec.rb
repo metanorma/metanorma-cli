@@ -3,10 +3,12 @@ require "spec_helper"
 RSpec.describe Metanorma::Cli::SiteGenerator do
   describe ".generate!" do
     def select_files_including_wildcard(files)
-      files.map do |file|
+      result = files.map do |file|
         file_path = source_path.join(file).to_s
         file_path.to_s.include?("*") ? Dir.glob(file_path) : file_path
-      end.flatten
+      end
+      result.flatten!
+      result
     end
 
     before do
@@ -198,7 +200,9 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         YAML
 
         it "handles output_filename_template from manifest" do
-          allow(File).to receive(:read).with(manifest_file_path.to_s).and_return(manifest_yaml)
+          allow(File).to receive(:read)
+            .with(manifest_file_path.to_s)
+            .and_return(manifest_yaml)
           described_class.generate!(
             source_path,
             { output_dir: output_directory,
@@ -217,15 +221,17 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
               site_generate: true,
             )
 
-            expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
-              asset_folder,
-              collection_xml_path,
-              title: collection_name,
-              organization: collection_org,
-            )
+            expect(Relaton::Cli::RelatonFile)
+              .to have_received(:concatenate)
+              .with(asset_folder,
+                    collection_xml_path,
+                    title: collection_name,
+                    organization: collection_org)
 
             expect(File).to have_received(:rename).with(
-              Pathname.new(collection_xml_path).sub_ext(".html").to_s, "index.html"
+              Pathname.new(collection_xml_path)
+                .sub_ext(".html").to_s,
+              "index.html",
             )
 
             expect(Relaton::Cli::XMLConvertor).to have_received(:to_html).with(

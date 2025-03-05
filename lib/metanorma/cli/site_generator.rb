@@ -28,8 +28,10 @@ module Metanorma
         @manifest_file = find_realpath(options.fetch(:config, default_config))
         @template_dir = options.fetch(:template_dir, template_data("path"))
         @stylesheet = options.fetch(:stylesheet, template_data("stylesheet"))
-        @output_filename_template = options.fetch(:output_filename_template,
-                                                  template_data("output_filename"))
+        @output_filename_template = options.fetch(
+          :output_filename_template,
+          template_data("output_filename"),
+        )
 
         @compile_options = compile_options
       end
@@ -77,7 +79,10 @@ module Metanorma
           files = Dir[File.join(source, "**", "*.adoc")]
         end
 
-        files.flatten.uniq.reject { |file| File.directory?(file) }
+        result = files.flatten
+        result.uniq!
+        result.reject! { |file| File.directory?(file) }
+        result
       end
 
       def build_collection_file!(relaton_collection_index_filename)
@@ -115,8 +120,8 @@ module Metanorma
 
       def compile_files!(files)
         fatals = files.map { |source| compile_file!(source) }
-          .flatten
-          .compact
+        fatals.flatten!
+        fatals.compact!
 
         raise Errors::FatalCompilationError, fatals unless fatals.empty?
       end
@@ -175,10 +180,14 @@ module Metanorma
       end
 
       def source_from_manifest
-        @source_from_manifest ||= manifest[:files].map do |source_file|
-          file_path = source.join(source_file).to_s
-          file_path.include?("*") ? Dir.glob(file_path) : file_path
-        end.flatten
+        @source_from_manifest ||= begin
+          result = manifest[:files].map do |source_file|
+            file_path = source.join(source_file).to_s
+            file_path.include?("*") ? Dir.glob(file_path) : file_path
+          end
+          result.flatten!
+          result
+        end
       end
 
       def ensure_site_asset_directory!
