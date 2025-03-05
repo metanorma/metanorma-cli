@@ -33,7 +33,7 @@ module Metanorma
       end
 
       Metanorma::Cli::Command.start(arguments)
-    rescue Interrupt, SignalException => _e
+    rescue SignalException # `Interrupt` inherits from this
       UI.say("Process cancelled, exiting.")
     rescue Errors::FileNotFoundError => e
       UI.say("Error: #{e}. \nNot sure what to run? try: metanorma help")
