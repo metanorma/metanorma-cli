@@ -2,13 +2,13 @@
 
 RSpec.describe Metanorma::SiteManifest do
   describe ".from_yaml" do
-    let(:manifest) { described_class.from_yaml(input_yaml) }
+    let(:manifest) { described_class::Base.from_yaml(input_yaml) }
 
     subject(:metanorma_manifest) { manifest.metanorma }
 
     shared_examples "a valid manifest" do
-      it "reads YAML into a #{described_class} object" do
-        expect(manifest).to be_a(described_class)
+      it "reads YAML into a #{described_class::Base} object" do
+        expect(manifest).to be_a(described_class::Base)
       end
 
       it { is_expected.to be_a(Metanorma::SiteManifest::Manifest) }

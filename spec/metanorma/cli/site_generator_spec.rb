@@ -45,7 +45,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
     end
 
     let(:manifest) do
-      Metanorma::SiteManifest.from_yaml(manifest_yaml)
+      Metanorma::SiteManifest::Base.from_yaml(manifest_yaml)
     end
 
     let(:sub_manifest_files) do

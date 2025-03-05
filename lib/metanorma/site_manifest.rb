@@ -3,7 +3,7 @@
 require "lutaml/model"
 
 module Metanorma
-  class SiteManifest < Lutaml::Model::Serializable
+  module SiteManifest
     class SourceEntries < Lutaml::Model::Serializable
       attribute :files, :string, collection: true
     end
@@ -24,6 +24,9 @@ module Metanorma
       attribute :collection, SiteMetadata
       attribute :template, SiteTemplate
     end
-    attribute :metanorma, Manifest
+
+    class Base < Lutaml::Model::Serializable
+      attribute :metanorma, Manifest
+    end
   end
 end

@@ -150,7 +150,7 @@ module Metanorma
       def config_from_manifest
         if manifest_file
           manifest_config(
-            Metanorma::SiteManifest.from_yaml(
+            Metanorma::SiteManifest::Base.from_yaml(
               File.read(manifest_file.to_s),
             ),
           )
