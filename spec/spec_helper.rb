@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "vcr"
 
 VCR.configure do |config|
@@ -54,6 +56,7 @@ RSpec.configure do |config|
   config.include RSpecCommand
 end
 
+# rubocop:disable Layout/LineLength
 def strip_guid(xml)
   xml.gsub(%r{ id="_[^"]+"}, ' id="_"')
     .gsub(%r{ target="_[^"]+"}, ' target="_"')
@@ -66,6 +69,7 @@ def strip_guid(xml)
     .gsub(%r{<fetched>[^<]+</fetched>}, "<fetched/>")
     .gsub(%r{ schema-version="[^"]+"}, "")
 end
+# rubocop:enable Layout/LineLength
 
 ASCIIDOC_BLANK_HDR = <<~"HDR"
   = Document title
@@ -120,7 +124,7 @@ ASCIIDOC_CONFIGURED_HDR = <<~"HDR"
   ----
 HDR
 
-ISOXML_BLANK_HDR = <<~"HDR"
+ISOXML_BLANK_HDR = <<~"HDR".freeze
   <?xml version="1.0" encoding="UTF-8"?>
   <iso-standard xmlns="http://riboseinc.com/isoxml">
   <bibdata type="article">

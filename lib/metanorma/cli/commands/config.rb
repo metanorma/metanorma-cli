@@ -49,9 +49,15 @@ module Metanorma
         def self.exit_on_failure?() true end
 
         # priority:
-        # IDEAL: thor defaults -> global conf -> local conf -> env vars -> passed arguments
-        # ACTUAL: all arguments -> global conf -> local conf
-        # - thor doesn't provide to differentiate default values against passed args
+        # IDEAL:
+        # thor defaults -> global conf -> local conf
+        #   -> env vars -> passed arguments
+        #
+        # ACTUAL:
+        # all arguments -> global conf -> local conf
+        #
+        # - thor doesn't provide to differentiate default values against passed
+        #   args
         # - thor doesn't allow to get all args available for current command
         def self.load_configs(options, configs = [
           Metanorma::Cli.global_config_path, Metanorma::Cli.local_config_path
@@ -60,7 +66,8 @@ module Metanorma
           configs.each do |config_path|
             next unless File.exist?(config_path)
 
-            config_values = ::YAML::load_file(config_path).symbolize_all_keys[:cli] || {}
+            config_values = ::YAML::load_file(config_path)
+              .symbolize_all_keys[:cli] || {}
             result.merge!(config_values)
           end
 
@@ -84,10 +91,10 @@ module Metanorma
         end
 
         def load_config(global_config, create_default_config: true)
-          config_path = Metanorma::Cli.config_path(global_config)
+          config_path = Metanorma::Cli.config_path(global: global_config)
 
           unless File.exist?(config_path) || create_default_config
-            config_path = Metanorma::Cli.config_path(true)
+            config_path = Metanorma::Cli.config_path(global: true)
           end
 
           save_default_config(config_path)

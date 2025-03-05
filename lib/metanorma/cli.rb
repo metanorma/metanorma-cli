@@ -66,7 +66,7 @@ module Metanorma
       Pathname.new(Dir.pwd).join(CONFIG_DIRNAME, CONFIG_FILENAME)
     end
 
-    def self.config_path(global = false)
+    def self.config_path(global: false)
       return global_config_path if global
 
       local_config_path

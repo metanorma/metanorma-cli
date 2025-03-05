@@ -12,6 +12,7 @@ module Metanorma
       DEFAULT_SITE_INDEX = "index.html"
       DEFAULT_CONFIG_FILE = "metanorma.yml"
 
+      # rubocop:disable Metrics/AbcSize
       def initialize(source, options = {}, compile_options = {})
         @collection_queue = []
         @source = find_realpath(source)
@@ -35,6 +36,7 @@ module Metanorma
 
         @compile_options = compile_options
       end
+      # rubocop:enable Metrics/AbcSize
 
       def self.generate!(source, options = {}, compile_options = {})
         new(source, options, compile_options).generate!

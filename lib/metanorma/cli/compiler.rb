@@ -15,12 +15,16 @@ module Metanorma
         path = Pathname.new(file)
         # Check if provided file path exists
         unless path.exist?
-          raise ::Metanorma::Cli::Errors::FileNotFoundError.new("Specified input file '#{file}' does not exist")
+          raise ::Metanorma::Cli::Errors::FileNotFoundError.new(
+            "Specified input file '#{file}' does not exist",
+          )
         end
 
         # Check if provided file is really a file
         unless path.file?
-          raise ::Metanorma::Cli::Errors::FileNotFoundError.new("Specified input file '#{file}' is not a file")
+          raise ::Metanorma::Cli::Errors::FileNotFoundError.new(
+            "Specified input file '#{file}' is not a file",
+          )
         end
       end
 
@@ -57,12 +61,12 @@ module Metanorma
         Hash.new.tap do |hash|
           hash[:extract] = extract[0]
           hash[:extract_type] =
-            extract.size > 0 ? extract[0..-1].map(&:to_sym) : []
+            extract.empty? ? [] : extract.map(&:to_sym)
         end
       end
 
       def extension_option
-        !extensions.empty? ? { extension_keys: extensions.map(&:to_sym) } : {}
+        extensions.empty? ? {} : { extension_keys: extensions.map(&:to_sym) }
       end
 
       def serialize(options)

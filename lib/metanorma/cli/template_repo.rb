@@ -37,7 +37,7 @@ module Metanorma
       end
 
       def template_config_file
-        @template_config_file ||= Cli.config_path(true)
+        @template_config_file ||= Cli.config_path(global: true)
       end
 
       def create_template_config
@@ -59,7 +59,9 @@ module Metanorma
         names = templates[:templates].map { |template| template[:name].to_s }
 
         if names.include?(name.to_s) && overwrite == false
-          raise Errors::DuplicateTemplateError.new("Duplicate metanorma template")
+          raise Errors::DuplicateTemplateError.new(
+            "Duplicate metanorma template",
+          )
         end
 
         templates[:templates].push({ name: name, source: source, type: type })
