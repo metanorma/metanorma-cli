@@ -10,7 +10,7 @@ RSpec.describe "Metanorma" do
   describe "site generate" do
     it "generate a mini site" do
       output_dir = Dir.pwd
-      allow(Metanorma::Cli::SiteGenerator).to receive(:generate)
+      allow(Metanorma::Cli::SiteGenerator).to receive(:generate!)
         .and_call_original
       allow(Metanorma::Cli::Compiler).to receive(:compile)
       command = %W(site generate #{source_dir} -o #{output_dir})
@@ -18,7 +18,7 @@ RSpec.describe "Metanorma" do
       output = capture_stdout { Metanorma::Cli.start(command) }
 
       expect(output).to include("Site has been generated at #{output_dir}")
-      expect(Metanorma::Cli::SiteGenerator).to have_received(:generate).with(
+      expect(Metanorma::Cli::SiteGenerator).to have_received(:generate!).with(
         source_dir.to_s,
         {
           output_dir: output_dir,
@@ -42,7 +42,7 @@ RSpec.describe "Metanorma" do
 
     it "generate a mini site with extra compile args" do
       output_dir = Dir.pwd
-      allow(Metanorma::Cli::SiteGenerator).to receive(:generate)
+      allow(Metanorma::Cli::SiteGenerator).to receive(:generate!)
         .and_call_original
       allow(Metanorma::Cli::Compiler).to receive(:compile)
       command = %W(site generate #{source_dir} -o #{output_dir}
@@ -51,7 +51,7 @@ RSpec.describe "Metanorma" do
       output = capture_stdout { Metanorma::Cli.start(command) }
 
       expect(output).to include("Site has been generated at #{output_dir}")
-      expect(Metanorma::Cli::SiteGenerator).to have_received(:generate).with(
+      expect(Metanorma::Cli::SiteGenerator).to have_received(:generate!).with(
         source_dir.to_s,
         {
           output_dir: output_dir,
@@ -80,11 +80,11 @@ RSpec.describe "Metanorma" do
     end
 
     it "usages pwd as default source path" do
-      allow(Metanorma::Cli::SiteGenerator).to receive(:generate)
+      allow(Metanorma::Cli::SiteGenerator).to receive(:generate!)
 
       Metanorma::Cli.start(%w(site generate))
 
-      expect(Metanorma::Cli::SiteGenerator).to have_received(:generate).with(
+      expect(Metanorma::Cli::SiteGenerator).to have_received(:generate!).with(
         Dir.pwd.to_s, any_args
       )
     end
@@ -92,7 +92,7 @@ RSpec.describe "Metanorma" do
     it "supports custom template for site" do
       template_dir = "./tmp/template"
       stylesheet_path = "./tmp/template/style.css"
-      allow(Metanorma::Cli::SiteGenerator).to receive(:generate)
+      allow(Metanorma::Cli::SiteGenerator).to receive(:generate!)
 
       command = %W(
         site generate #{source_dir}
@@ -102,7 +102,7 @@ RSpec.describe "Metanorma" do
 
       capture_stdout { Metanorma::Cli.start(command) }
 
-      expect(Metanorma::Cli::SiteGenerator).to have_received(:generate).with(
+      expect(Metanorma::Cli::SiteGenerator).to have_received(:generate!).with(
         source_dir.to_s,
         hash_including(template_dir: template_dir, stylesheet: stylesheet_path),
         progress: false,

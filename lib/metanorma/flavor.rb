@@ -14,7 +14,7 @@ module Metanorma
       "metanorma-csa",
       "metanorma-iho",
       "metanorma-jis",
-      # "metanorma-m3aawg", 
+      # "metanorma-m3aawg",
       "metanorma-generic",
       "metanorma-standoc",
       # "metanorma-un",
@@ -56,7 +56,11 @@ module Metanorma
     private
 
     def flavors
-      @flavors ||= [SUPPORTED_GEMS + PRIVATE_SUPPORTED_GEMS].flatten.uniq
+      @flavors ||= begin
+        result = [SUPPORTED_GEMS + PRIVATE_SUPPORTED_GEMS].flatten
+        result.uniq!
+        result
+      end
     end
 
     def gem_loading_error(flavor_name)

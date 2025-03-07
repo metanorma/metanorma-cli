@@ -38,9 +38,9 @@ RSpec.describe Metanorma::Cli::GitTemplate do
     it "says it out loud for invalid template repository" do
       template_repo = "https://github.com/metanorma/mn-templates-csd-one"
 
-      output = capture_stdout {
+      output = capture_stdout do
         Metanorma::Cli::GitTemplate.download("csd", repo: template_repo)
-      }
+      end
 
       expect(output).to include("Invalid template repository:")
     end

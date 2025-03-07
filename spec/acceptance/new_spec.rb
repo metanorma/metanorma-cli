@@ -17,22 +17,22 @@ RSpec.describe "Metanorma" do
 
         command = %w(
           new
-            -t csd
-            -d standard
-            -l https://github.com/metanorma/mn-templates-csd
-            ./tmp/my-csd-doc
+          -t csd
+          -d standard
+          -l https://github.com/metanorma/mn-templates-csd
+          ./tmp/my-csd-doc
         )
 
         capture_stdout { Metanorma::Cli.start(command) }
 
-        expect(Metanorma::Cli::Generator).to have_received(:run).
-          with(
+        expect(Metanorma::Cli::Generator).to have_received(:run)
+          .with(
             "./tmp/my-csd-doc",
             doctype: "standard",
             overwrite: nil,
             template: "https://github.com/metanorma/mn-templates-csd",
             type: "csd",
-        )
+          )
       end
     end
   end

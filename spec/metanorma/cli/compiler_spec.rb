@@ -16,10 +16,11 @@ RSpec.describe Metanorma::Cli::Compiler do
     end
 
     # @TODO: What exactly are we testing here?
-    # The script should exit with non zero status when errors like following occur:
+    # The script should exit with non zero status when errors like following
+    # occur:
     #   [metanorma] Error: xmlrfc2 format is not supported for this standard.
     #   [metanorma] Error: nits format is not supported for this standard.
-    # See issue 151.
+    # See issue #151.
     #
     it "compile with errors" do
       skip "Skipping for now, will get back to it soon!"
@@ -27,7 +28,8 @@ RSpec.describe Metanorma::Cli::Compiler do
       # Try to update metanorma gem
       VCR.use_cassette "workgroup_fetch" do
         expect do
-          Metanorma::Cli.start(["spec/fixtures/mn-samples-ietf-antioch.adoc", "--no-install-fonts"])
+          Metanorma::Cli.start(["spec/fixtures/mn-samples-ietf-antioch.adoc",
+                                "--no-install-fonts"])
         end.to raise_error SystemExit
 
         delete_file_if_exist("mn-samples-ietf-antioch.err")
@@ -39,7 +41,8 @@ RSpec.describe Metanorma::Cli::Compiler do
     it "write files to specified output dir" do
       VCR.use_cassette "workgroup_fetch" do
         Dir.mktmpdir("rspec-") do |dir|
-          Metanorma::Cli.start(["spec/fixtures/sample-file.adoc", "-o", dir, "--no-install-fonts"])
+          Metanorma::Cli.start(["spec/fixtures/sample-file.adoc", "-o", dir,
+                                "--no-install-fonts"])
           expect(File.exist?("#{dir}/sample-file.html")).to be true
           expect(File.exist?("#{dir}/sample-file.xml")).to be true
           expect(File.exist?("#{dir}/sample-file.presentation.xml")).to be true
@@ -59,7 +62,11 @@ RSpec.describe Metanorma::Cli::Compiler do
   end
 
   def sample_asciidoc_file
-    @sample_asciidoc_file ||= Metanorma::Cli.root_path.join("spec", "fixtures", "sample-file.adoc").to_s
+    @sample_asciidoc_file ||= Metanorma::Cli.root_path.join(
+      "spec",
+      "fixtures",
+      "sample-file.adoc",
+    ).to_s
   end
 
   def delete_file_if_exist(filename)

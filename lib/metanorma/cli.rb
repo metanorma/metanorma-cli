@@ -3,13 +3,14 @@
 require "metanorma"
 require "metanorma/flavor"
 
+require "metanorma/site_manifest"
+
 require "metanorma/cli/version"
 require "metanorma/cli/errors"
 require "metanorma/cli/command"
 
 module Metanorma
   module Cli
-
     CONFIG_DIRNAME = ".metanorma"
     CONFIG_FILENAME = "config.yml"
 
@@ -32,7 +33,7 @@ module Metanorma
       end
 
       Metanorma::Cli::Command.start(arguments)
-    rescue Interrupt, SignalException => _e
+    rescue SignalException # `Interrupt` inherits from this
       UI.say("Process cancelled, exiting.")
     rescue Errors::FileNotFoundError => e
       UI.say("Error: #{e}. \nNot sure what to run? try: metanorma help")
@@ -65,7 +66,7 @@ module Metanorma
       Pathname.new(Dir.pwd).join(CONFIG_DIRNAME, CONFIG_FILENAME)
     end
 
-    def self.config_path(global = false)
+    def self.config_path(global: false)
       return global_config_path if global
 
       local_config_path
@@ -91,7 +92,7 @@ module Metanorma
 
     def self.find_command(arguments)
       commands = Metanorma::Cli::Command.all_commands.keys
-      commands.select { |cmd| arguments.include?(cmd.gsub("_", "-")) == true }
+      commands.select { |cmd| arguments.include?(cmd.tr("_", "-")) == true }
     end
 
     def self.print_fatal_summary(error)

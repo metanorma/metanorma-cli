@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "metanorma/cli/compiler"
 require "metanorma/cli/generator"
 require "metanorma/cli/collection"
@@ -12,7 +14,8 @@ module Metanorma
   module Cli
     class Command < ThorWithConfig
       class_option :progress, aliases: "-s", type: :boolean, default: false,
-                              desc: "Show progress for long running tasks (like download)"
+                              desc: "Show progress for long running tasks" \
+                                    " (like download)"
 
       desc "new NAME", "Create new Metanorma document"
       option :type, aliases: "-t", required: true, desc: "Document type"
@@ -36,26 +39,34 @@ module Metanorma
       option :wrapper, aliases: "-w", type: :boolean,
                        desc: "Create wrapper folder for HTML output"
       option :asciimath, aliases: "-a", type: :boolean,
-                         desc: "Keep Asciimath in XML output instead of converting it to MathM"
+                         desc: "Keep Asciimath in XML output instead of" \
+                               " converting it to MathM"
       option :datauriimage, aliases: "-d", type: :boolean,
                             desc: "Encode HTML output images as data URIs"
       option :relaton, aliases: "-R",
-                       desc: "Export Relaton XML for document to nominated filename"
+                       desc: "Export Relaton XML for document to nominated" \
+                             " filename"
       option :extract, aliases: "-e",
-                       desc: "Export sourcecode fragments from this document to nominated directory"
+                       desc: "Export sourcecode fragments from this document" \
+                             " to nominated directory"
       option :version, aliases: "-v",
                        desc: "Print version of code (accompanied with -t)"
       option :output_dir, aliases: "-o",
                           desc: "Directory to save compiled files"
       option :strict, aliases: "-S", type: :boolean,
                       desc: "Strict compilation: abort if there are any errors"
-      option :agree_to_terms, type: :boolean, desc: "Agree / Disagree with all third-party licensing terms "\
-                                                    "presented (WARNING: do know what you are agreeing with!)"
+      option :agree_to_terms,
+             type: :boolean,
+             desc: "Agree / Disagree with all third-party licensing terms "\
+                   "presented (WARNING: do know what you are agreeing with!)"
       option :install_fonts, type: :boolean, default: true,
                              desc: "Install required fonts"
-      option :continue_without_fonts, type: :boolean,
-                                      desc: "Continue processing even when fonts are missing"
+      option :continue_without_fonts,
+             type: :boolean,
+             desc: "Continue processing even when fonts are missing"
 
+      # rubocop:disable Metrics/PerceivedComplexity
+      # rubocop:disable Metrics/AbcSize
       def compile(file_name = nil)
         if file_name && !options[:version]
           documents = select_wildcard_documents(file_name) || [file_name]
@@ -71,18 +82,23 @@ module Metanorma
           invoke :help
         end
       end
+      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/PerceivedComplexity
 
       desc "collection FILENAME", "Render HTML pages from XML/YAML colection"
       option :format, aliases: "-x", type: :string, desc: "Formats to generate"
       option :output_folder, aliases: "-w",
                              desc: "Directory to save compiled files"
       option :coverpage, aliases: "-c", desc: "Liquid template"
-      option :agree_to_terms, type: :boolean, desc: "Agree / Disagree with all third-party licensing terms "\
-                                                    "presented (WARNING: do know what you are agreeing with!)"
+      option :agree_to_terms,
+             type: :boolean,
+             desc: "Agree / Disagree with all third-party licensing terms "\
+                   "presented (WARNING: do know what you are agreeing with!)"
       option :install_fonts, type: :boolean, default: true,
                              desc: "Install required fonts"
-      option :continue_without_fonts, type: :boolean,
-                                      desc: "Continue processing even when fonts are missing"
+      option :continue_without_fonts,
+             type: :boolean,
+             desc: "Continue processing even when fonts are missing"
       option :strict, aliases: "-S", type: :boolean, \
                       desc: "Strict compilation: abort if there are any errors"
 

@@ -1,6 +1,6 @@
 RSpec.describe "Config" do
   before :each do
-    @test_config = @tmp_dir.join(Metanorma::Cli::CONFIG_FILENAME)
+    @test_config = tmp_dir.join(Metanorma::Cli::CONFIG_FILENAME)
     FileUtils.rm_f(@test_config)
 
     allow(Metanorma::Cli).to receive(:config_path).and_return(@test_config)
@@ -58,7 +58,7 @@ RSpec.describe "Config" do
       { agree_to_terms: false,
         install_fonts: true,
         continue_without_fonts: false },
-      [@test_config]
+      [@test_config],
     )
 
     expect(result[:agree_to_terms]).to be true

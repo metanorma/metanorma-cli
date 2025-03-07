@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "vcr"
 
 VCR.configure do |config|
@@ -20,6 +22,10 @@ require "xml-c14n"
 
 Dir["./spec/support/**/*.rb"].sort.each { |file| require file }
 
+RSpec.shared_context "global helpers" do
+  let(:tmp_dir) { Pathname.new(Dir.tmpdir) }
+end
+
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
@@ -34,15 +40,13 @@ RSpec.configure do |config|
   end
 
   config.before(:suite) do
-    tmp_dir = Pathname.new(Dir.tmpdir)
-    FileUtils.mkdir_p(tmp_dir) unless tmp_dir.exist?
-
     # Disable http authentication
     ENV["GIT_TERMINAL_PROMPT"] = "0"
   end
 
+  config.include_context "global helpers"
+
   config.before(:each) do
-    @tmp_dir = Pathname.new(Dir.tmpdir)
   end
 
   config.after(:suite) do
@@ -52,6 +56,7 @@ RSpec.configure do |config|
   config.include RSpecCommand
 end
 
+# rubocop:disable Layout/LineLength
 def strip_guid(xml)
   xml.gsub(%r{ id="_[^"]+"}, ' id="_"')
     .gsub(%r{ target="_[^"]+"}, ' target="_"')
@@ -64,6 +69,7 @@ def strip_guid(xml)
     .gsub(%r{<fetched>[^<]+</fetched>}, "<fetched/>")
     .gsub(%r{ schema-version="[^"]+"}, "")
 end
+# rubocop:enable Layout/LineLength
 
 ASCIIDOC_BLANK_HDR = <<~"HDR"
   = Document title
@@ -118,7 +124,7 @@ ASCIIDOC_CONFIGURED_HDR = <<~"HDR"
   ----
 HDR
 
-ISOXML_BLANK_HDR = <<~"HDR"
+ISOXML_BLANK_HDR = <<~"HDR".freeze
   <?xml version="1.0" encoding="UTF-8"?>
   <iso-standard xmlns="http://riboseinc.com/isoxml">
   <bibdata type="article">
@@ -168,13 +174,13 @@ HDR
 
 def mock_pdf
   allow(::Mn2pdf).to receive(:convert) do |url, output, _c, _d|
-    FileUtils.cp(url.gsub(/"/, ""), output.gsub(/"/, ""))
+    FileUtils.cp(url.delete('"'), output.delete('"'))
   end
 end
 
 def mock_sts
   allow(::MnConvert).to receive(:convert) do |url, opts|
     output = opts[:output_file] || "fake.xml"
-    FileUtils.cp(url.gsub(/"/, ""), output.gsub(/"/, ""))
+    FileUtils.cp(url.delete('"'), output.delete('"'))
   end
 end
