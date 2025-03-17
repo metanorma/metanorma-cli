@@ -48,7 +48,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "metanorma-ieee", "~> 1.4.0"
   spec.add_dependency "metanorma-jis", "~> 0.5.0"
   spec.add_dependency "metanorma-ogc", "~> 2.7.0"
-  spec.add_dependency "metanorma-plateau", "~> 0.2.0"
+  spec.add_dependency "metanorma-plateau", "~> 1.0.0"
   spec.add_dependency "relaton-cli", ">= 0.8.2"
 
   spec.add_dependency "socksify"
