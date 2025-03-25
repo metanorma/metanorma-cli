@@ -230,6 +230,7 @@ module Metanorma
             job,
             compile: @compile_options,
             output_dir: @asset_directory.join(".."),
+            site_generate: true,
           )
         end
       end

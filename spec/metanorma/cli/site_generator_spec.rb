@@ -249,6 +249,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           {
             output_dir: output_directory,
             config: source_path.join("metanorma.yml"),
+            site_generate: true,
           },
           continue_without_fonts: false,
         )
@@ -259,6 +260,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           collection_file.to_s,
           output_dir: output_directory,
           compile: { continue_without_fonts: false },
+          site_generate: true,
         )
       end
     end
