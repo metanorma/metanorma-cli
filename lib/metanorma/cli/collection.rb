@@ -37,6 +37,7 @@ module Metanorma
           output_folder: build_output_folder,
           coverpage: @options.fetch(:coverpage, nil),
           format: collection_output_formats(@options.fetch(:format, "")),
+          site_generate: @options["site_generate"],
         }
       end
 

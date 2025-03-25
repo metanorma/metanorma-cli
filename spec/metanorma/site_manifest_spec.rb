@@ -41,7 +41,7 @@ RSpec.describe Metanorma::SiteManifest do
       end
       it_behaves_like "a valid manifest"
       its(:template) { is_expected.to be_nil }
-      its(:"source.files") { is_expected.to be_nil }
+      its(:"source.files") { is_expected.to be_empty }
     end
 
     context "with a standard valid input YAML" do
