@@ -1,23 +1,20 @@
 ---
-# Optional: Metanora Node
+# Required: Metanorma Node
 #
-# The metanorma ndoe allows us to customize the metanorma
-# complilation process, as of now we are supporting to be
-# selectetive about which file to use, but in future we
-# might add more functionality thourgh it.
+# The `metanorma` node has to be at the top level.
+# It contains all the other configuration nodes.
 #
 metanorma:
 
   # Optional: Source files
   #
-  # The following source node can be used to be selective about
-  # the files in the specified source directory. The way you add
-  # files here is to use relative paths in regards to source path
-  # not necessarily related to the configuration file path. The
-  # file selections also support wildcards.
+  # The `source.files` node is a list of files or file globs that point to
+  # the file paths of the individual metanorma documents.
   #
-  # The following are examples of supported pattern, the CLI is
-  # also smart ignore any duplicates automaticaly.
+  # The paths can be absolute paths or relative paths, but they must resolve to
+  # files within the directory where this configuration file is found.
+  #
+  # Entries are de-duplicated automatically.
   #
   source:
     files:
@@ -29,16 +26,22 @@ metanorma:
       # collection file
       - ./collection_with_options.yml
 
-# Required: Site metadata
-#
-# The following relaton node is required for site generation.
-# The collection node data are used in the site title or heading
-# and the organization is used in the copyright area.
-#
+  # Required: Site metadata
+  #
+  # The `collection.name` node specifies the site title, whereas
+  # `collection.organization` is reflected in the copyright notice of the site.
+  #
   collection:
-    organization: "Metanorma : Organization name sample"
+    organization: "Metanorma: Organization name sample"
     name: "Metanorma: Sample collection name from metanorma.yml"
 
+  # Optional: Site output configuration
+  #
+  # The `template.path` node specifies the path to the Liquid template directory.
+  # The `template.stylesheet` node specifies the path to the stylesheet file.
+  # The `template.output_filename` node specifies the base output filename for
+  # all the generated artifacts, and is customized using Liquid templating.
   template:
-      path: your-custom-template-path
-      stylesheet: stylesheed-file-path
+    path: your-custom-template-path
+    stylesheet: stylesheet-file-path
+    output_filename: "your-filename-template-{{ document.docidentifier }}"
