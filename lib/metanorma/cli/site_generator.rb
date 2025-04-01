@@ -56,6 +56,7 @@ module Metanorma
       def generate!
         ensure_site_asset_directory!
 
+        # compile individual document files
         compile_files!(select_source_files)
 
         site_directory = asset_directory.parent
@@ -65,7 +66,8 @@ module Metanorma
           convert_to_html_page!(relaton_collection_index, DEFAULT_SITE_INDEX)
         end
 
-        dequeue_jobs!
+        # actually compile collection file(s)
+        compile_collections!
       end
 
       private
@@ -253,10 +255,9 @@ module Metanorma
         end
       end
 
-      def dequeue_jobs!
-        job = @collection_queue.pop
-
-        if job
+      # Only one collection file is supported for now??
+      def compile_collections!
+        while job = @collection_queue.pop
           Cli::Collection.render(
             job,
             compile: @compile_options,
