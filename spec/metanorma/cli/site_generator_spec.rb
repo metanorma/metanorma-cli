@@ -161,7 +161,8 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
             baseassetpath: source_path.to_s,
             format: :asciidoc,
             output_dir: output_directory.join(asset_folder),
-            output_filename_template: "your-filename-template-{{ document.docidentifier }}",
+            output_filename_template:
+              "your-filename-template-{{ document.docidentifier }}",
             continue_without_fonts: false,
             site_generate: true,
           )
