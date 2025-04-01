@@ -254,6 +254,8 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
       end
 
       it "handles collection generation properly" do
+        allow(Metanorma::Cli::Collection).to receive(:render)
+
         described_class.generate!(
           source_path,
           {
@@ -264,14 +266,17 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           continue_without_fonts: false,
         )
 
-        collection_file = source_path.join("collection_with_options.yml")
-
-        expect(Metanorma::Cli::Collection).to have_received(:render).with(
-          collection_file.to_s,
-          output_dir: output_directory,
-          compile: { continue_without_fonts: false },
-          site_generate: true,
-        )
+        [
+          "collection_with_options.yml",
+          "collection_with_options2.yml",
+        ].map do |file|
+          expect(Metanorma::Cli::Collection).to have_received(:render).with(
+            source_path.join(file).to_s,
+            output_dir: output_directory,
+            compile: { continue_without_fonts: false },
+            site_generate: true,
+          )
+        end
       end
     end
 

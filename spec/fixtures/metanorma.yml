@@ -25,6 +25,7 @@ metanorma:
 
       # collection file
       - ./collection_with_options.yml
+      - ./collection_with_options2.yml
 
   # Required: Site metadata
   #
