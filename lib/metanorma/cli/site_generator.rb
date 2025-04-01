@@ -34,6 +34,17 @@ module Metanorma
           template_data("output_filename"),
         )
 
+        # Determine base path for template files
+        # If template_dir is not absolute, then it is relative to the manifest
+        # file.
+        # If manifest file is not provided, then it is relative to the current
+        # directory.
+        @base_path = if manifest_file.nil?
+                       Pathname.pwd
+                     else
+                       Pathname.new(manifest_file).parent
+                     end
+
         @compile_options = compile_options
       end
       # rubocop:enable Metrics/AbcSize
@@ -47,7 +58,8 @@ module Metanorma
 
         compile_files!(select_source_files)
 
-        site_directory = asset_directory.join("..")
+        site_directory = asset_directory.parent
+
         Dir.chdir(site_directory) do
           build_collection_file!(relaton_collection_index)
           convert_to_html_page!(relaton_collection_index, DEFAULT_SITE_INDEX)
@@ -61,7 +73,8 @@ module Metanorma
       attr_reader :source, :asset_folder, :asset_directory, :site_path,
                   :manifest_file, :relaton_collection_index, :stylesheet,
                   :template_dir,
-                  :output_filename_template
+                  :output_filename_template,
+                  :base_path
 
       def find_realpath(source_path)
         Pathname.new(source_path.to_s).realpath if source_path
@@ -128,14 +141,32 @@ module Metanorma
         raise Errors::FatalCompilationError, fatals unless fatals.empty?
       end
 
-      def convert_to_html_page!(relaton_index_filename, page_name)
+      # Given a path, return the full path if it is not nil.
+      # If the path is absolute, return the path as is.
+      # If the path is relative, return the path relative to the base path.
+      # @param some_path [String, nil] the path to be converted to full path
+      # @return [String, nil] the full path
+      def full_path_for(some_path)
+        if some_path.nil?
+          nil
+        elsif Pathname.new(some_path).absolute?
+          some_path
+        elsif !base_path.nil?
+          base_path.join(some_path)
+        end
+      end
+
+      def convert_to_html_page!(
+        relaton_index_filename, page_name
+      )
         UI.info("Generating html site in #{site_path} ...")
 
         Relaton::Cli::XMLConvertor.to_html(
           relaton_index_filename,
-          stylesheet,
-          template_dir,
+          full_path_for(stylesheet),
+          full_path_for(template_dir),
         )
+
         File.rename(
           Pathname.new(relaton_index_filename).sub_ext(".html").to_s,
           page_name,
