@@ -161,7 +161,8 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
             baseassetpath: source_path.to_s,
             format: :asciidoc,
             output_dir: output_directory.join(asset_folder),
-            output_filename_template: "your-filename-template-{{ document.docidentifier }}",
+            output_filename_template:
+              "your-filename-template-{{ document.docidentifier }}",
             continue_without_fonts: false,
             site_generate: true,
           )
@@ -185,6 +186,15 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         let(:collection_org) { "My Organization" }
         let(:template_stylesheet) { "stylesheet.css" }
         let(:template_path) { "path/to/template" }
+
+        let(:expected_base_path) { source_path.realpath }
+        let(:expected_stylesheet_path) do
+          expected_base_path.join(template_stylesheet)
+        end
+        let(:expected_template_path) do
+          expected_base_path.join(template_path)
+        end
+
         let(:manifest_yaml) { <<~YAML }
           metanorma:
             source:
@@ -236,8 +246,8 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
 
             expect(Relaton::Cli::XMLConvertor).to have_received(:to_html).with(
               collection_xml_path,
-              template_stylesheet,
-              template_path,
+              expected_stylesheet_path,
+              expected_template_path,
             )
           end
         end
@@ -266,34 +276,56 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
     end
 
     context "custom site template" do
-      it "respects template options and pass it down to relaton" do
-        template_dir = "template-dir-as-option"
-        stylesheet_path = "stylesheet-as-option"
+      context "without manifest file" do
+        let(:expected_base_path) { Pathname.pwd }
+        let(:expected_stylesheet_path) do
+          expected_base_path.join(stylesheet_path)
+        end
+        let(:expected_template_path) do
+          expected_base_path.join(template_dir)
+        end
 
-        described_class.generate!(
-          source_path,
-          output_dir: output_directory,
-          template_dir: template_dir,
-          stylesheet: stylesheet_path,
-        )
+        let(:stylesheet_path) { "stylesheet-as-option" }
+        let(:template_dir) { "template-dir-as-option" }
 
-        expect(Relaton::Cli::XMLConvertor).to have_received(:to_html).with(
-          collection_xml_path, stylesheet_path, template_dir
-        )
+        it "respects template options and pass it down to relaton" do
+          described_class.generate!(
+            source_path,
+            output_dir: output_directory,
+            template_dir: template_dir,
+            stylesheet: stylesheet_path,
+          )
+
+          expect(Relaton::Cli::XMLConvertor).to have_received(:to_html).with(
+            collection_xml_path,
+            expected_stylesheet_path,
+            expected_template_path,
+          )
+        end
       end
 
-      it "allows us to use manifest file for template" do
-        described_class.generate!(
-          source_path,
-          output_dir: output_directory,
-          config: source_path.join("metanorma.yml"),
-        )
+      context "with manifest file" do
+        let(:expected_base_path) { source_path.realpath }
+        let(:expected_stylesheet_path) do
+          expected_base_path.join(manifest.metanorma.template.stylesheet)
+        end
+        let(:expected_template_path) do
+          expected_base_path.join(manifest.metanorma.template.path)
+        end
 
-        expect(Relaton::Cli::XMLConvertor).to have_received(:to_html).with(
-          collection_xml_path,
-          manifest.metanorma.template.stylesheet,
-          manifest.metanorma.template.path,
-        )
+        it "uses its template configuration" do
+          described_class.generate!(
+            source_path,
+            output_dir: output_directory,
+            config: source_path.join("metanorma.yml"),
+          )
+
+          expect(Relaton::Cli::XMLConvertor).to have_received(:to_html).with(
+            collection_xml_path,
+            expected_stylesheet_path,
+            expected_template_path,
+          )
+        end
       end
     end
 

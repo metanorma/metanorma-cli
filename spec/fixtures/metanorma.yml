@@ -37,8 +37,14 @@ metanorma:
 
   # Optional: Site output configuration
   #
-  # The `template.path` node specifies the path to the Liquid template directory.
+  # The `template.path` node specifies the path to the Liquid template directory,
+  # relative to:
+  #   1. the directory where the configuration file is found, or
+  #   2. the current working directory if the configuration file is not found.
+  #
   # The `template.stylesheet` node specifies the path to the stylesheet file.
+  # Refer to `template.path` for path resolution.
+  #
   # The `template.output_filename` node specifies the base output filename for
   # all the generated artifacts, and is customized using Liquid templating.
   template:
