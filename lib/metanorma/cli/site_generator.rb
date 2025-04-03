@@ -142,7 +142,7 @@ module Metanorma
         UI.info("Building collection file: #{collection_path} ...")
 
         Relaton::Cli::RelatonFile.concatenate(
-          asset_folder,
+          asset_folder.to_s,
           relaton_collection_index_filename,
           title: manifest[:collection_name],
           organization: manifest[:collection_organization],
@@ -153,6 +153,7 @@ module Metanorma
       # @output: file in asset_folder
       def compile_file!(file_path)
         if collection_file?(file_path)
+          @collection_queue << file_path
           return
         end
 
@@ -163,7 +164,7 @@ module Metanorma
         options = @compile_options.merge(
           output_filename_template: output_filename_template,
           format: :asciidoc,
-          output_dir: build_asset_output_directory!(file_path),
+          output_dir: asset_directory,
           site_generate: true,
         )
 
@@ -263,35 +264,19 @@ module Metanorma
         end
       end
 
+      # Use 'realpath' throughout to ensure consistency with file paths,
+      # especially with temporary directories generated in RSpec.
       def ensure_site_asset_directory!
-        asset_path = [site_path, asset_folder].join("/")
-        @asset_directory = Pathname.new(Dir.pwd).join(asset_path)
-
-        create_directory_if_not_present!(@asset_directory)
+        asset_path = site_path.join(asset_folder)
+        @asset_directory = Pathname.pwd.join(asset_path)
+        @asset_directory.mkpath
+        @asset_directory = @asset_directory.realpath
+        @asset_directory
       end
 
-      def create_directory_if_not_present!(directory)
-        FileUtils.mkdir_p(directory) unless directory.exist?
-      end
-
-      def build_asset_output_directory!(source)
-        sub_directory = Pathname.new(source.to_s.gsub(@source_path.to_s,
-                                                      "")).dirname.to_s
-        sub_directory.gsub!("/sources", "")
-        sub_directory.slice!(0)
-
-        output_directory = asset_directory.join(sub_directory)
-        create_directory_if_not_present!(output_directory)
-
-        output_directory
-      end
-
+      # @param source [Pathname] the source file
       def collection_file?(source)
-        ext = File.extname(source)&.downcase
-
-        if [".yml", ".yaml"].include?(ext)
-          @collection_queue << source
-        end
+        [".yml", ".yaml"].include?(source.extname&.downcase)
       end
 
       # Only one collection file is supported for now??
