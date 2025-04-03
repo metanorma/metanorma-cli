@@ -13,12 +13,12 @@ module Metanorma
       DEFAULT_CONFIG_FILE = "metanorma.yml"
 
       # rubocop:disable Metrics/AbcSize
-      def initialize(source, options = {}, compile_options = {})
+      def initialize(source_path, options = {}, compile_options = {})
         @collection_queue = []
-        @source = find_realpath(source)
         @site_path = options.fetch(
           :output_dir, Commands::Site::SITE_OUTPUT_DIRNAME
         ).to_s
+        @source_path = find_realpath(source_path)
 
         @asset_folder = options.fetch(:asset_folder, DEFAULT_ASSET_FOLDER).to_s
         @relaton_collection_index = options.fetch(
@@ -72,20 +72,20 @@ module Metanorma
 
       private
 
-      attr_reader :source, :asset_folder, :asset_directory, :site_path,
+      attr_reader :source_path, :asset_folder, :asset_directory, :site_path,
                   :manifest_file, :relaton_collection_index, :stylesheet,
                   :template_dir,
                   :output_filename_template,
                   :base_path
 
-      def find_realpath(source_path)
-        Pathname.new(source_path.to_s).realpath if source_path
+      def find_realpath(path)
+        Pathname.new(path.to_s).realpath if path
       rescue Errno::ENOENT
-        source_path
+        path
       end
 
       def default_config
-        default_file = Pathname.new(Dir.pwd).join(DEFAULT_CONFIG_FILE)
+        default_file = Pathname.pwd.join(DEFAULT_CONFIG_FILE)
         default_file if File.exist?(default_file)
       end
 
@@ -93,7 +93,7 @@ module Metanorma
         files = source_from_manifest
 
         if files.empty?
-          files = Dir[File.join(source, "**", "*.adoc")]
+          files = Dir[File.join(source_path, "**", "*.adoc")]
         end
 
         result = files.flatten
@@ -102,6 +102,8 @@ module Metanorma
         result
       end
 
+      # @dependency: files in asset_folder, from #compile_files! and #compile_collections!
+      # @output: documents.xml in site_path
       def build_collection_file!(relaton_collection_index_filename)
         collection_path = [site_path,
                            relaton_collection_index_filename].join("/")
@@ -115,28 +117,32 @@ module Metanorma
         )
       end
 
-      def compile_file!(source)
-        if collection_file?(source)
+      # @dependency: file in file_path, from #select_source_files
+      # @output: file in asset_folder
+      def compile_file!(file_path)
+        if collection_file?(file_path)
           return
         end
 
-        UI.info("Compiling #{source} ...")
+        UI.info("Compiling #{file_path} ...")
 
         # Incorporate output_filename_template so the output file
         # can be named as desired, using liquid template and Relaton LiquidDrop
         options = @compile_options.merge(
           output_filename_template: output_filename_template,
           format: :asciidoc,
-          output_dir: build_asset_output_directory!(source),
+          output_dir: build_asset_output_directory!(file_path),
           site_generate: true,
         )
 
-        options[:baseassetpath] = Pathname.new(source.to_s).dirname.to_s
-        Metanorma::Cli::Compiler.compile(source.to_s, options)
+        options[:baseassetpath] = Pathname.new(file_path.to_s).dirname.to_s
+        Metanorma::Cli::Compiler.compile(file_path.to_s, options)
       end
 
+      # @dependency: files in source_path, from #select_source_files
+      # @output: files in asset_folder
       def compile_files!(files)
-        fatals = files.map { |source| compile_file!(source) }
+        fatals = files.map { |file| compile_file!(file) }
         fatals.flatten!
         fatals.compact!
 
@@ -158,9 +164,9 @@ module Metanorma
         end
       end
 
-      def convert_to_html_page!(
-        relaton_index_filename, page_name
-      )
+      # @dependency: documents.xml from #build_collection_file!
+      # @output: index.html in site_path
+      def convert_to_html_page!(relaton_index_filename, page_name)
         UI.info("Generating html site in #{site_path} ...")
 
         Relaton::Cli::XMLConvertor.to_html(
@@ -217,7 +223,7 @@ module Metanorma
       def source_from_manifest
         @source_from_manifest ||= begin
           result = manifest[:files].map do |source_file|
-            file_path = source.join(source_file).to_s
+            file_path = source_path.join(source_file).to_s
             file_path.include?("*") ? Dir.glob(file_path) : file_path
           end
           result.flatten!
@@ -237,7 +243,8 @@ module Metanorma
       end
 
       def build_asset_output_directory!(source)
-        sub_directory = Pathname.new(source.gsub(@source.to_s, "")).dirname.to_s
+        sub_directory = Pathname.new(source.to_s.gsub(@source_path.to_s,
+                                                      "")).dirname.to_s
         sub_directory.gsub!("/sources", "")
         sub_directory.slice!(0)
 
