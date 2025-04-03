@@ -15,10 +15,10 @@ module Metanorma
       # rubocop:disable Metrics/AbcSize
       def initialize(source_path, options = {}, compile_options = {})
         @collection_queue = []
-        @site_path = options.fetch(
-          :output_dir, Commands::Site::SITE_OUTPUT_DIRNAME
-        ).to_s
         @source_path = find_realpath(source_path)
+        @site_path = Pathname.new(options.fetch(
+                                    :output_dir, Commands::Site::SITE_OUTPUT_DIRNAME
+                                  ))
 
         @asset_folder = options.fetch(:asset_folder, DEFAULT_ASSET_FOLDER).to_s
         @relaton_collection_index = options.fetch(
@@ -79,7 +79,7 @@ module Metanorma
                   :base_path
 
       def find_realpath(path)
-        Pathname.new(path.to_s).realpath if path
+        Pathname.new(path).realpath if path
       rescue Errno::ENOENT
         path
       end
@@ -89,24 +89,56 @@ module Metanorma
         default_file if File.exist?(default_file)
       end
 
+      # @return [Array<Pathname>] the list of ADOC source files
+      def select_source_adoc_files
+        select_source_files do |source_path|
+          source_path.glob("**/*.adoc")
+        end
+      end
+
+      # @return [Array<Pathname>] the list of YAML source files
+      def select_source_collection_files
+        select_source_files do |source_path|
+          source_path.glob("**/*.{yaml,yml}")
+        end.select do |f|
+          collection_file?(f)
+        end
+      end
+
+      # Select source files from the manifest if available, otherwise
+      # select all .adoc files in the source directory.
+      # If a block is given, yield the source directory to the block.
+      #
+      # @return [Array<Pathname>] the list of source files
+      # @yieldparam source [Pathname] the source directory
+      # @yieldreturn [Array<Pathname>] the list of source files
+      # @example
+      #  select_source_files do |source|
+      #    source.glob("**/*.adoc")
+      #  end
+      #  # => [#<Pathname:source/1.adoc>, #<Pathname:source/2.adoc>]
+      #
       def select_source_files
         files = source_from_manifest
 
         if files.empty?
-          files = Dir[File.join(source_path, "**", "*.adoc")]
+          files = if block_given?
+                    yield(source_path)
+                  else
+                    source_path.glob("**/*.adoc")
+                  end
         end
 
         result = files.flatten
         result.uniq!
-        result.reject! { |file| File.directory?(file) }
+        result.reject!(&:directory?)
         result
       end
 
       # @dependency: files in asset_folder, from #compile_files! and #compile_collections!
       # @output: documents.xml in site_path
       def build_collection_file!(relaton_collection_index_filename)
-        collection_path = [site_path,
-                           relaton_collection_index_filename].join("/")
+        collection_path = site_path.join(relaton_collection_index_filename)
         UI.info("Building collection file: #{collection_path} ...")
 
         Relaton::Cli::RelatonFile.concatenate(
@@ -223,8 +255,8 @@ module Metanorma
       def source_from_manifest
         @source_from_manifest ||= begin
           result = manifest[:files].map do |source_file|
-            file_path = source_path.join(source_file).to_s
-            file_path.include?("*") ? Dir.glob(file_path) : file_path
+            file_path = source_path.join(source_file)
+            file_path.to_s.include?("*") ? source_path.glob(source_file) : file_path
           end
           result.flatten!
           result
@@ -263,12 +295,14 @@ module Metanorma
       end
 
       # Only one collection file is supported for now??
+      #
+      # TODO: parallelize the compilation of collection files?
       def compile_collections!
-        while job = @collection_queue.pop
+        @collection_queue.compact.each do |file|
           Cli::Collection.render(
-            job,
+            file.to_s,
             compile: @compile_options,
-            output_dir: @asset_directory.join(".."),
+            output_dir: asset_directory.parent,
             site_generate: true,
           )
         end

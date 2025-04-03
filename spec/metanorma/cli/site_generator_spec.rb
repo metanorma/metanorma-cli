@@ -8,6 +8,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         file_path.to_s.include?("*") ? Dir.glob(file_path) : file_path
       end
       result.flatten!
+      result.uniq!
       result
     end
 
@@ -27,11 +28,11 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
     end
 
     let(:output_directory) do
-      tmp_dir
+      tmp_dir.realpath
     end
 
     let(:asset_directory) do
-      output_directory.join(asset_folder)
+      output_directory.join(asset_folder).realpath
     end
 
     let(:source_path) do
