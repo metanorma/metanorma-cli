@@ -16,9 +16,9 @@ module Metanorma
       def initialize(source_path, options = {}, compile_options = {})
         @collection_queue = []
         @source_path = find_realpath(source_path)
-        @site_path = Pathname.new(options.fetch(
-                                    :output_dir, Commands::Site::SITE_OUTPUT_DIRNAME
-                                  ))
+        @site_path = Pathname.new(
+          options.fetch(:output_dir, Commands::Site::SITE_OUTPUT_DIRNAME),
+        )
 
         @asset_folder = options.fetch(:asset_folder, DEFAULT_ASSET_FOLDER).to_s
         @relaton_collection_index = options.fetch(
@@ -277,7 +277,11 @@ module Metanorma
         @source_from_manifest ||= begin
           result = manifest[:files].map do |source_file|
             file_path = source_path.join(source_file)
-            file_path.to_s.include?("*") ? source_path.glob(source_file) : file_path
+            if file_path.to_s.include?("*")
+              source_path.glob(source_file)
+            else
+              file_path
+            end
           end
           result.flatten!
           result
@@ -300,7 +304,7 @@ module Metanorma
           source.to_s.gsub(@source_path.to_s, ""),
         ).dirname.to_s
         sub_directory.gsub!("/sources", "")
-        sub_directory.slice!(0)
+        sub_directory.sub!(%r{^/}, "")
 
         outdir = asset_directory.join(sub_directory)
         outdir.mkpath

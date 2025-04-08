@@ -376,7 +376,8 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         # Create a temporary XML file in the source directory
         xml_file = source_path.join("test_collection.xml")
         allow(File).to receive(:read).and_call_original
-        allow(File).to receive(:read).with(xml_file.to_s).and_return("<test>XML content</test>")
+        allow(File).to receive(:read).with(xml_file.to_s)
+          .and_return("<test>XML content</test>")
 
         # Modify manifest to include the XML file
         manifest_yaml = <<~YAML
@@ -393,7 +394,8 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
               template_dir: template_dir
         YAML
 
-        allow(File).to receive(:read).with(manifest_file_path.to_s).and_return(manifest_yaml)
+        allow(File).to receive(:read).with(manifest_file_path.to_s)
+          .and_return(manifest_yaml)
 
         # Create RSpec spy
         allow(Metanorma::Cli::Collection).to receive(:render)
