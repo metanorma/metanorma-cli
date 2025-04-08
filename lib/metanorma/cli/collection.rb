@@ -3,6 +3,8 @@ require "yaml"
 module Metanorma
   module Cli
     class Collection
+      attr_reader :file, :options
+
       def initialize(file, options)
         @file = file
         @options = Cli.with_indifferent_access(options)
@@ -17,27 +19,26 @@ module Metanorma
       def render
         extract_options_from_file
         collection_file.render(collection_options.compact)
+        self
       end
-
-      private
-
-      attr_reader :file, :options
 
       def collection_file
         @collection_file ||= Metanorma::Collection.parse(file)
       end
 
+      private
+
       def source_folder
-        @source_folder ||= File.dirname(File.expand_path(file))
+        @source_folder ||= Pathname.new(file).realpath.parent
       end
 
       def collection_options
         @collection_options ||= {
           compile: @compile_options,
           output_folder: build_output_folder,
-          coverpage: @options.fetch(:coverpage, nil),
-          format: collection_output_formats(@options.fetch(:format, "")),
-          site_generate: @options["site_generate"],
+          coverpage: options.fetch(:coverpage, nil),
+          format: collection_output_formats(options.fetch(:format, "")),
+          site_generate: options["site_generate"],
         }
       end
 
@@ -45,9 +46,11 @@ module Metanorma
         output_folder = options.fetch(:output_folder, nil)
 
         if output_folder && @output_dir
-          @output_dir.join(output_folder).to_s
+          @output_dir.join(output_folder)
+        elsif output_folder
+          Pathname.new(output_folder)
         else
-          output_folder || source_folder
+          source_folder
         end
       end
 
@@ -60,13 +63,13 @@ module Metanorma
       end
 
       def extract_options_from_file
-        yaml_file = if /\.ya?ml$/.match?(@file.to_s)
-                      YAML.safe_load(File.read(@file.to_s))
-                    elsif /\.xml$/.match?(@file.to_s)
+        yaml_file = if /\.ya?ml$/.match?(file.to_s)
+                      YAML.safe_load(File.read(file.to_s))
+                    elsif /\.xml$/.match?(file.to_s)
                       xml_extract_options_from_file
                     end
 
-        old = options.dup
+        old = @options.dup
         @options = Cli.with_indifferent_access(
           yaml_file.slice("coverpage", "format", "output_folder"),
         )
@@ -74,7 +77,7 @@ module Metanorma
       end
 
       def xml_extract_options_from_file
-        xml = Nokogiri::XML File.read(@file.to_s, encoding: "UTF-8", &:huge)
+        xml = Nokogiri::XML File.read(file.to_s, encoding: "UTF-8", &:huge)
         { "coverpage" => xml.at("//coverpage"),
           "format" => xml.at("//format"),
           "output_folder" => xml.at("//output_folder") }.compact

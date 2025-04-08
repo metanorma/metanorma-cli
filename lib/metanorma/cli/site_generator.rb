@@ -61,13 +61,13 @@ module Metanorma
 
         site_directory = asset_directory.parent
 
+        # actually compile collection file(s)
+        compile_collections!
+
         Dir.chdir(site_directory) do
           build_collection_file!(relaton_collection_index)
           convert_to_html_page!(relaton_collection_index, DEFAULT_SITE_INDEX)
         end
-
-        # actually compile collection file(s)
-        compile_collections!
       end
 
       private
@@ -135,14 +135,37 @@ module Metanorma
         result
       end
 
-      # @dependency: files in asset_folder, from #compile_files! and #compile_collections!
+      # @dependency: files (YAML, XML, RXL) in asset_directory's parent, from
+      # #compile_files! and #compile_collections!
+      #
+      # This looks for collection artifacts from the `collections`
+      # sub-directory, and individual document artifacts from the `documents`
+      # sub-directory.
+      #
       # @output: documents.xml in site_path
+      #
+      # @param relaton_collection_index_filename [String] the name of the
+      # collection index file (usually documents.xml), but can be changed
+      # through the :collection_name option
       def build_collection_file!(relaton_collection_index_filename)
         collection_path = site_path.join(relaton_collection_index_filename)
         UI.info("Building collection file: #{collection_path} ...")
 
+        # First concatenate individual document files
+        # But be sure to provide a *relative* path of _site,
+        # that is relative to the manifest file itself?  or relative to PWD!
+        #
+        # It has to be relative to PWD, otherwise the resolved relative paths
+        # will simply not be valid.
+        #
+        # If paths are desired to be relative from the manifest file, then
+        # `RelatonFile.concatenate` needs to accept a base path option, so
+        # `concatenate` can calculate the correct full path to use.
+        #
+        target_path = asset_directory.parent.relative_path_from(Pathname.pwd)
+
         Relaton::Cli::RelatonFile.concatenate(
-          asset_folder.to_s,
+          target_path.to_s,
           relaton_collection_index_filename,
           title: manifest[:collection_name],
           organization: manifest[:collection_organization],
@@ -164,7 +187,7 @@ module Metanorma
         options = @compile_options.merge(
           output_filename_template: output_filename_template,
           format: :asciidoc,
-          output_dir: asset_directory,
+          output_dir: ensure_site_asset_output_sub_directory!(file_path),
           site_generate: true,
         )
 
@@ -274,20 +297,61 @@ module Metanorma
         @asset_directory
       end
 
+      # TODO: spec
+      def ensure_site_asset_output_sub_directory!(source)
+        sub_directory = Pathname.new(
+          source.to_s.gsub(@source_path.to_s, ""),
+        ).dirname.to_s
+        sub_directory.gsub!("/sources", "")
+        sub_directory.slice!(0)
+
+        outdir = asset_directory.join(sub_directory)
+        outdir.mkpath
+
+        outdir
+      end
+
       # @param source [Pathname] the source file
       def collection_file?(source)
         [".yml", ".yaml"].include?(source.extname&.downcase)
       end
 
-      # Only one collection file is supported for now??
+      # Compile each collection file encountered in the site manifest file.
+      #
+      # The collection files are compiled into the `collections` sub-directory
+      # under the asset_directory.  The output folder specified in each of the
+      # collections will be relative to this `collections` folder.
+      #
+      # Putting the files under the asset_directory is important because
+      # the collection files are used to generate the collection index file
+      # and the HTML page.  It is what `Relaton::Cli::RelatonFile.concatenate`
+      # uses to find all artifacts and generate the correct links for them on
+      # the site index.
+      #
+      # Potential conflicts considered:
+      # On the one hand, each individual collection.yml specifies its own
+      # output folder.  This has to be respected.
+      #
+      # On the other hand, the output folders specified in collection.yml files
+      # naturally cannot be expected to live within the `asset_directory`.
+      #
+      # So, for the build_collection_file! method to correctly consider all
+      # generated artifacts, we need to copy the collection files over to the
+      # asset_directory.
+      #
+      # A question you may have: How much does the specific output folder
+      # matter, when doing a site generate?  Since the intent is to generate a
+      # site, the output folder is not really relevant.  The collection files
+      # are copied over to the asset_directory anyway.
       #
       # TODO: parallelize the compilation of collection files?
+      #
       def compile_collections!
         @collection_queue.compact.each do |file|
           Cli::Collection.render(
             file.to_s,
             compile: @compile_options,
-            output_dir: asset_directory.parent,
+            output_dir: asset_directory,
             site_generate: true,
           )
         end

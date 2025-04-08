@@ -80,7 +80,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         )
 
         expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
-          asset_folder, collection_xml_path, title: "", organization: ""
+          ".", collection_xml_path, title: "", organization: ""
         )
       end
 
@@ -124,7 +124,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         )
 
         expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
-          asset_folder, collection_xml_path, title: "", organization: ""
+          ".", collection_xml_path, title: "", organization: ""
         )
       end
 
@@ -174,7 +174,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         ).times
 
         expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
-          asset_folder,
+          ".",
           collection_xml_path,
           title: collection.name,
           organization: collection.organization,
@@ -234,7 +234,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
 
             expect(Relaton::Cli::RelatonFile)
               .to have_received(:concatenate)
-              .with(asset_folder,
+              .with(".",
                     collection_xml_path,
                     title: collection_name,
                     organization: collection_org)
@@ -273,7 +273,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         ].map do |file|
           expect(Metanorma::Cli::Collection).to have_received(:render).with(
             source_path.join(file).to_s,
-            output_dir: output_directory,
+            output_dir: asset_directory,
             compile: { continue_without_fonts: false },
             site_generate: true,
           )
