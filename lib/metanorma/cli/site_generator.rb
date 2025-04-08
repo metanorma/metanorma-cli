@@ -231,10 +231,7 @@ module Metanorma
           full_path_for(template_dir),
         )
 
-        File.rename(
-          Pathname.new(relaton_index_filename).sub_ext(".html").to_s,
-          page_name,
-        )
+        Pathname.new(relaton_index_filename).sub_ext(".html").rename(page_name)
       end
 
       def template_data(node)
