@@ -96,10 +96,10 @@ module Metanorma
         end
       end
 
-      # @return [Array<Pathname>] the list of YAML source files
+      # @return [Array<Pathname>] the list of YAML/XML source files
       def select_source_collection_files
         select_source_files do |source_path|
-          source_path.glob("**/*.{yaml,yml}")
+          source_path.glob("**/*.{yaml,yml,xml}")
         end.select do |f|
           collection_file?(f)
         end
@@ -310,7 +310,7 @@ module Metanorma
 
       # @param source [Pathname] the source file
       def collection_file?(source)
-        [".yml", ".yaml"].include?(source.extname&.downcase)
+        [".yml", ".yaml", ".xml"].include?(source.extname&.downcase)
       end
 
       # Compile each collection file encountered in the site manifest file.
