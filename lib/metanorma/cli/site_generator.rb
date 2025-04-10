@@ -13,12 +13,12 @@ module Metanorma
       DEFAULT_CONFIG_FILE = "metanorma.yml"
 
       # rubocop:disable Metrics/AbcSize
-      def initialize(source, options = {}, compile_options = {})
+      def initialize(source_path, options = {}, compile_options = {})
         @collection_queue = []
-        @source = find_realpath(source)
-        @site_path = options.fetch(
-          :output_dir, Commands::Site::SITE_OUTPUT_DIRNAME
-        ).to_s
+        @source_path = find_realpath(source_path)
+        @site_path = Pathname.new(
+          options.fetch(:output_dir, Commands::Site::SITE_OUTPUT_DIRNAME),
+        )
 
         @asset_folder = options.fetch(:asset_folder, DEFAULT_ASSET_FOLDER).to_s
         @relaton_collection_index = options.fetch(
@@ -56,85 +56,149 @@ module Metanorma
       def generate!
         ensure_site_asset_directory!
 
+        # compile individual document files
         compile_files!(select_source_files)
 
         site_directory = asset_directory.parent
+
+        # actually compile collection file(s)
+        compile_collections!
 
         Dir.chdir(site_directory) do
           build_collection_file!(relaton_collection_index)
           convert_to_html_page!(relaton_collection_index, DEFAULT_SITE_INDEX)
         end
-
-        dequeue_jobs!
       end
 
       private
 
-      attr_reader :source, :asset_folder, :asset_directory, :site_path,
+      attr_reader :source_path, :asset_folder, :asset_directory, :site_path,
                   :manifest_file, :relaton_collection_index, :stylesheet,
                   :template_dir,
                   :output_filename_template,
                   :base_path
 
-      def find_realpath(source_path)
-        Pathname.new(source_path.to_s).realpath if source_path
+      def find_realpath(path)
+        Pathname.new(path).realpath if path
       rescue Errno::ENOENT
-        source_path
+        path
       end
 
       def default_config
-        default_file = Pathname.new(Dir.pwd).join(DEFAULT_CONFIG_FILE)
+        default_file = Pathname.pwd.join(DEFAULT_CONFIG_FILE)
         default_file if File.exist?(default_file)
       end
 
+      # @return [Array<Pathname>] the list of ADOC source files
+      def select_source_adoc_files
+        select_source_files do |source_path|
+          source_path.glob("**/*.adoc")
+        end
+      end
+
+      # @return [Array<Pathname>] the list of YAML/XML source files
+      def select_source_collection_files
+        select_source_files do |source_path|
+          source_path.glob("**/*.{yaml,yml,xml}")
+        end.select do |f|
+          collection_file?(f)
+        end
+      end
+
+      # Select source files from the manifest if available, otherwise
+      # select all .adoc files in the source directory.
+      # If a block is given, yield the source directory to the block.
+      #
+      # @return [Array<Pathname>] the list of source files
+      # @yieldparam source [Pathname] the source directory
+      # @yieldreturn [Array<Pathname>] the list of source files
+      # @example
+      #  select_source_files do |source|
+      #    source.glob("**/*.adoc")
+      #  end
+      #  # => [#<Pathname:source/1.adoc>, #<Pathname:source/2.adoc>]
+      #
       def select_source_files
         files = source_from_manifest
 
         if files.empty?
-          files = Dir[File.join(source, "**", "*.adoc")]
+          files = if block_given?
+                    yield(source_path)
+                  else
+                    source_path.glob("**/*.adoc")
+                  end
         end
 
         result = files.flatten
         result.uniq!
-        result.reject! { |file| File.directory?(file) }
+        result.reject!(&:directory?)
         result
       end
 
+      # @dependency: files (YAML, XML, RXL) in asset_directory's parent, from
+      # #compile_files! and #compile_collections!
+      #
+      # This looks for collection artifacts from the `collections`
+      # sub-directory, and individual document artifacts from the `documents`
+      # sub-directory.
+      #
+      # @output: documents.xml in site_path
+      #
+      # @param relaton_collection_index_filename [String] the name of the
+      # collection index file (usually documents.xml), but can be changed
+      # through the :collection_name option
       def build_collection_file!(relaton_collection_index_filename)
-        collection_path = [site_path,
-                           relaton_collection_index_filename].join("/")
+        collection_path = site_path.join(relaton_collection_index_filename)
         UI.info("Building collection file: #{collection_path} ...")
 
+        # First concatenate individual document files
+        # But be sure to provide a *relative* path of _site,
+        # that is relative to the manifest file itself?  or relative to PWD!
+        #
+        # It has to be relative to PWD, otherwise the resolved relative paths
+        # will simply not be valid.
+        #
+        # If paths are desired to be relative from the manifest file, then
+        # `RelatonFile.concatenate` needs to accept a base path option, so
+        # `concatenate` can calculate the correct full path to use.
+        #
+        target_path = asset_directory.parent.relative_path_from(Pathname.pwd)
+
         Relaton::Cli::RelatonFile.concatenate(
-          asset_folder,
+          target_path.to_s,
           relaton_collection_index_filename,
           title: manifest[:collection_name],
           organization: manifest[:collection_organization],
         )
       end
 
-      def compile_file!(source)
-        if collection_file?(source)
+      # @dependency: file in file_path, from #select_source_files
+      # @output: file in asset_folder
+      def compile_file!(file_path)
+        if collection_file?(file_path)
+          @collection_queue << file_path
           return
         end
 
-        UI.info("Compiling #{source} ...")
+        UI.info("Compiling #{file_path} ...")
 
         # Incorporate output_filename_template so the output file
         # can be named as desired, using liquid template and Relaton LiquidDrop
         options = @compile_options.merge(
           output_filename_template: output_filename_template,
           format: :asciidoc,
-          output_dir: build_asset_output_directory!(source),
+          output_dir: ensure_site_asset_output_sub_directory!(file_path),
           site_generate: true,
         )
 
-        options[:baseassetpath] = Pathname.new(source.to_s).dirname.to_s
-        Metanorma::Cli::Compiler.compile(source.to_s, options)
+        options[:baseassetpath] = Pathname.new(file_path.to_s).dirname.to_s
+        Metanorma::Cli::Compiler.compile(file_path.to_s, options)
       end
 
+      # @dependency: files in source_path, from #select_source_files
+      # @output: files in asset_folder
       def compile_files!(files)
-        fatals = files.map { |source| compile_file!(source) }
+        fatals = files.map { |file| compile_file!(file) }
         fatals.flatten!
         fatals.compact!
 
@@ -156,9 +220,9 @@ module Metanorma
         end
       end
 
-      def convert_to_html_page!(
-        relaton_index_filename, page_name
-      )
+      # @dependency: documents.xml from #build_collection_file!
+      # @output: index.html in site_path
+      def convert_to_html_page!(relaton_index_filename, page_name)
         UI.info("Generating html site in #{site_path} ...")
 
         Relaton::Cli::XMLConvertor.to_html(
@@ -167,10 +231,7 @@ module Metanorma
           full_path_for(template_dir),
         )
 
-        File.rename(
-          Pathname.new(relaton_index_filename).sub_ext(".html").to_s,
-          page_name,
-        )
+        Pathname.new(relaton_index_filename).sub_ext(".html").rename(page_name)
       end
 
       def template_data(node)
@@ -215,52 +276,83 @@ module Metanorma
       def source_from_manifest
         @source_from_manifest ||= begin
           result = manifest[:files].map do |source_file|
-            file_path = source.join(source_file).to_s
-            file_path.include?("*") ? Dir.glob(file_path) : file_path
+            file_path = source_path.join(source_file)
+            if file_path.to_s.include?("*")
+              source_path.glob(source_file)
+            else
+              file_path
+            end
           end
           result.flatten!
           result
         end
       end
 
+      # Use 'realpath' throughout to ensure consistency with file paths,
+      # especially with temporary directories generated in RSpec.
       def ensure_site_asset_directory!
-        asset_path = [site_path, asset_folder].join("/")
-        @asset_directory = Pathname.new(Dir.pwd).join(asset_path)
-
-        create_directory_if_not_present!(@asset_directory)
+        asset_path = site_path.join(asset_folder)
+        @asset_directory = Pathname.pwd.join(asset_path)
+        @asset_directory.mkpath
+        @asset_directory = @asset_directory.realpath
+        @asset_directory
       end
 
-      def create_directory_if_not_present!(directory)
-        FileUtils.mkdir_p(directory) unless directory.exist?
-      end
-
-      def build_asset_output_directory!(source)
-        sub_directory = Pathname.new(source.gsub(@source.to_s, "")).dirname.to_s
+      # TODO: spec
+      def ensure_site_asset_output_sub_directory!(source)
+        sub_directory = Pathname.new(
+          source.to_s.gsub(@source_path.to_s, ""),
+        ).dirname.to_s
         sub_directory.gsub!("/sources", "")
-        sub_directory.slice!(0)
+        sub_directory.sub!(%r{^/}, "")
 
-        output_directory = asset_directory.join(sub_directory)
-        create_directory_if_not_present!(output_directory)
+        outdir = asset_directory.join(sub_directory)
+        outdir.mkpath
 
-        output_directory
+        outdir
       end
 
+      # @param source [Pathname] the source file
       def collection_file?(source)
-        ext = File.extname(source)&.downcase
-
-        if [".yml", ".yaml"].include?(ext)
-          @collection_queue << source
-        end
+        [".yml", ".yaml", ".xml"].include?(source.extname&.downcase)
       end
 
-      def dequeue_jobs!
-        job = @collection_queue.pop
-
-        if job
+      # Compile each collection file encountered in the site manifest file.
+      #
+      # The collection files are compiled into the `collections` sub-directory
+      # under the asset_directory.  The output folder specified in each of the
+      # collections will be relative to this `collections` folder.
+      #
+      # Putting the files under the asset_directory is important because
+      # the collection files are used to generate the collection index file
+      # and the HTML page.  It is what `Relaton::Cli::RelatonFile.concatenate`
+      # uses to find all artifacts and generate the correct links for them on
+      # the site index.
+      #
+      # Potential conflicts considered:
+      # On the one hand, each individual collection.yml specifies its own
+      # output folder.  This has to be respected.
+      #
+      # On the other hand, the output folders specified in collection.yml files
+      # naturally cannot be expected to live within the `asset_directory`.
+      #
+      # So, for the build_collection_file! method to correctly consider all
+      # generated artifacts, we need to copy the collection files over to the
+      # asset_directory.
+      #
+      # A question you may have: How much does the specific output folder
+      # matter, when doing a site generate?  Since the intent is to generate a
+      # site, the output folder is not really relevant.  The collection files
+      # are copied over to the asset_directory anyway.
+      #
+      # TODO: parallelize the compilation of collection files?
+      #
+      def compile_collections!
+        @collection_queue.compact.each do |file|
           Cli::Collection.render(
-            job,
+            file.to_s,
             compile: @compile_options,
-            output_dir: @asset_directory.join(".."),
+            output_dir: asset_directory,
             site_generate: true,
           )
         end

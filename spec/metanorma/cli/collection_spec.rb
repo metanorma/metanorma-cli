@@ -13,7 +13,8 @@ RSpec.describe Metanorma::Cli::Collection do
         )
 
         expect(collection).to have_received(:render).with(
-          format: %I(html pdf), output_folder: "bilingual-brochure",
+          format: %I(html pdf),
+          output_folder: Pathname.new("bilingual-brochure"),
         )
       end
     end
@@ -25,13 +26,14 @@ RSpec.describe Metanorma::Cli::Collection do
         collection_file = collection_file("collection_with_options.yml")
 
         Metanorma::Cli::Collection.render(
-          collection_file, output_dir: root_path
+          collection_file,
+          output_dir: root_path,
         )
 
         expect(collection).to have_received(:render).with(
           coverpage: "collection_cover.html",
           format: %I(xml html presentation pdf),
-          output_folder: root_path.join("bilingual-brochure").to_s,
+          output_folder: root_path.join("bilingual-brochure"),
         )
       end
     end
@@ -43,7 +45,7 @@ RSpec.describe Metanorma::Cli::Collection do
         Metanorma::Cli::Collection.render(collection_file)
 
         expect(collection).to have_received(:render).with(
-          hash_including(output_folder: File.dirname(collection_file.to_s)),
+          hash_including(output_folder: collection_file.dirname),
         )
       end
     end

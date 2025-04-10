@@ -8,6 +8,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         file_path.to_s.include?("*") ? Dir.glob(file_path) : file_path
       end
       result.flatten!
+      result.uniq!
       result
     end
 
@@ -27,11 +28,11 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
     end
 
     let(:output_directory) do
-      tmp_dir
+      tmp_dir.realpath
     end
 
     let(:asset_directory) do
-      output_directory.join(asset_folder)
+      output_directory.join(asset_folder).realpath
     end
 
     let(:source_path) do
@@ -79,7 +80,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         )
 
         expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
-          asset_folder, collection_xml_path, title: "", organization: ""
+          ".", collection_xml_path, title: "", organization: ""
         )
       end
 
@@ -123,7 +124,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         )
 
         expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
-          asset_folder, collection_xml_path, title: "", organization: ""
+          ".", collection_xml_path, title: "", organization: ""
         )
       end
 
@@ -173,7 +174,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         ).times
 
         expect(Relaton::Cli::RelatonFile).to have_received(:concatenate).with(
-          asset_folder,
+          ".",
           collection_xml_path,
           title: collection.name,
           organization: collection.organization,
@@ -233,7 +234,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
 
             expect(Relaton::Cli::RelatonFile)
               .to have_received(:concatenate)
-              .with(asset_folder,
+              .with(".",
                     collection_xml_path,
                     title: collection_name,
                     organization: collection_org)
@@ -254,6 +255,8 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
       end
 
       it "handles collection generation properly" do
+        allow(Metanorma::Cli::Collection).to receive(:render)
+
         described_class.generate!(
           source_path,
           {
@@ -264,14 +267,17 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           continue_without_fonts: false,
         )
 
-        collection_file = source_path.join("collection_with_options.yml")
-
-        expect(Metanorma::Cli::Collection).to have_received(:render).with(
-          collection_file.to_s,
-          output_dir: output_directory,
-          compile: { continue_without_fonts: false },
-          site_generate: true,
-        )
+        [
+          "collection_with_options.yml",
+          "collection_with_options2.yml",
+        ].map do |file|
+          expect(Metanorma::Cli::Collection).to have_received(:render).with(
+            source_path.join(file).to_s,
+            output_dir: asset_directory,
+            compile: { continue_without_fonts: false },
+            site_generate: true,
+          )
+        end
       end
     end
 
@@ -344,6 +350,89 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
           continue_without_fonts: false,
         )
       end.to raise_error(Metanorma::Cli::Errors::FatalCompilationError)
+    end
+
+    context "with XML collection files" do
+      it "includes XML files in collection files" do
+        # Create a temporary XML file in the source directory
+        xml_file = source_path.join("test_collection.xml")
+        File.write(xml_file, "<test>XML content</test>")
+
+        # Create a SiteGenerator instance
+        generator = described_class.new(source_path,
+                                        { output_dir: output_directory })
+
+        # Call the method that selects collection files
+        collection_files = generator.send(:select_source_collection_files)
+
+        # Verify that the XML file is included
+        expect(collection_files.map(&:to_s)).to include(xml_file.to_s)
+
+        # Clean up
+        File.delete(xml_file)
+      end
+
+      it "processes XML collection files during site generation" do
+        # Create a temporary XML file in the source directory
+        xml_file = source_path.join("test_collection.xml")
+        allow(File).to receive(:read).and_call_original
+        allow(File).to receive(:read).with(xml_file.to_s)
+          .and_return("<test>XML content</test>")
+
+        # Modify manifest to include the XML file
+        manifest_yaml = <<~YAML
+          metanorma:
+            source:
+              files:
+                - test_collection.xml
+            collection:
+              name: My Collection
+              organization: My Organization
+            template:
+              stylesheet: stylesheet.css
+              output_filename: output_filename_template
+              template_dir: template_dir
+        YAML
+
+        allow(File).to receive(:read).with(manifest_file_path.to_s)
+          .and_return(manifest_yaml)
+
+        # Create RSpec spy
+        allow(Metanorma::Cli::Collection).to receive(:render)
+
+        # Generate the site
+        described_class.generate!(
+          source_path,
+          {
+            output_dir: output_directory,
+            config: manifest_file_path,
+          },
+          continue_without_fonts: false,
+        )
+
+        # Verify that Collection.render was called with the XML file
+        expect(Metanorma::Cli::Collection).to have_received(:render).with(
+          xml_file.to_s,
+          compile: { continue_without_fonts: false },
+          output_dir: asset_directory,
+          site_generate: true,
+        )
+      end
+
+      it "recognizes XML files as collection files" do
+        # Create a temporary XML file
+        xml_file = Pathname.new("test.xml")
+
+        # Create a SiteGenerator instance
+        generator = described_class.new(source_path,
+                                        { output_dir: output_directory })
+
+        # Call the collection_file? method
+        result = generator.send(:collection_file?, xml_file)
+
+        # Verify that XML files are recognized as collection files
+        expect(result).to be true
+      end
     end
   end
 end
