@@ -83,35 +83,9 @@ module Metanorma
         def generate(manifest_path = nil)
           my_options = options.dup # because options is not modifiable
 
-          base_path = if manifest_path.nil?
-                        config_file = options[:config]
-                        config_file_path = if config_file.nil?
-                                             nil
-                                           else
-                                             Pathname.new(config_file)
-                                           end
-                        if config_file_path.nil?
-                          Pathname.pwd
-                        else
-                          config_file_path.dirname
-                        end
-                      elsif File.file?(manifest_path) && options[:config].nil?
-                        my_options["config"] = manifest_path
-                        Pathname.new(manifest_path).dirname
-                      else
-                        Pathname.new(manifest_path)
-                      end
+          base_path = calculate_base_path!(my_options, manifest_path).realpath
 
-          base_path = base_path.realpath
-
-          %i[stylesheet template_dir].each do |key|
-            if my_options[key]
-              path = Pathname.new(my_options[key])
-              if path.relative?
-                my_options[key] = Pathname.pwd.join(path)
-              end
-            end
-          end
+          calculate_full_paths!(my_options)
 
           Cli::SiteGenerator.generate!(
             base_path,
@@ -121,6 +95,44 @@ module Metanorma
           UI.say("Site has been generated at #{options[:output_dir]}")
         rescue Cli::Errors::InvalidManifestFileError
           UI.error("Invalid data in: #{options[:config]}")
+        end
+
+        private
+
+        # Make relative paths absolute.
+        def calculate_full_paths!(my_options)
+          %i[stylesheet template_dir].each do |key|
+            if my_options[key]
+              path = Pathname.new(my_options[key])
+              if path.relative?
+                my_options[key] = Pathname.pwd.join(path)
+              end
+            end
+          end
+        end
+
+        # Calculate the base path for the site generation.
+        def calculate_base_path!(my_options, manifest_path = nil)
+          config_file = options[:config]
+          if manifest_path.nil?
+            if config_file.nil?
+              # If no config file is given, use the current working directory
+              # as the base path.
+              Pathname.pwd
+            else
+              # If a config file is given, use it as the config file
+              # and use its directory as the base path.
+              Pathname.new(config_file).dirname
+            end
+          elsif File.file?(manifest_path) && config_file.nil?
+            # If a file is given, use it as the config file
+            # and use its directory as the base path.
+            my_options["config"] = manifest_path
+            Pathname.new(manifest_path).dirname
+          else
+            # If directory is given, use it as the base path.
+            Pathname.new(manifest_path)
+          end
         end
       end
     end
