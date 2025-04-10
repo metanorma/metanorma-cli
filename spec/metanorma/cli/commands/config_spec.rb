@@ -61,8 +61,8 @@ RSpec.describe "Config" do
       [@test_config],
     )
 
-    expect(result[:agree_to_terms]).to be true
-    expect(result[:install_fonts]).to be true
-    expect(result[:continue_without_fonts]).to be true
+    expect(result.agree_to_terms).to be true
+    expect(result.install_fonts).to be true
+    expect(result.continue_without_fonts).to be true
   end
 end
