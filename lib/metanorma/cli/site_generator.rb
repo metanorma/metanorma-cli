@@ -34,11 +34,11 @@ module Metanorma
           template_data("output_filename"),
         )
 
-        # Determine base path for template files
-        # If template_dir is not absolute, then it is relative to the manifest
-        # file.
-        # If manifest file is not provided, then it is relative to the current
-        # directory.
+        # Determine base path for stylesheet & template files
+        # If the file path is relative, it is relative to the directory
+        # containing the site manifest file.
+        # If site manifest file is not provided, then it is relative to the
+        # current directory.
         @base_path = if manifest_file.nil?
                        Pathname.pwd
                      else
