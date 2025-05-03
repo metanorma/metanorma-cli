@@ -30,10 +30,10 @@ installed with this gem, and have to be installed separately.
 The process of installing the full suite can be a little more complex.
 
 Generally, we recommend you to follow steps given at
-https://www.metanorma.com/author/topics/install/[Metanorma Installation].
+https://www.metanorma.org/install/[Metanorma Installation].
 
 But if you aren't afraid of tinkering deeply, please see the
-https://www.metanorma.com/install/manual-installation/[Developer Installation Notes]
+https://www.metanorma.org/install/develop/[Developer Installation Notes]
 for advanced details regarding dependencies and Windows installation notes.
 
 
