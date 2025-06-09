@@ -40,7 +40,7 @@ Gem::Specification.new do |spec|
   # spec.add_dependency 'metanorma-mpfa', "~> 0.9.0"
   spec.add_dependency "git", "~> 1.5"
   spec.add_dependency "lutaml-model"
-  spec.add_dependency "metanorma", "~> 2.1.0"
+  spec.add_dependency "metanorma", "~> 2.2.0"
   spec.add_dependency "metanorma-iho", "~> 1.1.0"
   spec.add_dependency "metanorma-itu", "~> 2.6.0"
   # spec.add_dependency "metanorma-nist", "~> 2.6.0"
