@@ -227,20 +227,6 @@
           }
         }
       }
-    },
-    {
-      "id": "plateau",
-      "public": true,
-      "experimental": false,
-      "manifest": {
-        "metanorma": {
-          "source": {
-            "files": [
-              "sources/002-v5/document.adoc"
-            ]
-          }
-        }
-      }
     }
   ]
 }
