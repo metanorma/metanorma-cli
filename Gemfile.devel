@@ -1,0 +1,1 @@
+gem "metanorma-bsi", git: "https://github.com/metanorma/metanorma-bsi", branch: "fix/optimise-ol-cleanup"
