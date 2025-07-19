@@ -13,16 +13,16 @@ gemspec
 group :development do
   gem "debug"
   gem "pry"
-  gem "rake", "~> 13.0"
-  gem "rspec", "~> 3.0"
-  gem "rspec-command", "~> 1.0.3"
-  gem "rspec-core", "~> 3.4"
-  gem "rubocop", "~> 1"
+  gem "rake"
+  gem "rspec"
+  gem "rspec-command"
+  gem "rspec-core"
+  gem "rubocop"
   gem "rubocop-performance"
   # need for dev because locally compiled metanorma-iso does not have css
   gem "sassc-embedded"
-  gem "simplecov", "~> 0.15"
-  gem "vcr", "~> 6.1.0"
+  gem "simplecov"
+  gem "vcr"
   gem "webmock"
   gem "xml-c14n"
 end
