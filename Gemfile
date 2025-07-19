@@ -6,6 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}" }
 
 source "https://rubygems.pkg.github.com/metanorma" do
   gem "metanorma-nist"
+  gem "metanorma-bsi"
 end
 
 gemspec
