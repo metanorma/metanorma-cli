@@ -30,6 +30,17 @@ flavors.each do |flavor|
     exit(0)
   end
 
+  puts "Processing fonts for #{gem_name}..."
+  unless processor.respond_to?(:fonts_manifest)
+    die "#{processor_class} does not respond to :fonts_manifest"
+  end
+
+  puts "Using #{processor_class} to retrieve fonts manifest."
+  puts "Fonts manifest for #{gem_name} (processor.fonts_manifest):"
+  puts "--------------------------------------------------"
+  puts "#{processor.fonts_manifest.inspect}"
+  puts "--------------------------------------------------"
+
   manifest = Fontist::Manifest::Install.from_hash(
     processor.fonts_manifest,
     confirmation: "yes",
