@@ -110,8 +110,8 @@
         "metanorma": {
           "source": {
             "files": [
-              "sources/brochure-its90/brochure-its90-en.adoc",
-              "sources/guides/guide-its90-diff.adoc"
+              "sources/brochure-its90/document-en.adoc",
+              "sources/guides/guide-its90-diff/document.adoc"
             ]
           }
         }
@@ -180,7 +180,7 @@
         "metanorma": {
           "source": {
             "files": [
-              "sources/jcgm/100-2008-en/document.adoc"
+              "sources/jcgm/200-2012-en/document.adoc"
             ]
           }
         }
