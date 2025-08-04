@@ -2,7 +2,7 @@
 
 image:https://img.shields.io/gem/v/metanorma-cli.svg["Gem Version", link="https://rubygems.org/gems/metanorma-cli"]
 image:https://github.com/metanorma/metanorma-cli/workflows/rake/badge.svg["Build Status", link="https://github.com/metanorma/metanorma-cli/actions?workflow=rake"]
-image:https://codeclimate.com/github/metanorma/metanorma-cli/badges/gpa.svg["Code Climate", link="https://codeclimate.com/github/metanorma/metanorma-cli"]
+// image:https://codeclimate.com/github/metanorma/metanorma-cli/badges/gpa.svg["Code Climate", link="https://codeclimate.com/github/metanorma/metanorma-cli"]
 image:https://img.shields.io/github/issues-pr-raw/metanorma/metanorma-cli.svg["Pull Requests", link="https://github.com/metanorma/metanorma-cli/pulls"]
 image:https://img.shields.io/github/commits-since/metanorma/metanorma-cli/latest.svg["Commits since latest",link="https://github.com/metanorma/metanorma-cli/releases"]
 
