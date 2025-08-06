@@ -197,12 +197,16 @@ jobs:
             if (-not $SUCCESS) {
               Write-Host "❌ Could not find Gemfile.lock in any expected location"
               # List directory contents to help debug
-              Write-Host "Listing C:\ contents:"
-              docker run --rm $IMAGE_TAG cmd /c "dir C:\"
+              Write-Host "Listing C:\ contents recursively:"
+              docker run --rm $IMAGE_TAG cmd /c "dir C:\ /s /b | findstr /i gemfile"
+              Write-Host "Searching for all Gemfile.lock files:"
+              docker run --rm $IMAGE_TAG cmd /c "dir C:\*.lock /s /b"
+              Write-Host "Searching for all Gemfile files:"
+              docker run --rm $IMAGE_TAG cmd /c "dir C:\*Gemfile* /s /b"
               Write-Host "Listing C:\metanorma contents:"
-              docker run --rm $IMAGE_TAG cmd /c "dir C:\metanorma"
+              docker run --rm $IMAGE_TAG cmd /c "if exist C:\metanorma (dir C:\metanorma /b) else (echo Directory C:\metanorma does not exist)"
               Write-Host "Listing C:\setup contents:"
-              docker run --rm $IMAGE_TAG cmd /c "dir C:\setup"
+              docker run --rm $IMAGE_TAG cmd /c "if exist C:\setup (dir C:\setup /b) else (echo Directory C:\setup does not exist)"
             }
 
             if (Test-Path $LOCK_FILE -PathType Leaf) {
