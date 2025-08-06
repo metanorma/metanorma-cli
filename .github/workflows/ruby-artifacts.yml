@@ -1,0 +1,128 @@
+name: ruby-artifacts
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to build artifacts for (e.g., v1.2.3 or 1.2.3)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build-ruby-artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" == "release" ]; then
+            VERSION="${{ github.event.release.tag_name }}"
+          elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          fi
+
+          # Normalize version (remove 'v' prefix if present)
+          VERSION=${VERSION#v}
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "tag=v${VERSION}" >> $GITHUB_OUTPUT
+          echo "Building artifacts for version: ${VERSION}"
+
+      - name: Checkout specific version
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.version.outputs.tag }}
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+
+      - name: Build gem
+        run: |
+          gem build metanorma-cli.gemspec
+          mv metanorma-cli-*.gem metanorma-cli-${{ steps.version.outputs.version }}.gem
+          echo "Built gem: metanorma-cli-${{ steps.version.outputs.version }}.gem"
+          ls -la metanorma-cli-${{ steps.version.outputs.version }}.gem
+
+      - name: Generate ruby platform Gemfile.lock
+        run: |
+          # Create minimal Gemfile with ruby platform constraint
+          cat > Gemfile.release << EOF
+          source "https://rubygems.org"
+          gem "metanorma-cli", "${{ steps.version.outputs.version }}"
+          EOF
+
+          echo "Created release Gemfile:"
+          cat Gemfile.release
+
+          # Generate platform-independent lock file
+          BUNDLE_FORCE_RUBY_PLATFORM=1 bundle lock --gemfile=Gemfile.release
+          mv Gemfile.release.lock metanorma-cli-${{ steps.version.outputs.version }}-ruby.lock
+
+          echo "Generated ruby platform Gemfile.lock:"
+          head -20 metanorma-cli-${{ steps.version.outputs.version }}-ruby.lock
+
+      - name: Generate checksums
+        run: |
+          sha256sum metanorma-cli-${{ steps.version.outputs.version }}.gem > metanorma-cli-${{ steps.version.outputs.version }}.gem.sha256
+          sha256sum metanorma-cli-${{ steps.version.outputs.version }}-ruby.lock > metanorma-cli-${{ steps.version.outputs.version }}-ruby.lock.sha256
+
+          echo "Generated checksums:"
+          cat metanorma-cli-${{ steps.version.outputs.version }}.gem.sha256
+          cat metanorma-cli-${{ steps.version.outputs.version }}-ruby.lock.sha256
+
+      - name: List all artifacts
+        run: |
+          echo "All ruby platform artifacts created:"
+          ls -la metanorma-cli-${{ steps.version.outputs.version }}*
+
+      - name: Upload artifacts to release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          files: |
+            metanorma-cli-${{ steps.version.outputs.version }}.gem
+            metanorma-cli-${{ steps.version.outputs.version }}-ruby.lock
+            metanorma-cli-${{ steps.version.outputs.version }}.gem.sha256
+            metanorma-cli-${{ steps.version.outputs.version }}-ruby.lock.sha256
+
+      - name: Trigger downstream workflows
+        if: github.event_name == 'release'
+        run: |
+          echo "Triggering downstream workflows for version ${{ steps.version.outputs.tag }}"
+
+          # Trigger metanorma-docker build
+          gh workflow run build-push.yml \
+            --repo metanorma/metanorma-docker \
+            --ref main \
+            --field version="${{ steps.version.outputs.tag }}"
+
+          # Trigger metanorma-docker Windows build
+          gh workflow run build-push-windows.yml \
+            --repo metanorma/metanorma-docker \
+            --ref main \
+            --field version="${{ steps.version.outputs.tag }}"
+
+          # Trigger packed-mn build
+          gh workflow run build.yml \
+            --repo metanorma/packed-mn \
+            --ref main \
+            --field version="${{ steps.version.outputs.tag }}"
+
+          echo "Downstream workflows triggered successfully"
+        env:
+          GH_TOKEN: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
+
+      - name: Summary
+        run: |
+          echo "✅ Ruby platform artifacts completed successfully!"
+          echo "📦 Artifacts uploaded for version: ${{ steps.version.outputs.tag }}"
+          echo "🔗 Check the release at: https://github.com/metanorma/metanorma-cli/releases/tag/${{ steps.version.outputs.tag }}"
+          if [ "${{ github.event_name }}" == "release" ]; then
+            echo "🚀 Downstream workflows triggered for Docker and binary builds"
+          fi

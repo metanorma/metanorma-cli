@@ -1,0 +1,32 @@
+name: release-artifacts
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  trigger-ruby-artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger ruby artifacts workflow
+        run: |
+          echo "Release published: ${{ github.event.release.tag_name }}"
+          echo "Triggering ruby-artifacts workflow..."
+
+          gh workflow run ruby-artifacts.yml \
+            --repo metanorma/metanorma-cli \
+            --ref main
+
+          echo "Ruby artifacts workflow triggered successfully"
+        env:
+          GH_TOKEN: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
+
+      - name: Summary
+        run: |
+          echo "🚀 Release artifacts pipeline initiated for ${{ github.event.release.tag_name }}"
+          echo "📦 Ruby artifacts workflow has been triggered"
+          echo "🐳 Docker and binary builds will be triggered automatically"
+          echo "🔗 Monitor progress at: https://github.com/metanorma/metanorma-cli/actions"
