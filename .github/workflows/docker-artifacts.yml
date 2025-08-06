@@ -158,7 +158,7 @@ jobs:
         id: extract
         run: |
           $VERSION = "${{ steps.version.outputs.version }}"
-          $IMAGE_TAG = "metanorma/metanorma:windows-latest"
+          $IMAGE_TAG = "metanorma/metanorma:windows-ltsc2022"
 
           Write-Host "Pulling Windows Docker image: $IMAGE_TAG"
           try {
