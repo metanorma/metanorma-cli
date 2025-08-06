@@ -51,9 +51,21 @@ jobs:
       - name: Build gem
         run: |
           gem build metanorma-cli.gemspec
-          mv metanorma-cli-*.gem metanorma-cli-${{ steps.version.outputs.version }}.gem
-          echo "Built gem: metanorma-cli-${{ steps.version.outputs.version }}.gem"
-          ls -la metanorma-cli-${{ steps.version.outputs.version }}.gem
+
+          # Find the built gem file
+          BUILT_GEM=$(ls metanorma-cli-*.gem)
+          TARGET_GEM="metanorma-cli-${{ steps.version.outputs.version }}.gem"
+
+          # Only rename if necessary
+          if [ "$BUILT_GEM" != "$TARGET_GEM" ]; then
+            mv "$BUILT_GEM" "$TARGET_GEM"
+            echo "Renamed $BUILT_GEM to $TARGET_GEM"
+          else
+            echo "Gem already has correct name: $TARGET_GEM"
+          fi
+
+          echo "Built gem: $TARGET_GEM"
+          ls -la "$TARGET_GEM"
 
       - name: Generate ruby platform Gemfile.lock
         run: |
