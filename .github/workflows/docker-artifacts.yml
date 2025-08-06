@@ -169,7 +169,41 @@ jobs:
             $LOCK_FILE = "metanorma-cli-$VERSION-docker-windows.lock"
             Write-Host "Extracting Gemfile.lock to: $LOCK_FILE"
 
-            docker run --rm $IMAGE_TAG cmd /c "type C:\usr\local\bundle\Gemfile.lock" | Out-File -FilePath $LOCK_FILE -Encoding UTF8
+            # Try multiple possible locations for Gemfile.lock
+            $POSSIBLE_PATHS = @(
+              "C:\metanorma\Gemfile.lock",
+              "C:\setup\Gemfile.lock",
+              "C:\usr\local\bundle\Gemfile.lock"
+            )
+
+            $SUCCESS = $false
+            foreach ($PATH in $POSSIBLE_PATHS) {
+              Write-Host "Trying path: $PATH"
+              try {
+                docker run --rm $IMAGE_TAG cmd /c "type `"$PATH`"" | Out-File -FilePath $LOCK_FILE -Encoding UTF8
+                if (Test-Path $LOCK_FILE -PathType Leaf) {
+                  $content = Get-Content $LOCK_FILE -Raw
+                  if ($content -and $content.Contains("GEM")) {
+                    Write-Host "✅ Successfully extracted Gemfile.lock from: $PATH"
+                    $SUCCESS = $true
+                    break
+                  }
+                }
+              } catch {
+                Write-Host "❌ Failed to extract from: $PATH"
+              }
+            }
+
+            if (-not $SUCCESS) {
+              Write-Host "❌ Could not find Gemfile.lock in any expected location"
+              # List directory contents to help debug
+              Write-Host "Listing C:\ contents:"
+              docker run --rm $IMAGE_TAG cmd /c "dir C:\"
+              Write-Host "Listing C:\metanorma contents:"
+              docker run --rm $IMAGE_TAG cmd /c "dir C:\metanorma"
+              Write-Host "Listing C:\setup contents:"
+              docker run --rm $IMAGE_TAG cmd /c "dir C:\setup"
+            }
 
             if (Test-Path $LOCK_FILE -PathType Leaf) {
               $content = Get-Content $LOCK_FILE -Raw
