@@ -3,6 +3,9 @@ name: ruby-artifacts
 on:
   release:
     types: [published]
+  pull_request:
+    paths:
+      - '.github/workflows/ruby-artifacts.yml'
   workflow_dispatch:
     inputs:
       version:
@@ -24,6 +27,9 @@ jobs:
             VERSION="${{ github.event.release.tag_name }}"
           elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             VERSION="${{ github.event.inputs.version }}"
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
+            # For PR testing, use a test version
+            VERSION="v1.13.3"
           fi
 
           # Normalize version (remove 'v' prefix if present)
@@ -82,6 +88,7 @@ jobs:
           ls -la metanorma-cli-${{ steps.version.outputs.version }}*
 
       - name: Upload artifacts to release
+        if: github.event_name != 'pull_request'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.tag }}
@@ -90,6 +97,13 @@ jobs:
             metanorma-cli-${{ steps.version.outputs.version }}-ruby.lock
             metanorma-cli-${{ steps.version.outputs.version }}.gem.sha256
             metanorma-cli-${{ steps.version.outputs.version }}-ruby.lock.sha256
+
+      - name: PR testing summary
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "🧪 PR Testing Mode - Artifacts built but not uploaded"
+          echo "📦 Test artifacts created for version: ${{ steps.version.outputs.tag }}"
+          echo "✅ Workflow validation completed successfully"
 
       - name: Trigger downstream workflows
         if: github.event_name == 'release'

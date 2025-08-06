@@ -3,6 +3,9 @@ name: docker-artifacts
 on:
   repository_dispatch:
     types: [docker-published]
+  pull_request:
+    paths:
+      - '.github/workflows/docker-artifacts.yml'
   workflow_dispatch:
     inputs:
       version:
@@ -38,6 +41,9 @@ jobs:
             VERSION="${{ github.event.client_payload.version }}"
           elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             VERSION="${{ github.event.inputs.version }}"
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
+            # For PR testing, use a test version
+            VERSION="v1.13.3"
           fi
 
           # Normalize version (remove 'v' prefix if present)
@@ -105,7 +111,7 @@ jobs:
           cat "${LOCK_FILE}.sha256"
 
       - name: Upload ${{ matrix.platform.name }} artifacts to release
-        if: steps.extract.outputs.success == 'true'
+        if: steps.extract.outputs.success == 'true' && github.event_name != 'pull_request'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.tag }}
@@ -116,8 +122,12 @@ jobs:
       - name: Platform summary
         run: |
           if [ "${{ steps.extract.outputs.success }}" = "true" ]; then
-            echo "✅ ${{ matrix.platform.name }} platform artifacts completed successfully!"
-            echo "📦 Uploaded: ${{ steps.extract.outputs.lock_file }}"
+            if [ "${{ github.event_name }}" = "pull_request" ]; then
+              echo "🧪 ${{ matrix.platform.name }} platform artifacts built but not uploaded (PR mode)"
+            else
+              echo "✅ ${{ matrix.platform.name }} platform artifacts completed successfully!"
+              echo "📦 Uploaded: ${{ steps.extract.outputs.lock_file }}"
+            fi
           else
             echo "❌ ${{ matrix.platform.name }} platform artifacts failed"
             echo "This may be expected if the Docker image is not yet available"
@@ -133,6 +143,9 @@ jobs:
             $VERSION = "${{ github.event.client_payload.version }}"
           } elseif ("${{ github.event_name }}" -eq "workflow_dispatch") {
             $VERSION = "${{ github.event.inputs.version }}"
+          } elseif ("${{ github.event_name }}" -eq "pull_request") {
+            # For PR testing, use a test version
+            $VERSION = "v1.13.3"
           }
 
           # Normalize version (remove 'v' prefix if present)
@@ -190,7 +203,7 @@ jobs:
           Get-Content "$LOCK_FILE.sha256"
 
       - name: Upload Windows artifacts to release
-        if: steps.extract.outputs.success == 'true'
+        if: steps.extract.outputs.success == 'true' && github.event_name != 'pull_request'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.tag }}
@@ -201,8 +214,12 @@ jobs:
       - name: Windows summary
         run: |
           if ("${{ steps.extract.outputs.success }}" -eq "true") {
-            Write-Host "✅ Windows platform artifacts completed successfully!"
-            Write-Host "📦 Uploaded: ${{ steps.extract.outputs.lock_file }}"
+            if ("${{ github.event_name }}" -eq "pull_request") {
+              Write-Host "🧪 Windows platform artifacts built but not uploaded (PR mode)"
+            } else {
+              Write-Host "✅ Windows platform artifacts completed successfully!"
+              Write-Host "📦 Uploaded: ${{ steps.extract.outputs.lock_file }}"
+            }
           } else {
             Write-Host "❌ Windows platform artifacts failed"
             Write-Host "This may be expected if the Windows Docker image is not yet available"
@@ -220,6 +237,9 @@ jobs:
             VERSION="${{ github.event.client_payload.version }}"
           elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             VERSION="${{ github.event.inputs.version }}"
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
+            # For PR testing, use a test version
+            VERSION="v1.13.3"
           fi
 
           # Normalize version (remove 'v' prefix if present)
