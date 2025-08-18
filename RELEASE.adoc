@@ -1,0 +1,631 @@
+= Metanorma release process
+
+== Purpose
+
+The Metanorma release process is a complex, multi-repository orchestration that
+produces artifacts for multiple platforms and package managers. This document
+describes the complete flow from a metanorma-cli release to all downstream
+artifacts across the entire Metanorma ecosystem.
+
+== Architecture
+
+=== General
+
+The Metanorma release ecosystem consists of the following phases that execute in
+a coordinated sequence:
+
+* Phase 1 handles the core release
+* Phase 2 creates Docker containers
+* Phase 3 creates platform-specific artifacts (executes with Phase 2)
+* Phase 4 updates package managers to use the new artifacts
+
+=== Release flow overview
+
+[source]
+----
+╭───────────────────────────────────────────────────────────────────────────╮
+│                          metanorma-cli RELEASE                            │
+│                     Manual trigger: git tag vX.Y.Z                        │
+╰─────────────────────────────────┬─────────────────────────────────────────╯
+                                  │
+                                  ▼
+╭───────────────────────────────────────────────────────────────────────────╮
+│                           PHASE 1: Core release                           │
+╰───────────────────────────────────────────────────────────────────────────╯
+
+╭─────────────────────────────────╮    ╭────────────────────────────────────╮
+│            release.yml          │    │         ruby-artifacts.yml         │
+│                                 │    │                                    │
+│ • Publishes gem to RubyGems     │───►│ • Builds gem from release tag      │
+│ • Creates GitHub release        │    │ • Generates ruby platform          │
+│ • Triggers downstream processes │    │   Gemfile.lock                     │
+│                                 │    │ • Uploads artifacts to GitHub      │
+╰─────────────────────────────────╯    ╰────────────────────────────────────╯
+                  │
+                  ▼
+╭───────────────────────────────────────────────────────────────────────────╮
+│                    PHASE 2 & 3: Parallel execution                        │
+╰───────────────────────────────────────────────────────────────────────────╯
+
+╭───────────────────────────────────╮  ╭────────────────────────────────────╮
+│        metanorma-docker           │  │             packed-mn              │
+│                                   │  │                                    │
+│ build-push.yml:                   │  │ build.yml:                         │
+│ • Builds Linux/macOS containers   │  │ • Builds single executables for    │
+│   (ruby, ubuntu, alpine)          │  │   multiple platforms               │
+│ • Supports amd64/arm64 archs      │  │ • Creates cross-platform binaries  │
+│                                   │  │   (macOS x86/arm, Linux x86/arm,   │
+│ build-push-windows.yml:           │  │    Windows x86/arm)                │
+│ • Builds Windows containers       │  │                                    │
+│ • Supports windows/amd64 arch     │  │                                    │
+╰─────────────────┬─────────────────╯  ╰──────────────┬─────────────────────╯
+                  │                                   │
+                  ▼                                   ▼
+╭───────────────────────────────────╮  ╭────────────────────────────────────╮
+│       docker-artifacts.yml        │  │     Package manager triggers       │
+│                                   │  │                                    │
+│ • Extracts Gemfile.lock from      │  │ • chocolatey-metanorma             │
+│   each platform container         │  │ • winget-metanorma                 │
+│ • Uploads platform-specific       │  │ • metanorma-snap (Linux)           │
+│   Gemfile.lock to metanorma-cli   │  │ • homebrew-metanorma (macOS+Linux) │
+╰───────────────────────────────────╯  ╰──────────────┬─────────────────────╯
+                                                      │
+                                                      ▼
+╭───────────────────────────────────────────────────────────────────────────╮
+│                         PHASE 4: Package managers                         │
+╰───────────────────────────────────────────────────────────────────────────╯
+
+      ╭───────────────────────────────────────────────────────────────╮
+      │                        Package manager updates                │
+      │                                                               │
+      │ • metanorma-snap:           Linux Snap Store package          │
+      │ • homebrew-metanorma:       macOS Homebrew formula            │
+      │ • chocolatey-metanorma:     Windows Chocolatey package        │
+      │ • winget-metanorma:         Windows Microsoft Store package   │
+      ╰───────────────────────────────────────────────────────────────╯
+----
+
+
+== Release flow
+
+=== Phase 1: Core release
+
+==== General
+
+Phase 1 establishes the foundation for all subsequent release activities.
+
+It publishes the core gem and creates the initial set of artifacts that other
+phases depend upon.
+
+==== release.yml workflow
+
+The `release.yml` workflow in metanorma-cli repository performs the following
+operations:
+
+* Publishes the metanorma-cli gem to RubyGems
+* Creates a GitHub release with the version tag
+* Triggers the ruby-artifacts.yml workflow
+* Sends notifications to downstream repositories
+
+==== ruby-artifacts.yml workflow
+
+The `ruby-artifacts.yml` workflow in metanorma-cli repository performs the
+following operations:
+
+* Checks out the specific release tag
+* Builds the gem from the tagged source code
+* Generates a platform-independent Ruby Gemfile.lock
+* Creates SHA256 checksums for all artifacts
+* Uploads artifacts to the GitHub release
+
+=== Phase 2: Docker containers
+
+==== General
+
+Phase 2 builds Docker containers for multiple platforms and extracts
+platform-specific dependency information. This phase executes in parallel
+with Phase 3.
+
+==== build-push.yml workflow
+
+The `build-push.yml` workflow in the metanorma-docker repository performs the
+following operations for Docker containers:
+
+* Builds Docker images for the `ruby`, `ubuntu`, and `alpine` containers
+* Supports both amd64 and arm64 architectures
+* Pushes images to Docker Hub and GitHub Container Registry
+* Tags images with version numbers and platform identifiers
+* Triggers the docker-artifacts.yml workflow for Unix platforms
+
+NOTE: These containers are built on Linux, runs on macOS and Linux.
+
+==== build-push-windows.yml workflow
+
+The `build-push-windows.yml` workflow in metanorma-docker repository performs
+the following operations for Windows containers:
+
+* Builds Docker images for Windows Server Core platforms
+* Supports windows/amd64 and windows/arm64 architectures
+* Handles Windows-specific container requirements
+* Pushes Windows images to Docker Hub and GitHub Container Registry
+* Triggers the docker-artifacts.yml workflow for Windows platforms
+
+==== docker-artifacts.yml workflow
+
+The `docker-artifacts.yml` workflow in metanorma-cli repository performs the
+following operations:
+
+* Pulls the published Docker containers for each platform
+* Extracts Gemfile.lock from each container's bundle directory
+* Handles both Unix and Windows container filesystem layouts
+* Creates platform-specific lock files with appropriate naming
+* Generates SHA256 checksums for all extracted files
+* Uploads Docker-based artifacts to the metanorma-cli GitHub release
+
+=== Phase 3: Binary ecosystem
+
+==== General
+
+Phase 3 creates single-file executables for multiple platforms and triggers
+all package manager updates. This phase executes in parallel with Phase 2.
+
+==== build.yml workflow
+
+The `build.yml` workflow in packed-mn repository performs the following
+operations:
+
+* Compiles single executables for multiple platforms
+* Supports linux, macOS, and Windows on multiple architectures
+* Creates optimized, self-contained binaries
+* Uploads binaries to the packed-mn GitHub release
+* Triggers all package manager repositories
+
+=== Phase 4: Package managers
+
+==== General
+
+Phase 4 updates all platform-specific package managers with the new release.
+This phase is triggered by the completion of Phase 3.
+
+==== Package manager workflows
+
+Each package manager repository contains update workflows that perform the
+following operations:
+
+* **chocolatey-metanorma**: Updates Windows Chocolatey package
+* **winget-metanorma**: Updates Microsoft Store package manifest
+* **metanorma-snap**: Updates Linux Snap package
+* **homebrew-metanorma**: Updates macOS Homebrew formula
+
+== Release workflows
+
+=== metanorma-cli workflows
+
+==== ruby-artifacts.yml
+
+The
+https://github.com/metanorma/metanorma-cli/blob/main/.github/workflows/ruby-artifacts.yml[ruby-artifacts.yml]
+workflow handles the generation of ruby platform artifacts. It triggers on
+release publication and can be manually dispatched with a version parameter.
+
+==== docker-artifacts.yml
+
+The
+https://github.com/metanorma/metanorma-cli/blob/main/.github/workflows/docker-artifacts.yml[docker-artifacts.yml]
+workflow extracts Gemfile.lock files from published Docker containers. It
+responds to repository dispatch events and supports manual execution.
+
+=== metanorma-docker workflows
+
+==== build-push.yml
+
+The
+https://github.com/metanorma/metanorma-docker/blob/main/.github/workflows/build-push.yml[build-push.yml]
+workflow builds and publishes Linux and macOS containers for ruby, ubuntu, and
+alpine platforms with multi-architecture support.
+
+==== build-push-windows.yml
+
+The
+https://github.com/metanorma/metanorma-docker/blob/main/.github/workflows/build-push-windows.yml[build-push-windows.yml]
+workflow builds and publishes Windows containers with Windows-specific
+requirements and configurations.
+
+=== packed-mn workflows
+
+==== build.yml
+
+The
+https://github.com/metanorma/packed-mn/blob/main/.github/workflows/build.yml[build.yml]
+workflow compiles single executables for multiple platforms and triggers all
+downstream package manager updates.
+
+=== Package manager workflows
+
+==== chocolatey-metanorma
+
+The
+https://github.com/metanorma/chocolatey-metanorma/blob/main/.github/workflows/release-tag.yml[release-tag.yml]
+workflow triggers the update of the Windows Chocolatey package with new binary releases.
+
+The release workflow is https://github.com/metanorma/chocolatey-metanorma/blob/main/.github/workflows/main.yml[main.yml].
+
+==== winget-metanorma
+
+WARNING: This workflow does not seem to be working now.
+
+The
+https://github.com/metanorma/winget-metanorma/blob/master/.github/workflows/create-upstream-pr.yml[create-upstream-pr.yml]
+workflow triggers a pull request to the Microsoft Store repository for the updated package manifest.
+
+==== metanorma-snap
+
+The
+https://github.com/metanorma/metanorma-snap/blob/main/.github/workflows/release-tag.yml[release-tag.yml]
+workflow triggers the update of the Snap package.
+
+The release workflow is https://github.com/metanorma/metanorma-snap/blob/main/.github/workflows/main.yml[main.yml].
+
+==== homebrew-metanorma
+
+The
+https://github.com/metanorma/homebrew-metanorma/blob/main/.github/workflows/release-tag.yml[release-tag.yml]
+workflow triggers the update of the macOS Homebrew formula.
+
+It has two workflows:
+
+* macOS: https://github.com/metanorma/homebrew-metanorma/blob/main/.github/workflows/macos.yml[macos.yml]
+
+* Linux: https://github.com/metanorma/homebrew-metanorma/blob/main/.github/workflows/linux.yml[linux.yml]
+
+
+=== Cross-repository integration
+
+==== General
+
+The release process uses GitHub CLI to coordinate workflow execution between
+repositories. Each workflow uses the `gh workflow run` command with appropriate
+repository targets and input parameters.
+
+==== Authentication
+
+All cross-repository triggers use the `METANORMA_CI_PAT_TOKEN` secret for
+authentication, ensuring proper permissions across the entire Metanorma
+organization.
+
+== Artifact specifications
+
+=== Naming conventions
+
+All artifacts follow a consistent naming pattern that includes the version
+and platform information:
+
+[source]
+----
+metanorma-cli-{version}.gem
+metanorma-cli-{version}-ruby.lock
+metanorma-cli-{version}-docker-{platform}.lock
+{filename}.sha256
+----
+
+=== Ruby platform artifacts
+
+.Ruby platform artifacts
+[cols="2,4,2"]
+|===
+|File |Description |Platform support
+
+|metanorma-cli-X.Y.Z.gem
+|Compiled Ruby gem built from release tag
+|All platforms
+
+|metanorma-cli-X.Y.Z-ruby.lock
+|Platform-independent Gemfile.lock using BUNDLE_FORCE_RUBY_PLATFORM
+|All platforms
+
+|metanorma-cli-X.Y.Z.gem.sha256
+|SHA256 checksum of the gem file
+|All platforms
+
+|metanorma-cli-X.Y.Z-ruby.lock.sha256
+|SHA256 checksum of the ruby lock file
+|All platforms
+
+|===
+
+=== Docker platform artifacts
+
+.Docker platform artifacts
+[cols="2,4,2"]
+|===
+|File |Description |Platform support
+
+|metanorma-cli-X.Y.Z-docker-ruby.lock
+|Gemfile.lock from ruby:slim-bookworm container
+|linux/amd64, linux/arm64
+
+|metanorma-cli-X.Y.Z-docker-ubuntu.lock
+|Gemfile.lock from ubuntu:22.04 container
+|linux/amd64, linux/arm64
+
+|metanorma-cli-X.Y.Z-docker-alpine.lock
+|Gemfile.lock from ruby:alpine container
+|linux/amd64, linux/arm64
+
+|metanorma-cli-X.Y.Z-docker-windows.lock
+|Gemfile.lock from Windows Server Core container
+|windows/amd64
+
+|*.sha256
+|SHA256 checksums for all Docker lock files
+|Respective platforms
+
+|===
+
+== Usage examples
+
+=== Manual release trigger
+
+[example]
+====
+To create a new release manually:
+
+[source,bash]
+----
+git tag v1.2.3
+git push origin main --tags
+----
+
+This triggers the entire release pipeline automatically.
+====
+
+To generate artifacts for an existing release:
+
+[source,bash]
+----
+# Generate ruby platform artifacts
+gh workflow run ruby-artifacts.yml \
+  --repo metanorma/metanorma-cli \
+  --field version=v1.2.3
+
+# Generate Docker platform artifacts
+gh workflow run docker-artifacts.yml \
+  --repo metanorma/metanorma-cli \
+  --field version=v1.2.3
+----
+
+To add artifacts to multiple existing releases:
+
+[source,bash]
+----
+for version in v1.2.0 v1.2.1 v1.2.2; do
+  gh workflow run ruby-artifacts.yml \
+    --repo metanorma/metanorma-cli \
+    --field version=$version
+
+  gh workflow run docker-artifacts.yml \
+    --repo metanorma/metanorma-cli \
+    --field version=$version
+done
+----
+=== Retroactive artifact generation
+
+[example]
+To add artifacts to multiple existing releases:
+
+[source,bash]
+----
+for version in v1.2.0 v1.2.1 v1.2.2; do
+  gh workflow run ruby-artifacts.yml \
+    --repo metanorma/metanorma-cli \
+    --field version=$version
+
+  gh workflow run docker-artifacts.yml \
+    --repo metanorma/metanorma-cli \
+    --field version=$version
+done
+----
+=== Manual artifact generation
+
+[example]
+To generate artifacts for an existing release:
+
+[source,bash]
+----
+# Generate ruby platform artifacts
+gh workflow run ruby-artifacts.yml \
+  --repo metanorma/metanorma-cli \
+  --field version=v1.2.3
+
+# Generate Docker platform artifacts
+gh workflow run docker-artifacts.yml \
+  --repo metanorma/metanorma-cli \
+  --field version=v1.2.3
+----
+
+=== Retroactive artifact generation
+
+[example]
+To add artifacts to multiple existing releases:
+
+[source,bash]
+----
+for version in v1.2.0 v1.2.1 v1.2.2; do
+  gh workflow run ruby-artifacts.yml \
+    --repo metanorma/metanorma-cli \
+    --field version=$version
+
+  gh workflow run docker-artifacts.yml \
+    --repo metanorma/metanorma-cli \
+    --field version=$version
+done
+----
+====
+To generate artifacts for an existing release:
+
+[source,bash]
+----
+# Generate ruby platform artifacts
+gh workflow run ruby-artifacts.yml \
+  --repo metanorma/metanorma-cli \
+  --field version=v1.2.3
+
+# Generate Docker platform artifacts
+gh workflow run docker-artifacts.yml \
+  --repo metanorma/metanorma-cli \
+  --field version=v1.2.3
+----
+====
+
+To add artifacts to multiple existing releases:
+
+[source,bash]
+----
+for version in v1.2.0 v1.2.1 v1.2.2; do
+  gh workflow run ruby-artifacts.yml \
+    --repo metanorma/metanorma-cli \
+    --field version=$version
+
+  gh workflow run docker-artifacts.yml \
+    --repo metanorma/metanorma-cli \
+    --field version=$version
+done
+----
+=== Retroactive artifact generation
+
+[example]
+To add artifacts to multiple existing releases:
+
+[source,bash]
+----
+for version in v1.2.0 v1.2.1 v1.2.2; do
+  gh workflow run ruby-artifacts.yml \
+    --repo metanorma/metanorma-cli \
+    --field version=$version
+
+  gh workflow run docker-artifacts.yml \
+    --repo metanorma/metanorma-cli \
+    --field version=$version
+done
+----
+
+== Testing workflows
+
+=== General
+
+The release workflows can be tested individually without creating actual
+releases. This allows for validation of the artifact generation process
+before deploying to production.
+
+=== Testing ruby artifacts
+
+[example]
+To test ruby artifact generation for the current version:
+
+[source,bash]
+----
+# Get current version from gemspec
+VERSION=$(ruby -e "puts Gem::Specification.load('metanorma-cli.gemspec').version")
+
+# Test ruby artifacts workflow
+gh workflow run ruby-artifacts.yml \
+  --repo metanorma/metanorma-cli \
+  --field version="v${VERSION}"
+----
+
+This will create artifacts for the current version without triggering
+downstream workflows.
+
+=== Testing docker artifacts
+
+[example]
+To test docker artifact extraction:
+
+[source,bash]
+----
+# Test with a known version that has Docker images
+gh workflow run docker-artifacts.yml \
+  --repo metanorma/metanorma-cli \
+  --field version=v1.7.0
+----
+
+This will attempt to extract Gemfile.lock files from existing Docker
+containers and upload them to the specified release.
+
+=== Workflow validation
+
+[example]
+To validate workflow syntax and structure:
+
+[source,bash]
+----
+# Validate workflow files
+for workflow in .github/workflows/*.yml; do
+  echo "Validating $workflow"
+  gh workflow view "$(basename "$workflow" .yml)" --repo metanorma/metanorma-cli
+done
+----
+
+This checks that all workflow files are properly formatted and accessible.
+
+== Troubleshooting
+
+=== Common issues
+
+==== Missing Docker images
+
+If docker-artifacts.yml fails with image pull errors, the Docker images may
+not be available yet. This is expected behavior when Docker builds are still
+in progress.
+
+**Solution**: Wait for Docker builds to complete, then manually trigger the
+docker-artifacts workflow.
+
+==== Authentication failures
+
+Cross-repository workflow triggers require the `METANORMA_CI_PAT_TOKEN` secret
+with appropriate permissions.
+
+**Solution**: Verify the token has `repo` and `workflow` scopes for all
+repositories in the Metanorma organization.
+
+==== Artifact upload failures
+
+Release artifact uploads may fail if the release does not exist or if there
+are permission issues.
+
+**Solution**: Ensure the release exists and the workflow has `contents: write`
+permissions.
+
+=== Debugging workflows
+
+[example]
+To debug workflow execution:
+
+[source,bash]
+----
+# View recent workflow runs
+gh run list --repo metanorma/metanorma-cli --workflow=ruby-artifacts.yml
+
+# View specific run details
+gh run view <run-id> --repo metanorma/metanorma-cli
+
+# Download logs for analysis
+gh run download <run-id> --repo metanorma/metanorma-cli
+----
+====
+To add artifacts to multiple existing releases:
+
+[source,bash]
+----
+for version in v1.2.0 v1.2.1 v1.2.2; do
+  gh workflow run ruby-artifacts.yml \
+    --repo metanorma/metanorma-cli \
+    --field version=$version
+
+  gh workflow run docker-artifacts.yml \
+    --repo metanorma/metanorma-cli \
+    --field version=$version
+done
+----
+====

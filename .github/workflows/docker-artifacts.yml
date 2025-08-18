@@ -1,0 +1,299 @@
+name: docker-artifacts
+
+on:
+  repository_dispatch:
+    types: [docker-published]
+  pull_request:
+    paths:
+      - '.github/workflows/docker-artifacts.yml'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to extract Docker artifacts for (e.g., v1.2.3 or 1.2.3)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  extract-docker-artifacts:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform:
+          - name: ruby
+            image: metanorma/metanorma:latest
+            bundle_path: /usr/local/bundle/Gemfile.lock
+          - name: ubuntu
+            image: metanorma/metanorma:ubuntu-latest
+            bundle_path: /usr/local/bundle/Gemfile.lock
+          - name: alpine
+            image: metanorma/metanorma:alpine-latest
+            bundle_path: /usr/local/bundle/Gemfile.lock
+      fail-fast: false
+
+    steps:
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+            VERSION="${{ github.event.client_payload.version }}"
+          elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
+            # For PR testing, use a test version
+            VERSION="v1.13.3"
+          fi
+
+          # Normalize version (remove 'v' prefix if present)
+          VERSION=${VERSION#v}
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "tag=v${VERSION}" >> $GITHUB_OUTPUT
+          echo "Extracting Docker artifacts for version: ${VERSION}"
+
+      - name: Extract Gemfile.lock from ${{ matrix.platform.name }} container
+        id: extract
+        run: |
+          PLATFORM="${{ matrix.platform.name }}"
+          VERSION="${{ steps.version.outputs.version }}"
+
+          # Try version-specific tag first, then fall back to latest
+          IMAGE_TAG="${{ matrix.platform.image }}"
+          if [ "$PLATFORM" = "ruby" ]; then
+            # For ruby platform, try version-specific tag
+            VERSIONED_IMAGE="metanorma/metanorma:${{ steps.version.outputs.tag }}"
+            if docker pull "$VERSIONED_IMAGE" 2>/dev/null; then
+              IMAGE_TAG="$VERSIONED_IMAGE"
+              echo "Using versioned image: $IMAGE_TAG"
+            else
+              echo "Versioned image not found, using latest: $IMAGE_TAG"
+            fi
+          fi
+
+          echo "Pulling Docker image: $IMAGE_TAG"
+          if docker pull "$IMAGE_TAG"; then
+            echo "Successfully pulled $IMAGE_TAG"
+
+            # Extract Gemfile.lock
+            LOCK_FILE="metanorma-cli-${VERSION}-docker-${PLATFORM}.lock"
+            echo "Extracting Gemfile.lock to: $LOCK_FILE"
+
+            if docker run --rm "$IMAGE_TAG" cat "${{ matrix.platform.bundle_path }}" > "$LOCK_FILE"; then
+              echo "Successfully extracted Gemfile.lock"
+              echo "lock_file=$LOCK_FILE" >> $GITHUB_OUTPUT
+              echo "success=true" >> $GITHUB_OUTPUT
+
+              # Verify the file is not empty and contains expected content
+              if [ -s "$LOCK_FILE" ] && grep -q "GEM" "$LOCK_FILE"; then
+                echo "Gemfile.lock validation passed"
+                echo "First 10 lines of extracted Gemfile.lock:"
+                head -10 "$LOCK_FILE"
+              else
+                echo "❌ Gemfile.lock validation failed - file is empty or invalid"
+                echo "success=false" >> $GITHUB_OUTPUT
+              fi
+            else
+              echo "❌ Failed to extract Gemfile.lock from container"
+              echo "success=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "❌ Failed to pull Docker image: $IMAGE_TAG"
+            echo "success=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate checksum for ${{ matrix.platform.name }}
+        if: steps.extract.outputs.success == 'true'
+        run: |
+          LOCK_FILE="${{ steps.extract.outputs.lock_file }}"
+          sha256sum "$LOCK_FILE" > "${LOCK_FILE}.sha256"
+          echo "Generated checksum for $LOCK_FILE:"
+          cat "${LOCK_FILE}.sha256"
+
+      - name: Upload ${{ matrix.platform.name }} artifacts to release
+        if: steps.extract.outputs.success == 'true' && github.event_name != 'pull_request'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          files: |
+            ${{ steps.extract.outputs.lock_file }}
+            ${{ steps.extract.outputs.lock_file }}.sha256
+
+      - name: Platform summary
+        run: |
+          if [ "${{ steps.extract.outputs.success }}" = "true" ]; then
+            if [ "${{ github.event_name }}" = "pull_request" ]; then
+              echo "🧪 ${{ matrix.platform.name }} platform artifacts built but not uploaded (PR mode)"
+            else
+              echo "✅ ${{ matrix.platform.name }} platform artifacts completed successfully!"
+              echo "📦 Uploaded: ${{ steps.extract.outputs.lock_file }}"
+            fi
+          else
+            echo "❌ ${{ matrix.platform.name }} platform artifacts failed"
+            echo "This may be expected if the Docker image is not yet available"
+          fi
+
+  extract-windows-artifacts:
+    runs-on: windows-latest
+    steps:
+      - name: Determine version
+        id: version
+        run: |
+          if ("${{ github.event_name }}" -eq "repository_dispatch") {
+            $VERSION = "${{ github.event.client_payload.version }}"
+          } elseif ("${{ github.event_name }}" -eq "workflow_dispatch") {
+            $VERSION = "${{ github.event.inputs.version }}"
+          } elseif ("${{ github.event_name }}" -eq "pull_request") {
+            # For PR testing, use a test version
+            $VERSION = "v1.13.3"
+          }
+
+          # Normalize version (remove 'v' prefix if present)
+          $VERSION = $VERSION -replace '^v', ''
+          echo "version=$VERSION" >> $env:GITHUB_OUTPUT
+          echo "tag=v$VERSION" >> $env:GITHUB_OUTPUT
+          echo "Extracting Windows Docker artifacts for version: $VERSION"
+
+      - name: Extract Gemfile.lock from Windows container
+        id: extract
+        run: |
+          $VERSION = "${{ steps.version.outputs.version }}"
+          $IMAGE_TAG = "metanorma/metanorma:windows-ltsc2022"
+
+          Write-Host "Pulling Windows Docker image: $IMAGE_TAG"
+          try {
+            docker pull $IMAGE_TAG
+            Write-Host "Successfully pulled $IMAGE_TAG"
+
+            # Extract Gemfile.lock
+            $LOCK_FILE = "metanorma-cli-$VERSION-docker-windows.lock"
+            Write-Host "Extracting Gemfile.lock to: $LOCK_FILE"
+
+            # Try multiple possible locations for Gemfile.lock
+            $POSSIBLE_PATHS = @(
+              "C:\metanorma\Gemfile.lock",
+              "C:\setup\Gemfile.lock",
+              "C:\usr\local\bundle\Gemfile.lock"
+            )
+
+            $SUCCESS = $false
+            foreach ($PATH in $POSSIBLE_PATHS) {
+              Write-Host "Trying path: $PATH"
+              try {
+                docker run --rm $IMAGE_TAG cmd /c "type `"$PATH`"" | Out-File -FilePath $LOCK_FILE -Encoding UTF8
+                if (Test-Path $LOCK_FILE -PathType Leaf) {
+                  $content = Get-Content $LOCK_FILE -Raw
+                  if ($content -and $content.Contains("GEM")) {
+                    Write-Host "✅ Successfully extracted Gemfile.lock from: $PATH"
+                    $SUCCESS = $true
+                    break
+                  }
+                }
+              } catch {
+                Write-Host "❌ Failed to extract from: $PATH"
+              }
+            }
+
+            if (-not $SUCCESS) {
+              Write-Host "❌ Could not find Gemfile.lock in any expected location"
+              # List directory contents to help debug
+              Write-Host "Listing C:\ contents recursively:"
+              docker run --rm $IMAGE_TAG cmd /c "dir C:\ /s /b | findstr /i gemfile"
+              Write-Host "Searching for all Gemfile.lock files:"
+              docker run --rm $IMAGE_TAG cmd /c "dir C:\*.lock /s /b"
+              Write-Host "Searching for all Gemfile files:"
+              docker run --rm $IMAGE_TAG cmd /c "dir C:\*Gemfile* /s /b"
+              Write-Host "Listing C:\metanorma contents:"
+              docker run --rm $IMAGE_TAG cmd /c "if exist C:\metanorma (dir C:\metanorma /b) else (echo Directory C:\metanorma does not exist)"
+              Write-Host "Listing C:\setup contents:"
+              docker run --rm $IMAGE_TAG cmd /c "if exist C:\setup (dir C:\setup /b) else (echo Directory C:\setup does not exist)"
+            }
+
+            if (Test-Path $LOCK_FILE -PathType Leaf) {
+              $content = Get-Content $LOCK_FILE -Raw
+              if ($content -and $content.Contains("GEM")) {
+                Write-Host "Successfully extracted and validated Gemfile.lock"
+                echo "lock_file=$LOCK_FILE" >> $env:GITHUB_OUTPUT
+                echo "success=true" >> $env:GITHUB_OUTPUT
+
+                Write-Host "First 10 lines of extracted Gemfile.lock:"
+                Get-Content $LOCK_FILE | Select-Object -First 10
+              } else {
+                Write-Host "❌ Gemfile.lock validation failed - file is empty or invalid"
+                echo "success=false" >> $env:GITHUB_OUTPUT
+              }
+            } else {
+              Write-Host "❌ Failed to extract Gemfile.lock from container"
+              echo "success=false" >> $env:GITHUB_OUTPUT
+            }
+          } catch {
+            Write-Host "❌ Failed to pull or extract from Windows Docker image: $_"
+            echo "success=false" >> $env:GITHUB_OUTPUT
+          }
+
+      - name: Generate checksum for Windows
+        if: steps.extract.outputs.success == 'true'
+        run: |
+          $LOCK_FILE = "${{ steps.extract.outputs.lock_file }}"
+          $hash = Get-FileHash -Path $LOCK_FILE -Algorithm SHA256
+          "$($hash.Hash.ToLower())  $LOCK_FILE" | Out-File -FilePath "$LOCK_FILE.sha256" -Encoding ASCII
+          Write-Host "Generated checksum for $LOCK_FILE:"
+          Get-Content "$LOCK_FILE.sha256"
+
+      - name: Upload Windows artifacts to release
+        if: steps.extract.outputs.success == 'true' && github.event_name != 'pull_request'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          files: |
+            ${{ steps.extract.outputs.lock_file }}
+            ${{ steps.extract.outputs.lock_file }}.sha256
+
+      - name: Windows summary
+        run: |
+          if ("${{ steps.extract.outputs.success }}" -eq "true") {
+            if ("${{ github.event_name }}" -eq "pull_request") {
+              Write-Host "🧪 Windows platform artifacts built but not uploaded (PR mode)"
+            } else {
+              Write-Host "✅ Windows platform artifacts completed successfully!"
+              Write-Host "📦 Uploaded: ${{ steps.extract.outputs.lock_file }}"
+            }
+          } else {
+            Write-Host "❌ Windows platform artifacts failed"
+            Write-Host "This may be expected if the Windows Docker image is not yet available"
+          }
+
+  summary:
+    runs-on: ubuntu-latest
+    needs: [extract-docker-artifacts, extract-windows-artifacts]
+    if: always()
+    steps:
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+            VERSION="${{ github.event.client_payload.version }}"
+          elif [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          elif [ "${{ github.event_name }}" == "pull_request" ]; then
+            # For PR testing, use a test version
+            VERSION="v1.13.3"
+          fi
+
+          # Normalize version (remove 'v' prefix if present)
+          VERSION=${VERSION#v}
+          echo "tag=v${VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Final summary
+        run: |
+          echo "🐳 Docker artifacts extraction completed for version: ${{ steps.version.outputs.tag }}"
+          echo "🔗 Check the release at: https://github.com/metanorma/metanorma-cli/releases/tag/${{ steps.version.outputs.tag }}"
+          echo ""
+          echo "Expected artifacts:"
+          echo "  • metanorma-cli-*-docker-ruby.lock"
+          echo "  • metanorma-cli-*-docker-ubuntu.lock"
+          echo "  • metanorma-cli-*-docker-alpine.lock"
+          echo "  • metanorma-cli-*-docker-windows.lock"
+          echo "  • SHA256 checksums for all lock files"
+          echo ""
+          echo "Note: Some artifacts may be missing if corresponding Docker images are not yet available."
