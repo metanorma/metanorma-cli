@@ -43,7 +43,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "metanorma", "~> 2.2.0"
   spec.add_dependency "metanorma-iho", "~> 1.2.0"
   spec.add_dependency "metanorma-itu", "~> 2.7.0"
-  # spec.add_dependency "metanorma-nist", "~> 2.6.0"
+  # spec.add_dependency "metanorma-nist", "~> 2.7.0"
   spec.add_dependency "liquid", "~> 5"
   spec.add_dependency "metanorma-ieee", "~> 1.5.0"
   spec.add_dependency "metanorma-jis", "~> 0.6.0"
