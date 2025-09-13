@@ -11,7 +11,6 @@ module Metanorma
       "metanorma-ietf",
       "metanorma-bipm",
       "metanorma-cc",
-      "metanorma-csa",
       "metanorma-iho",
       "metanorma-jis",
       # "metanorma-m3aawg",

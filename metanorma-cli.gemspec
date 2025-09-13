@@ -31,7 +31,6 @@ Gem::Specification.new do |spec|
   # spec.add_dependency "thor", "~> 1.0" # inherited from vectory
   # spec.add_dependency "metanorma-gb", "~> 1.5.0"
   spec.add_dependency "metanorma-cc", "~> 2.7.0"
-  spec.add_dependency "metanorma-csa", "~> 2.7.0"
   spec.add_dependency "metanorma-iec", "~> 2.7.0"
   # spec.add_dependency 'metanorma-ribose', "~> 2.7.0"
   spec.add_dependency "metanorma-bipm", "~> 2.7.0"
