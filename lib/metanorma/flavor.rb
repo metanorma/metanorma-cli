@@ -10,6 +10,7 @@ module Metanorma
       "metanorma-ieee",
       "metanorma-ietf",
       "metanorma-bipm",
+      "metanorma-ribose",
       "metanorma-cc",
       "metanorma-iho",
       "metanorma-jis",
