@@ -51,6 +51,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "relaton-cli", ">= 0.8.2"
 
   spec.add_dependency "socksify"
+  spec.add_dependency "suma"
   # spec.metadata["rubygems_mfa_required"] = "true"
   # NOBODY UNCOMMENTS THIS WITHOUT EXPLAINING TO ME HOW TO USE MFA
 end
