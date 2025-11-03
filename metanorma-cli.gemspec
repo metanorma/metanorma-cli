@@ -47,11 +47,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency "metanorma-ieee", "~> 1.6.0"
   spec.add_dependency "metanorma-jis", "~> 1.0.0"
   spec.add_dependency "metanorma-ogc", "~> 2.8.0"
-  spec.add_dependency "metanorma-plateau", "~> 1.1.0"
+  spec.add_dependency "metanorma-plateau", "~> 1.2.0"
   spec.add_dependency "relaton-cli", ">= 0.8.2"
-
   spec.add_dependency "socksify"
-  spec.add_dependency "suma"
+  spec.add_dependency "suma", "~> 0.2.0"
   # spec.metadata["rubygems_mfa_required"] = "true"
   # NOBODY UNCOMMENTS THIS WITHOUT EXPLAINING TO ME HOW TO USE MFA
 end
