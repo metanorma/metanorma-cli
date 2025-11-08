@@ -124,6 +124,14 @@ RSpec.describe Metanorma do
     expect(stdout).to match(/Metanorma::Iso \d/)
   end
 
+  it "shows log messages for a standard type" do
+    stdout = `metanorma -L -t iso`
+    expect(stdout).to include("STANDOC_")
+    expect(stdout).to include("ISODOC_")
+    expect(stdout).to include("ISO_")
+    expect(stdout).not_to include("NIST_")
+  end
+
   it "exports assets" do
     create_clean_test_files ASCIIDOC_CONFIGURED_HDR
 

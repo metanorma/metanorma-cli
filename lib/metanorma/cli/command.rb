@@ -51,6 +51,9 @@ module Metanorma
                              " to nominated directory"
       option :version, aliases: "-v",
                        desc: "Print version of code (accompanied with -t)"
+      option :log_messages, aliases: "-L",
+                            desc: "Display available log messages " \
+                            "(accompanied with -t)"
       option :output_dir, aliases: "-o",
                           desc: "Directory to save compiled files"
       option :strict, aliases: "-S", type: :boolean,
@@ -74,6 +77,9 @@ module Metanorma
 
         elsif options[:version]
           invoke(:version, [], type: options[:type], format: options[:format])
+
+        elsif options[:log_messages]
+          invoke(:log_messages, [], type: options[:type])
 
         elsif options.keys.size >= 2
           UI.say("Need to specify a file to process")
@@ -154,6 +160,22 @@ module Metanorma
         Metanorma::Cli.load_flavors
         backend_version(options[:type]) || supported_backends
         options[:type] or dependencies_versions
+      rescue NameError => e
+        UI.say(e)
+      end
+
+      desc "log_messages", "Display available log messages for a standard type"
+      option :type, aliases: "-t", required: false,
+                    desc: "Type of standard to generate"
+
+      def log_messages
+        if options[:type]
+          Metanorma::Cli.load_flavors
+          messages = ::Metanorma::Compile.new.extract_log_messages(options[:type])
+          UI.say(messages)
+        else
+          UI.say("Please specify a standard type with -t option")
+        end
       rescue NameError => e
         UI.say(e)
       end
