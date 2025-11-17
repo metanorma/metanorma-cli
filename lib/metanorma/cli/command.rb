@@ -79,7 +79,7 @@ module Metanorma
           invoke(:version, [], type: options[:type], format: options[:format])
 
         elsif options[:log_messages]
-          invoke(:log_messages, [], type: options[:type])
+          invoke(:log_messages, [], type: options[:type], agree_to_terms: true)
 
         elsif options.keys.size >= 2
           UI.say("Need to specify a file to process")
