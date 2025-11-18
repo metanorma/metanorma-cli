@@ -1,2 +1,10 @@
-gem "metanorma", git: "https://github.com/metanorma/metanorma", branch: "main"
+# Testing Gemfile.devel mechanism with isodoc PR
+# This file tests that gem overrides work in CI workflow
+# See docs/testing.adoc for more information
 
+# Test isodoc PR with diagnostic message
+gem "isodoc", git: "https://github.com/metanorma/isodoc", branch: "fix/test-cli-pr-testing"
+
+# Expected output in CI logs:
+# "THIS IS AN OBNOXIOUS DIAGNOSTIC"
+# This confirms the PR branch is being used instead of released gem
