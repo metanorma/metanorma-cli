@@ -41,10 +41,8 @@ flavors.each do |flavor|
   puts "#{processor.fonts_manifest.inspect}"
   puts "--------------------------------------------------"
 
-  manifest = Fontist::Manifest::Install.from_hash(
-    processor.fonts_manifest,
-    confirmation: "yes",
-  )
+  manifest = Fontist::Manifest.from_hash(processor.fonts_manifest)
+  manifest = manifest.install(confirmation: "yes")
 
   puts "# #{gem_name} related fonts"
   puts manifest.to_yaml
