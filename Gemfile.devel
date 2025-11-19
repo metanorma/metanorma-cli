@@ -2,9 +2,5 @@
 # This file tests that gem overrides work in CI workflow
 # See docs/testing.adoc for more information
 
-# Test isodoc PR with diagnostic message
-gem "isodoc", git: "https://github.com/metanorma/isodoc", branch: "fix/test-cli-pr-testing"
+gem "metanorma-standoc", git: "https://github.com/metanorma/metanorma-standoc", branch: "fix/restore_svg_conform"
 
-# Expected output in CI logs:
-# "THIS IS AN OBNOXIOUS DIAGNOSTIC"
-# This confirms the PR branch is being used instead of released gem
