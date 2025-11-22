@@ -8,6 +8,7 @@
 /tmp/
 /.rubocop-https---**
 /Gemfile.lock
+/Gemfile.devel
 /templates/*
 !/templates/base
 /test.*

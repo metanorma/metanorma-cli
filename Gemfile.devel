@@ -1,2 +1,7 @@
-gem "metanorma", git: "https://github.com/metanorma/metanorma", branch: "main"
+# Testing Gemfile.devel mechanism with isodoc PR
+# This file tests that gem overrides work in CI workflow
+# See docs/testing.adoc for more information
+
+gem "metanorma-standoc", git: "https://github.com/metanorma/metanorma-standoc", branch: "fix/restore_svg_conform"
+gem "svg_conform", git: "https://github.com/claricle/svg_conform", branch: "rt-add-reference-manifest"
 
