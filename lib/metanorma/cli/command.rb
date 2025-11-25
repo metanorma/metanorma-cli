@@ -51,6 +51,9 @@ module Metanorma
                              " to nominated directory"
       option :version, aliases: "-v",
                        desc: "Print version of code (accompanied with -t)"
+      option :log_messages, aliases: "-L",
+                            desc: "Display available log messages " \
+                            "(accompanied with -t)"
       option :output_dir, aliases: "-o",
                           desc: "Directory to save compiled files"
       option :strict, aliases: "-S", type: :boolean,
@@ -74,6 +77,9 @@ module Metanorma
 
         elsif options[:version]
           invoke(:version, [], type: options[:type], format: options[:format])
+
+        elsif options[:log_messages]
+          invoke(:log_messages, [], type: options[:type], agree_to_terms: true)
 
         elsif options.keys.size >= 2
           UI.say("Need to specify a file to process")
@@ -158,6 +164,22 @@ module Metanorma
         UI.say(e)
       end
 
+      desc "log_messages", "Display available log messages for a standard type"
+      option :type, aliases: "-t", required: false,
+                    desc: "Type of standard to generate"
+
+      def log_messages
+        if options[:type]
+          Metanorma::Cli.load_flavors
+          messages = ::Metanorma::Compile.new.extract_log_messages(options[:type])
+          UI.say(messages)
+        else
+          UI.say("Please specify a standard type with -t option")
+        end
+      rescue NameError => e
+        UI.say(e)
+      end
+
       desc "list-extensions", "List supported extensions"
       def list_extensions(type = nil)
         single_type_extensions(type) || all_type_extensions
@@ -235,7 +257,7 @@ module Metanorma
 
       DEPENDENCY_GEMS =
         %w(html2doc isodoc metanorma-utils mn2pdf mn-requirements isodoc-i18n
-           metanorma-plugin-datastruct metanorma-plugin-glossarist
+           metanorma-plugin-glossarist
            metanorma-plugin-lutaml relaton-cli pubid glossarist fontist
            plurimath lutaml expressir xmi lutaml-model emf2svg unitsml
            vectory ogc-gml oscal).freeze

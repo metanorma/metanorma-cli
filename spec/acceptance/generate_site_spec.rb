@@ -1,6 +1,8 @@
-require "spec_helper"
+# frozen_string_literal: true
 
 RSpec.describe "Metanorma" do
+  let(:source_dir) { Pathname.new(__dir__).parent.join("fixtures") }
+
   around(:each) do |example|
     Dir.mktmpdir("rspec-") do |dir|
       Dir.chdir(dir) { example.run }
@@ -19,7 +21,7 @@ RSpec.describe "Metanorma" do
 
       expect(output).to include("Site has been generated at #{output_dir}")
       expect(Metanorma::Cli::SiteGenerator).to have_received(:generate!).with(
-        source_dir.to_s,
+        source_dir,
         {
           output_dir: output_dir,
           progress: false,
@@ -52,7 +54,7 @@ RSpec.describe "Metanorma" do
 
       expect(output).to include("Site has been generated at #{output_dir}")
       expect(Metanorma::Cli::SiteGenerator).to have_received(:generate!).with(
-        source_dir.to_s,
+        source_dir,
         {
           output_dir: output_dir,
           progress: false,
@@ -85,7 +87,7 @@ RSpec.describe "Metanorma" do
       Metanorma::Cli.start(%w(site generate))
 
       expect(Metanorma::Cli::SiteGenerator).to have_received(:generate!).with(
-        Dir.pwd.to_s, any_args
+        Pathname.pwd, any_args
       )
     end
 
@@ -103,8 +105,9 @@ RSpec.describe "Metanorma" do
       capture_stdout { Metanorma::Cli.start(command) }
 
       expect(Metanorma::Cli::SiteGenerator).to have_received(:generate!).with(
-        source_dir.to_s,
-        hash_including(template_dir: template_dir, stylesheet: stylesheet_path),
+        source_dir,
+        hash_including(template_dir: Pathname.pwd.join(template_dir),
+                       stylesheet: Pathname.pwd.join(stylesheet_path)),
         progress: false,
         install_fonts: true,
       )
@@ -144,10 +147,5 @@ RSpec.describe "Metanorma" do
       expect(exit_called).to eq(true)
       expect(output).to include("Fatal compilation error(s)")
     end
-  end
-
-  def source_dir
-    @source_dir ||=
-      File.expand_path(File.join(File.dirname(__dir__), "fixtures"))
   end
 end

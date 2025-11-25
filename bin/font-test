@@ -2,8 +2,6 @@
 # frozen_string_literal: true
 
 require "fontist"
-require "rubygems"
-require "yaml"
 
 flavors = ARGV
 
@@ -16,43 +14,44 @@ end
 Fontist::Formula.update_formulas_repo
 
 flavors.each do |flavor|
-  gem_name = "metanorma-#{flavor}"
+  flavor_name = (flavor == "jcgm") ? "bipm" : flavor
+  gem_name = "metanorma-#{flavor_name}"
   require gem_name
 
-  submodule = case flavor
-              when "jcgm"
-                "Bipm"
-              else
-                flavor.capitalize
-              end
-  processor_class = "Metanorma::#{submodule}::Processor"
+  # Determine the processor class based on the flavor
+  processor_class = "Metanorma::#{flavor_name.capitalize}::Processor"
 
   processor = Object
     .const_get(processor_class)
     .new
 
   unless processor.respond_to?(:fonts_manifest)
-    puts "#{flavor} does not require any fonts.  Skipping."
+    puts "#{gem_name} does not require any fonts. Skipping."
     exit(0)
   end
 
-  manifest = processor.fonts_manifest
+  puts "Processing fonts for #{gem_name}..."
+  unless processor.respond_to?(:fonts_manifest)
+    die "#{processor_class} does not respond to :fonts_manifest"
+  end
 
-  Fontist::Manifest::Install.from_hash(
-    manifest,
-    confirmation: "yes",
-  )
+  puts "Using #{processor_class} to retrieve fonts manifest."
+  puts "Fonts manifest for #{gem_name} (processor.fonts_manifest):"
+  puts "--------------------------------------------------"
+  puts "#{processor.fonts_manifest.inspect}"
+  puts "--------------------------------------------------"
 
-  puts "#{flavor}-related fonts:"
-  puts Fontist::Manifest::Locations.from_hash(manifest).to_yaml
+  manifest = Fontist::Manifest.from_hash(processor.fonts_manifest)
+  manifest = manifest.install(confirmation: "yes")
+
+  puts "# #{gem_name} related fonts"
+  puts manifest.to_yaml
 rescue LoadError => e
   die "Could not load gem '#{gem_name}': #{e.message}"
 rescue NameError => e
   die "Could not find class '#{processor_class}': #{e.message}"
+rescue Fontist::Errors => e
+  die "Fontist failed with: #{e.message}"
 rescue StandardError => e
-  if e.class.to_s.start_with?("Fontist::Errors::")
-    die "Fontist failed with: #{e.message}"
-  else
-    die "Unknown error: #{e.message}"
-  end
+  die "Unknown error: #{e.message}"
 end
