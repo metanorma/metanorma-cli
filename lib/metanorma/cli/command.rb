@@ -183,19 +183,11 @@ module Metanorma
       desc "list-extensions", "List supported extensions"
       def list_extensions(type = nil)
         single_type_extensions(type) || all_type_extensions
-      rescue LoadError
-        UI.say("Couldn't load #{type}, please provide a valid type!")
       end
 
       desc "list-doctypes", "List supported doctypes"
       def list_doctypes(type = nil)
-        processors = backend_processors
-
-        if type && processors[type.to_sym]
-          processors = { type.to_sym => processors[type.to_sym] }
-        end
-
-        print_doctypes_table(processors)
+        print_doctypes_table(type)
       end
 
       desc "template-repo", "Manage metanorma templates repository"
@@ -213,51 +205,80 @@ module Metanorma
 
       private
 
+      def print_doctypes_table(type)
+        ret = flavor_dictionary
+        if type && ret[type.to_sym]
+          new = {}
+          new[type.to_sym] = ret[type.to_sym]
+          ret = new
+        end
+        table_data = ret.map do |k, v|
+          [k, v[:input], join_keys(v[:format_keys])]
+        end
+        UI.table(["Type", "Input", "Supported output format"], table_data)
+      end
+
+      def flavor_dictionary
+        Metanorma::Cli.load_flavors
+        ret = {}
+        Metanorma::Registry.instance.processors.each do |type_sym, processor|
+          ret[type_sym] = { format_keys: processor.output_formats.keys,
+                            input: processor.input_format }
+        end
+        flavor_dictionary_taste(ret)
+        ret
+      end
+
+      def flavor_dictionary_taste(ret)
+        Metanorma::TasteRegister.instance.available_tastes.each do |taste|
+          format_keys, base_flavor = taste_format_keys(taste)
+          ret[taste] = { format_keys: format_keys, base_flavor: base_flavor,
+                         native_keys: ret[base_flavor][:format_keys],
+                         input: ret[base_flavor][:input] }
+        end
+        ret
+      end
+
       def taste_format_keys(type)
         c = Metanorma::TasteRegister.instance.get_config(type.to_sym)
-        k = find_backend(c.base_flavor.to_sym).output_formats.keys
         k1 = c.base_override.value_attributes.output_extensions&.split(",")
-        [k1, k, c.base_flavor]
+        [k1, c.base_flavor.to_sym]
       end
 
       def single_type_extensions(type)
-        type or return false
-        if Metanorma::TasteRegister.instance.available_tastes.include?(type.to_sym)
-          single_type_extensions_taste(type)
-        else
-          format_keys = find_backend(type).output_formats.keys
-          UI.say("Supported extensions: #{join_keys(format_keys)}.")
-        end
-        true
+        dict, ret = single_type_extensions_prep(type)
+        dict or return ret
+        single_type_extensions_lookup(dict, type)
       end
 
-      def single_type_extensions_taste(type)
-        format_keys, native_keys, base_flavor = taste_format_keys(type)
-        UI.say("Supported extensions: #{join_keys(format_keys || native_keys)}.")
-        base_flavor and UI.say("Base flavor: #{base_flavor}")
-        format_keys and UI.say("Flavor extensions: #{join_keys(native_keys)}")
+      def single_type_extensions_lookup(dict, type)
+        k = dict[type.to_sym][:format_keys]
+        UI.say("Supported extensions: #{join_keys(k)}.")
+        b = dict[type.to_sym][:base_flavor] and UI.say("Base flavor: #{b}")
+        n = dict[type.to_sym][:native_keys] and
+          UI.say("Flavor extensions: #{join_keys n}")
+      end
+
+      def single_type_extensions_prep(type)
+        type or return [nil, false]
+        ret = flavor_dictionary
+        unless ret[type.to_sym]
+          UI.say("Couldn't load #{type}, please provide a valid type!")
+          return [nil, true]
+        end
+        [ret, true]
       end
 
       def all_type_extensions
-        Metanorma::Cli.load_flavors
         message = "Supported extensions per type: \n"
-        Metanorma::Registry.instance.processors.each do |type_sym, processor|
-          format_keys = processor.output_formats.keys
-          message += "  #{type_sym}: #{join_keys(format_keys)}.\n"
+        ret = flavor_dictionary
+        ret.each do |k, v|
+          v[:base_flavor] and b = " (base flavor: #{v[:base_flavor]})"
+          v[:native_keys] and
+            n = ". (Flavor extensions: #{join_keys(v[:native_keys])})"
+          message += "#{k}#{b}: #{join_keys(v[:format_keys])}#{n}.\n"
         end
-        message = all_type_extensions_taste(message)
         UI.say(message)
-      end
-
-      def all_type_extensions_taste(message)
-        Metanorma::TasteRegister.instance.available_tastes.each do |taste|
-          format_keys, native_keys, base_flavor = taste_format_keys(taste)
-          format_keys and
-            native = ". (Flavor extensions: #{join_keys(native_keys)})"
-          message += "  #{taste} (base flavor: #{base_flavor}): "\
-            "#{join_keys(format_keys)}#{native}.\n"
-        end
-        message
       end
 
       def backend_version(type)
@@ -318,15 +339,6 @@ module Metanorma
         unless Metanorma::Registry.instance.find_processor(type&.to_sym)
           require "metanorma-#{type}"
         end
-      end
-
-      def print_doctypes_table(processors)
-        table_data = processors.map do |type_sym, processor|
-          [type_sym.to_s,
-           processor.input_format,
-           join_keys(processor.output_formats.keys)]
-        end
-        UI.table(["Type", "Input", "Supported output format"], table_data)
       end
 
       def select_wildcard_documents(filename)
