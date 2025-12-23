@@ -213,9 +213,20 @@ module Metanorma
 
       private
 
+      def taste_format_keys(type)
+        c = Metanorma::TasteRegister.instance.get_config(type.to_sym)
+        k = find_backend(c.base_flavor.to_sym).output_formats.keys
+        k1 = c.base_override.value_attributes.output_extensions&.split(",")
+        k1 || k
+      end
+
       def single_type_extensions(type)
         type or return false
-        format_keys = find_backend(type).output_formats.keys
+        if Metanorma::TasteRegister.instance.available_tastes.include?(type.to_sym)
+          format_keys = taste_format_keys(type)
+        else
+          format_keys = find_backend(type).output_formats.keys
+        end
         UI.say("Supported extensions: #{join_keys(format_keys)}.")
         true
       end
@@ -226,6 +237,10 @@ module Metanorma
         Metanorma::Registry.instance.processors.each do |type_sym, processor|
           format_keys = processor.output_formats.keys
           message += "  #{type_sym}: #{join_keys(format_keys)}.\n"
+        end
+        Metanorma::TasteRegister.instance.available_tastes.each do |taste|
+          format_keys = taste_format_keys(taste)
+          message += "  #{taste}: #{join_keys(format_keys)}.\n"
         end
         UI.say(message)
       end
