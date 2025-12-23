@@ -217,18 +217,25 @@ module Metanorma
         c = Metanorma::TasteRegister.instance.get_config(type.to_sym)
         k = find_backend(c.base_flavor.to_sym).output_formats.keys
         k1 = c.base_override.value_attributes.output_extensions&.split(",")
-        k1 || k
+        [k1, k, c.base_flavor]
       end
 
       def single_type_extensions(type)
         type or return false
         if Metanorma::TasteRegister.instance.available_tastes.include?(type.to_sym)
-          format_keys = taste_format_keys(type)
+          single_type_extensions_taste(type)
         else
           format_keys = find_backend(type).output_formats.keys
+          UI.say("Supported extensions: #{join_keys(format_keys)}.")
         end
-        UI.say("Supported extensions: #{join_keys(format_keys)}.")
         true
+      end
+
+      def single_type_extensions_taste(type)
+        format_keys, native_keys, base_flavor = taste_format_keys(type)
+        UI.say("Supported extensions: #{join_keys(format_keys || native_keys)}.")
+        base_flavor and UI.say("Base flavor: #{base_flavor}")
+        format_keys and UI.say("Flavor extensions: #{join_keys(native_keys)}")
       end
 
       def all_type_extensions
@@ -238,11 +245,19 @@ module Metanorma
           format_keys = processor.output_formats.keys
           message += "  #{type_sym}: #{join_keys(format_keys)}.\n"
         end
-        Metanorma::TasteRegister.instance.available_tastes.each do |taste|
-          format_keys = taste_format_keys(taste)
-          message += "  #{taste}: #{join_keys(format_keys)}.\n"
-        end
+        message = all_type_extensions_taste(message)
         UI.say(message)
+      end
+
+      def all_type_extensions_taste(message)
+        Metanorma::TasteRegister.instance.available_tastes.each do |taste|
+          format_keys, native_keys, base_flavor = taste_format_keys(taste)
+          format_keys and
+            native = ". (Flavor extensions: #{join_keys(native_keys)})"
+          message += "  #{taste} (base flavor: #{base_flavor}): "\
+            "#{join_keys(format_keys)}#{native}.\n"
+        end
+        message
       end
 
       def backend_version(type)
