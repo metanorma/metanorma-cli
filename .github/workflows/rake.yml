@@ -11,7 +11,7 @@ on:
 
 jobs:
   rake:
-    uses: metanorma/ci/.github/workflows/mn-processor-rake.yml@main
+    uses: metanorma/ci/.github/workflows/mn-processor-rake.yml@test/fontist-in-bsi
     with:
       samples-matrix-json-file: .github/workflows/samples-smoke-matrix.json
       templates-matrix-json-file: .github/workflows/templates-smoke-matrix.json
