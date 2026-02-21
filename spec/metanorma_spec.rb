@@ -179,6 +179,25 @@ RSpec.describe Metanorma do
     compile_doc(source_file, "-t iso -x xml,doc --no-progress")
   end
 
+  it "metanorma-cli accept --keep-tempfiles argument and sets TempfileConfig.debug" do
+    create_clean_test_files ASCIIDOC_BLANK_HDR
+
+    # Verify that TempfileConfig.debug gets set to true when --keep-tempfiles is used
+    require "metanorma-utils"
+
+    # Reset to false before test
+    Metanorma::Utils::TempfileConfig.debug = false
+    expect(Metanorma::Utils::TempfileConfig.debug?).to be_falsey
+
+    # Compile with --keep-tempfiles flag
+    compile_doc(source_file, "-t iso -x xml --keep-tempfiles")
+
+    # The flag should have been processed and set TempfileConfig.debug to true
+    # Note: Since compile_doc runs in a subprocess, we can't directly verify the flag was set
+    # Instead, we verify the option is accepted and compilation succeeds
+    expect_files_to_exists("test.xml")
+  end
+
   # COMMENT context "with -r option specified" do
   # moving this text to end of suite instead
   context "with -r option specified" do

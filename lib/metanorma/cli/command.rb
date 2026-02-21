@@ -68,10 +68,14 @@ module Metanorma
       option :continue_without_fonts,
              type: :boolean,
              desc: "Continue processing even when fonts are missing"
+      option :keep_tempfiles, type: :boolean,
+                              desc: "Keep temporary files generated during compilation"
 
       # rubocop:disable Metrics/PerceivedComplexity
       # rubocop:disable Metrics/AbcSize
       def compile(file_name = nil)
+        Metanorma::Utils::TempfileConfig.debug = true if options[:keep_tempfiles]
+
         if file_name && !options[:version]
           documents = select_wildcard_documents(file_name) || [file_name]
           documents.each { |document| compile_document(document, options.dup) }
