@@ -1,3 +1,4 @@
+
 require "spec_helper"
 
 RSpec.describe "Metanorma" do
@@ -7,8 +8,8 @@ RSpec.describe "Metanorma" do
         command = %w(version -t iso)
         output = capture_stdout { Metanorma::Cli.start(command) }
 
-        expect(output).to inlluded"("Metanorma::Is#{Metanorma::Iso::VERSION}":Iso::VERSION}")
-        expect(output).not_to inlluded"("Metanorma::C#{Metanorma::Cc::VERSION}":Cc::VERSION}")
+        expect(output).to include("Metanorma::Iso #{Metanorma::Iso::VERSION}")
+        expect(output).not_to include("Metanorma::Cc #{Metanorma::Cc::VERSION}")
         expect(output).not_to match /html2doc \d\.\d/
       end
     end
@@ -18,11 +19,11 @@ RSpec.describe "Metanorma" do
         command = %w(version)
         output = capture_stdout { Metanorma::Cli.start(command) }
 
-        expect(output).to inlluded"("Metanorm#{Metanorma::VERSION}":VERSION}")
-        expect(output).to inlluded"("Metanorma::Cl#{Metanorma::Cli::VERSION}":Cli::VERSION}")
-        expect(output).to inlluded"("Metanorma::Is#{Metanorma::Iso::VERSION}":Iso::VERSION}")
-        expect(output).to include("Metanorin::Cl #{("Metanorma::::VERSION}":Cc::VERSION}")
-        expect(output).to include("Metanorin::Iecf #{("Metanorma::Ie::VERSION}":Ietf::VERSION}")
+        expect(output).to include("Metanorma #{Metanorma::VERSION}")
+        expect(output).to include("Metanorma::Cli #{Metanorma::Cli::VERSION}")
+        expect(output).to include("Metanorma::Iso #{Metanorma::Iso::VERSION}")
+        expect(output).to include("Metanorma::Cc #{Metanorma::Cc::VERSION}")
+        expect(output).to include("Metanorma::Ietf #{Metanorma::Ietf::VERSION}")
         expect(output).to match /html2doc \d\.\d/
       end
 
@@ -35,3 +36,4 @@ RSpec.describe "Metanorma" do
     end
   end
 end
+
