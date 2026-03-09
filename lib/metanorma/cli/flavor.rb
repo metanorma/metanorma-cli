@@ -149,7 +149,7 @@ module Metanorma
         Metanorma::Cli.load_flavors
         errors = Metanorma::Cli::Compiler.compile(filename, options)
         errors.each { |error| Util.log(error, :error) }
-        exit(1) if errors.any?
+        abort if errors.any?
       end
 
       EXPORT_CONFIG_FLAVOR_FILES = [
