@@ -60,6 +60,30 @@ RSpec.describe Metanorma::Cli::Generator do
         )
       end
 
+      it "reports the specific doctype was not found and lists available ones" do
+        document = tmp_dir.join "my-bad-doctype-document"
+        template = "https://github.com/metanorma/mn-templates-csd"
+
+        output = capture_stdout do
+          Metanorma::Cli::Generator.run(
+            document,
+            type: "csd",
+            overwrite: true,
+            doctype: "nonexistent",
+            template: template,
+          )
+        end
+
+        expect(output).to include("Unable to generate document:")
+        expect(output).to include(
+          "Doctype 'nonexistent' not found in templates for type 'csd'.",
+        )
+        expect(output).to include("Available doctypes:")
+        expect(output).not_to include(
+          "please provide a valid `type` or a template URL",
+        )
+      end
+
       it "raise and throws a custom exception" do
         document = tmp_dir.join "my-invalid-document"
         template = "https://github.com/metanorma/mn-templates-ogc"

@@ -39,7 +39,7 @@ module Metanorma
       # ooption, and in that case it will use that template.
       #
       def self.run(name, type:, doctype:, **options)
-        new(name, **options.merge(type: type, doctype: doctype)).run
+        new(name, **options, type: type, doctype: doctype).run
       end
 
       private
@@ -53,9 +53,13 @@ module Metanorma
       def create_metanorma_document
         type_template = type_specific_template
 
-        if type_template.empty?
+        if type_template.nil?
           UI.say(
-            "Unable to generate document:\n#{create_metanorma_document_error}",
+            "Unable to generate document:\n#{type_not_found_error}",
+          )
+        elsif type_template.empty?
+          UI.say(
+            "Unable to generate document:\n#{doctype_not_found_error}",
           )
         else
           templates = base_templates.merge(type_template)
@@ -63,12 +67,29 @@ module Metanorma
         end
       end
 
-      def create_metanorma_document_error
+      def type_not_found_error
+        "Templates for type #{type} cannot be found -- " \
+          "please provide a valid `type` or a template URL"
+      end
+
+      def doctype_not_found_error
         type == "ogc" && doctype == "charter" and return <<~ERR
           The template for OGC charter documents can be downloaded from https://github.com/opengeospatial/templates/tree/master/charter_templates
         ERR
-        "Templates for type #{type} cannot be found -- "\
-          "please provide a valid `type` or a template URL"
+        available = available_template_doctypes
+        msg = "Doctype '#{doctype}' not found in templates for type '#{type}'."
+        msg += " Available doctypes: #{available.join(', ')}." unless available.empty?
+        msg
+      end
+
+      def available_template_doctypes
+        return [] unless @type_template_path
+
+        Pathname.new(@type_template_path).children
+          .select(&:directory?)
+          .map { |d| d.basename.to_s }
+          .reject { |d| d == "common" || d.start_with?(".") }
+          .sort
       end
 
       def find_standard_template(type)
@@ -85,13 +106,13 @@ module Metanorma
       end
 
       def type_specific_template
-        template_path = custom_template || find_standard_template(type)
-        return {} if template_path.nil?
+        @type_template_path = custom_template || find_standard_template(type)
+        return nil if @type_template_path.nil?
 
-        result = build_template_hash(template_path, doctype)
+        result = build_template_hash(@type_template_path, doctype)
         return result if result.empty?
 
-        result.merge(build_template_common_hash(template_path))
+        result.merge(build_template_common_hash(@type_template_path))
       end
 
       def custom_template
