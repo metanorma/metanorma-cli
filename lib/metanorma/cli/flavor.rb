@@ -106,7 +106,7 @@ module Metanorma
 
       DEPENDENCY_GEMS =
         %w(html2doc isodoc metanorma-utils mn2pdf mn-requirements isodoc-i18n
-           metanorma-plugin-glossarist metanorma-plugin-lutaml 
+           metanorma-core metanorma-plugin-glossarist metanorma-plugin-lutaml
            metanorma-taste relaton-cli pubid glossarist fontist
            plurimath lutaml expressir xmi lutaml-model emf2svg unitsml
            vectory ogc-gml oscal).freeze
