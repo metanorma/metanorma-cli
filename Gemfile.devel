@@ -1,3 +1,4 @@
-gem "plurimath", github: "plurimath/plurimath", branch: "feature/performance"
-gem "unitsml", github: "unitsml/unitsml-ruby", branch: "main", submodules: true
-#gem "mml", github: "plurimath/mml", branch: "main"
+gem 'plurimath', github: 'plurimath/plurimath', branch: 'feat/autoload-and-mml-update'
+gem 'unitsml', github: 'unitsml/unitsml-ruby', branch: 'feat/mml-v4-register', submodules: true
+gem 'unitsdb', github: 'unitsml/unitsdb-ruby', branch: 'feat/context-register-models', submodules: true
+gem 'lutaml-model', github: 'lutaml/lutaml-model', branch: 'fix/global-context-register-lookup-fallback'
