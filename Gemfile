@@ -4,12 +4,14 @@ Encoding.default_internal = Encoding::UTF_8
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}" }
 
-source "https://rubygems.pkg.github.com/metanorma" do
-  gem "metanorma-nist"
-  gem "metanorma-bsi"
-end
+# source "https://rubygems.pkg.github.com/metanorma" do
+#   gem "metanorma-nist"
+#   gem "metanorma-bsi"
+# end
 
 gemspec
+
+gem "lutaml-model", github: "lutaml/lutaml-model", branch: "main"
 
 group :development do
   gem "debug"
