@@ -134,9 +134,7 @@ module Metanorma
 
       def load_flavours(type)
         Metanorma::Cli.load_flavors
-        unless Metanorma::Registry.instance.find_processor(type&.to_sym)
-          require "metanorma-#{type}"
-        end
+        type and Metanorma::Core::FlavorLoader.load_flavor(type)
       end
 
       def select_wildcard_documents(filename)
