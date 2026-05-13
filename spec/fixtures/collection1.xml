@@ -1,4 +1,7 @@
 <metanorma-collection>
+  <directive>
+    <key>documents-external</key>
+  </directive>
   <bibdata type="collection">
   <fetched>2020-07-14</fetched>
   <title type="title-main" format="text/plain" language="en">ISO Collection 1</title>
