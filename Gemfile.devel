@@ -10,6 +10,4 @@
 # the regular Gemfile constraint picks it up.
 gem "fontist",
     git: "https://github.com/fontist/fontist.git",
-    branch: "fonts-install-failure"
-
-gem "metanorma-plugin-lutaml", "= 0.7.43"                                                                                                                                
+    branch: "main"
