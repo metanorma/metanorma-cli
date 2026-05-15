@@ -1,16 +1,8 @@
 # Loaded by mn-processor-rake.yml via `eval_gemfile("../Gemfile.devel")`
 # from each sample-repo's Gemfile during the `test-samples` job.
 #
-# Purpose: pin fontist to the fix branch for issue #418
-# (https://github.com/fontist/fontist/issues/418) so the Windows-only
-# "spurious missing font" failures can be verified end-to-end before the
-# fix is released as a new fontist gem.
-#
 # Remove this file once a fontist gem containing the fix is released and
-# the regular Gemfile constraint picks it up.
-gem "fontist",
-    git: "https://github.com/fontist/fontist.git",
-    branch: "revert-safe-install"
+# the regular Gemfile constraint in metanorma picks it up.
 
 gem "metanorma",
     git: "https://github.com/metanorma/metanorma.git",
