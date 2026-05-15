@@ -3,6 +3,9 @@
 #
 # Remove this file once a fontist gem containing the fix is released and
 # the regular Gemfile constraint in metanorma picks it up.
+gem "fontist",
+    git: "https://github.com/fontist/fontist.git",
+    branch: "multiple-index-rebuild"
 
 gem "metanorma",
     git: "https://github.com/metanorma/metanorma.git",
