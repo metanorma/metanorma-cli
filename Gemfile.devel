@@ -1,0 +1,9 @@
+# Diagnostic pin for https://github.com/metanorma/metanorma-cli/issues/414.
+# Holds fontist at the last pre-regression release while lutaml-model
+# floats to current latest, so a rake-workflow run on this branch isolates
+# the fontist contribution to the iso-3.3-ubuntu-latest slowdown.
+# Loaded by mn-processor-rake.yml via `eval_gemfile("../Gemfile.devel")`
+# from each sample-repo's Gemfile during the `test-samples` job.
+# Do not merge — delete branch after the diagnostic run completes.
+
+gem "fontist", "3.0.3"
