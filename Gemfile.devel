@@ -1,0 +1,9 @@
+# Diagnostic pin for https://github.com/metanorma/metanorma-cli/issues/414.
+# Narrows the lutaml-model regression window: prior cycle established that
+# 0.8.7 is fast and 0.8.9 is slow. This pin tests 0.8.8 to tell whether
+# the regression entered in 0.8.8 or in 0.8.9.
+# Loaded by mn-processor-rake.yml via `eval_gemfile("../Gemfile.devel")`
+# from each sample-repo's Gemfile during the `test-samples` job.
+# Do not merge — delete branch after the diagnostic run completes.
+
+gem "lutaml-model", "0.8.8"
