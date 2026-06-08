@@ -109,7 +109,7 @@ module Metanorma
            metanorma-core metanorma-plugin-glossarist metanorma-plugin-lutaml
            metanorma-taste relaton-cli pubid glossarist fontist
            plurimath lutaml expressir xmi lutaml-model emf2svg unitsml
-           vectory ogc-gml oscal).freeze
+           vectory ogc-gml oscal suma).freeze
 
       def dependencies_versions
         versions = Gem.loaded_specs
