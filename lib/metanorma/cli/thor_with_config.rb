@@ -23,7 +23,7 @@ module Metanorma
             progress
             strict
           ]
-          options.select { |k, _| copts.include?(k) }.symbolize_all_keys
+          options.slice(*copts).symbolize_all_keys
         end
       end
     end

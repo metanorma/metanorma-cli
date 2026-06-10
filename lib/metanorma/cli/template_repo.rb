@@ -1,8 +1,6 @@
 require "yaml"
 require "metanorma-utils"
 
-# require "metanorma/cli/stringify_all_keys"
-
 module Metanorma
   module Cli
     class TemplateRepo

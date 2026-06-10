@@ -45,4 +45,4 @@ jobs:
           ruby-version: ${{ env.RUBY_VERSION }}
       - uses: reclaim-the-stack/rubocop-action@v1.1.0
         with:
-          gem_versions: rubocop:1.72.2 rubocop-performance:1.24.0
+          gem_versions: rubocop:1.86.0 rubocop-performance:1.26.1

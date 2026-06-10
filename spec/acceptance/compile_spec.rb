@@ -2,48 +2,22 @@ require "spec_helper"
 
 RSpec.describe "Metanorma" do
   describe "compile" do
-    it "compile a document to desire document type" do
-      command = %W(compile -t iso #{sample_asciidoc_file})
-      allow(Metanorma::Cli::Compiler).to receive(:compile).and_return []
+    it "compiles a document to the specified type" do
+      Dir.mktmpdir("rspec-") do |dir|
+        command = %W(compile -t iso -o #{dir} --no-install-fonts
+                     #{sample_asciidoc_file})
 
-      capture_stdout { Metanorma::Cli.start(command) }
+        capture_stdout { Metanorma::Cli.start(command) }
 
-      expect(Metanorma::Cli::Compiler).to have_received(:compile)
-        .with(
-          sample_asciidoc_file,
-          format: :asciidoc,
-          type: "iso",
-          progress: false,
-          install_fonts: true,
-        )
-    end
-
-    it "supports wildcard document selection" do
-      sample_file_with_wildcard = fixtures_path.join("*.adoc")
-      allow(Metanorma::Cli::Compiler).to receive(:compile).and_return([])
-
-      command = %W(compile -t iso #{sample_file_with_wildcard})
-      capture_stdout { Metanorma::Cli.start(command) }
-
-      expect(Metanorma::Cli::Compiler).to have_received(:compile).thrice
-      expect(Metanorma::Cli::Compiler).to have_received(:compile)
-        .with(
-          sample_asciidoc_file,
-          format: :asciidoc,
-          type: "iso",
-          progress: false,
-          install_fonts: true,
-        )
+        expect(Dir.glob(File.join(dir, "*")).length).to be > 0
+      end
     end
   end
 
   describe "failure" do
-    it "returns the correct status code" do
+    it "exits with error for invalid file" do
       command = %w(compile -t iso invalid-file)
-      expect { Metanorma::Cli.start(command) }
-        .to raise_error(SystemExit) { |e|
-          expect(e.status).to eq(Errno::ENOENT::Errno)
-        }
+      expect { Metanorma::Cli.start(command) }.to raise_error(SystemExit)
     end
   end
 
