@@ -22,6 +22,7 @@ module Metanorma
             continue_without_fonts
             progress
             strict
+            extensions
           ]
           options.select { |k, _| copts.include?(k) }.symbolize_all_keys
         end

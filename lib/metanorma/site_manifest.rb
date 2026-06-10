@@ -23,6 +23,7 @@ module Metanorma
       attribute :source, SourceEntries
       attribute :collection, SiteMetadata
       attribute :template, SiteTemplate
+      attribute :extensions, :string, collection: true
     end
 
     class Base < Lutaml::Model::Serializable

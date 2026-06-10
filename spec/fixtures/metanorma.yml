@@ -27,6 +27,18 @@ metanorma:
       - ./collection_with_options.yml
       - ./collection_with_options2.yml
 
+  # Optional: Output formats
+  #
+  # The `extensions` node restricts which output formats are generated for all
+  # sources in this run (individual documents and collection files alike),
+  # overriding any per-collection `format:`. Omit it to generate every format
+  # the flavor supports. It can also be set on the command line with
+  # `--extensions` / `-x`, which takes precedence over this node.
+  #
+  # extensions:
+  #   - html
+  #   - rxl
+
   # Required: Site metadata
   #
   # The `collection.name` node specifies the site title, whereas
