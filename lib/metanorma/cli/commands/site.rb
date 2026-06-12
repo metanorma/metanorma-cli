@@ -58,6 +58,13 @@ module Metanorma
                type: :boolean,
                desc: "Strict compilation: abort if there are any errors"
 
+        option :extensions,
+               aliases: "-x",
+               desc: "Comma-separated list of output formats to generate " \
+                     "(e.g. html,rxl); overrides the manifest `extensions:` " \
+                     "key and any per-collection `format:`. " \
+                     "Default: all formats the flavor supports"
+
         # If no argument is provided, work out the base
         # path to use for calculation of full paths for
         # files referenced in the site manifest.

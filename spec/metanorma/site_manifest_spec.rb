@@ -166,5 +166,27 @@ RSpec.describe Metanorma::SiteManifest do
       its(:'template.path') { is_expected.to eq "path/to/template" }
       its(:'template.stylesheet') { is_expected.to eq "path/to/stylesheet" }
     end
+
+    context "with a valid input YAML with output extensions" do
+      let(:input_yaml) do
+        <<~EOYAML
+          metanorma:
+            source:
+              files:
+              - file1
+              - file2
+            collection:
+              organization: org
+              name: name
+            extensions:
+            - html
+            - rxl
+        EOYAML
+      end
+
+      it_behaves_like "a valid manifest"
+
+      its(:extensions) { is_expected.to eq %w[html rxl] }
+    end
   end
 end
