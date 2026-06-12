@@ -153,8 +153,11 @@ module Metanorma
       EXPORT_CONFIG_FLAVOR_FILES = [
         "metanorma/*/*.adoc",
         "isodoc/*/html/*",
+        "isodoc/*/*.xsl",
         "isodoc/*/*.yml",
+        "isodoc/*/*.yaml",
         "relaton/render/*.yml",
+        "relaton/render/*.yaml",
       ].freeze
 
       def export_config_flavor(type)
