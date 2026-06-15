@@ -56,6 +56,35 @@ module Metanorma
                type: :boolean,
                desc: "Strict compilation: abort if there are any errors"
 
+        option :extensions,
+               aliases: "-x",
+               desc: "Comma-separated list of output formats to generate " \
+                     "(e.g. html,rxl); overrides the manifest `extensions:` " \
+                     "key and any per-collection `format:`. " \
+                     "Default: all formats the flavor supports"
+
+        # If no argument is provided, work out the base
+        # path to use for calculation of full paths for
+        # files referenced in the site manifest.
+        #
+        # Additionally, if the config file is not provided,
+        # use the current working directory as the base path.
+        # If the config file is provided, use the directory
+        # of the config file as the base path.
+        #
+        # If the source path is a file and no config file is provided,
+        # treat the source path as the config file.
+        # Similar to the above, use the directory of the config file
+        # as the base path.
+        #
+        # For stylesheet and template_dir options, and if they are
+        # relative paths, they will be resolved relative to whatever
+        # defined them.
+        #
+        # So, if they are provided via the command line,
+        # resolve them relative to the current working directory.
+        # If they are provided via the site manifest,
+        # resolve them relative to the site manifest's directory.
         def generate(manifest_path = nil)
           my_options = options.dup # because options is not modifiable
 

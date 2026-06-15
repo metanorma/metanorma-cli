@@ -114,6 +114,110 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
       end
     end
 
+    context "with output format extensions" do
+      let(:collection_name) { "Ext Collection" }
+      let(:collection_org) { "Ext Org" }
+
+      let(:manifest_with_extensions) { <<~YAML }
+        metanorma:
+          source:
+            files:
+              - "*.adoc"
+          collection:
+            name: #{collection_name.inspect}
+            organization: #{collection_org.inspect}
+          extensions:
+            - html
+            - rxl
+      YAML
+
+      it "passes the manifest extensions: list to the compiler" do
+        allow(File).to receive(:read).and_call_original
+        allow(File).to receive(:read)
+          .with(manifest_file_path.to_s)
+          .and_return(manifest_with_extensions)
+
+        described_class.generate!(
+          source_path,
+          { output_dir: output_directory, config: manifest_file_path },
+          continue_without_fonts: false,
+        )
+
+        expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
+          kind_of(String),
+          hash_including(extensions: "html,rxl"),
+        ).at_least(:once)
+      end
+
+      it "passes the CLI extensions to the compiler" do
+        described_class.generate!(
+          source_path,
+          { output_dir: output_directory },
+          continue_without_fonts: false,
+          extensions: "rxl",
+        )
+
+        expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
+          kind_of(String),
+          hash_including(extensions: "rxl"),
+        ).at_least(:once)
+      end
+
+      it "lets the CLI extensions override the manifest" do
+        allow(File).to receive(:read).and_call_original
+        allow(File).to receive(:read)
+          .with(manifest_file_path.to_s)
+          .and_return(manifest_with_extensions)
+
+        described_class.generate!(
+          source_path,
+          { output_dir: output_directory, config: manifest_file_path },
+          continue_without_fonts: false,
+          extensions: "pdf",
+        )
+
+        expect(Metanorma::Cli::Compiler).to have_received(:compile).with(
+          kind_of(String), hash_including(extensions: "pdf")
+        ).at_least(:once)
+
+        expect(Metanorma::Cli::Compiler).not_to have_received(:compile).with(
+          kind_of(String), hash_including(extensions: "html,rxl")
+        )
+      end
+
+      it "overrides each collection's own format: with the extensions" do
+        allow(Metanorma::Cli::Collection).to receive(:render)
+
+        described_class.generate!(
+          source_path,
+          {
+            output_dir: output_directory,
+            config: source_path.join("metanorma.yml"),
+            site_generate: true,
+          },
+          continue_without_fonts: false,
+          extensions: "rxl",
+        )
+
+        expect(Metanorma::Cli::Collection).to have_received(:render).with(
+          source_path.join("collection_with_options.yml").to_s,
+          hash_including(format: ["rxl"]),
+        ).at_least(:once)
+      end
+
+      it "does not set extensions when none are requested" do
+        described_class.generate!(
+          source_path,
+          { output_dir: output_directory },
+          continue_without_fonts: false,
+        )
+
+        expect(Metanorma::Cli::Compiler).not_to have_received(:compile).with(
+          kind_of(String), hash_including(:extensions)
+        )
+      end
+    end
+
     context "custom site template" do
       let(:output_directory) { tmp_dir.realpath }
 

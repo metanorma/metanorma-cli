@@ -12,7 +12,7 @@ module Metanorma
       DEFAULT_SITE_INDEX = "index.html"
       DEFAULT_CONFIG_FILE = "metanorma.yml"
 
-      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       def initialize(source_path, options = {}, compile_options = {})
         @collection_queue = []
         @source_path = find_realpath(source_path)
@@ -29,8 +29,16 @@ module Metanorma
         @manifest_file = find_realpath(options.fetch(:config, default_config))
         @compile_options = compile_options
         resolve_template_options(options)
+
+        # Resolve the output formats to generate: CLI `--extensions` (a
+        # comma-separated string in compile_options) takes precedence over the
+        # manifest `extensions:` list; empty means "all formats the flavor
+        # supports" (the historical default).  Remove it from @compile_options
+        # so it is injected explicitly and not double-handled downstream.
+        @extensions = resolve_extensions
+        @compile_options.delete(:extensions)
       end
-      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
       def self.generate!(source, options = {}, compile_options = {})
         new(source, options, compile_options).generate!
@@ -186,9 +194,10 @@ module Metanorma
           format: :asciidoc,
           output_dir: ensure_site_asset_output_sub_directory!(file_path),
           site_generate: true,
+          baseassetpath: Pathname.new(file_path.to_s).dirname.to_s,
+          **extensions_option,
         )
 
-        options[:baseassetpath] = Pathname.new(file_path.to_s).dirname.to_s
         Metanorma::Cli::Compiler.compile(file_path.to_s, options)
       end
 
@@ -268,6 +277,27 @@ module Metanorma
         raise Errors::InvalidManifestFileError.new("Invalid manifest file")
       end
 
+      # @return [Array<String>] the output formats to generate, resolved from
+      # the CLI `--extensions` flag (highest precedence) then the manifest
+      # `extensions:` list.  Empty array means "all formats" (no filtering).
+      def resolve_extensions
+        cli = @compile_options[:extensions]
+        cli = cli.split(",") if cli.is_a?(String)
+        cli = (cli || []).map(&:strip).reject(&:empty?)
+        return cli unless cli.empty?
+
+        manifest[:extensions] || []
+      end
+
+      # Restrict output formats when extensions were requested (CLI or
+      # manifest); Compiler turns this into `extension_keys`.  Empty means no
+      # filtering (all formats the flavor supports).
+      def extensions_option
+        return {} if @extensions.empty?
+
+        { extensions: @extensions.join(",") }
+      end
+
       def source_from_manifest
         @source_from_manifest ||= begin
           result = manifest[:files].map do |source_file|
@@ -318,12 +348,18 @@ module Metanorma
       # and the HTML page.
       def compile_collections!
         @collection_queue.compact.each do |file|
-          Cli::Collection.render(
-            file.to_s,
+          render_options = {
             compile: @compile_options,
             output_dir: asset_directory,
             site_generate: true,
-          )
+          }
+
+          # Override each collection file's own `format:` when extensions were
+          # requested (CLI or manifest); passed-in options win over the
+          # file-extracted ones in Cli::Collection.
+          render_options[:format] = @extensions unless @extensions.empty?
+
+          Cli::Collection.render(file.to_s, render_options)
         end
       end
     end

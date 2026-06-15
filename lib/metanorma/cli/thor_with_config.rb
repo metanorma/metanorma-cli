@@ -22,6 +22,7 @@ module Metanorma
             continue_without_fonts
             progress
             strict
+            extensions
           ]
           options.slice(*copts).symbolize_all_keys
         end

@@ -29,19 +29,20 @@ RSpec.describe "Metanorma" do
         expect(output).to include("configuration file(s) from metanorma-iso")
         expect(output).to include(export_dir)
         expect(Dir.exist?(export_dir)).to be true
-        expect(File.exist?(
-                 File.join(export_dir, "metanorma/iso/boilerplate.adoc"),
-               )).to be true
-        expect(File.exist?(
-                 File.join(export_dir, "isodoc/iso/html/header.html"),
-               )).to be true
-        expect(File.exist?(
-                 File.join(export_dir, "isodoc/iso/html/isodoc.scss"),
-               )).to be true
-        expect(File.exist?(
-                 File.join(export_dir, "relaton/render/config.yml"),
-               )).to be true
-        FileUtils.rm_rf(export_dir)
+        expect(File.exist?(File.join(export_dir,
+                                     "metanorma/iso/boilerplate.adoc"))).to be true
+        expect(File.exist?(File.join(export_dir,
+                                     "isodoc/iso/html/header.html"))).to be true
+        expect(File.exist?(File.join(export_dir,
+                                     "isodoc/iso/html/isodoc.scss"))).to be true
+        # https://github.com/metanorma/metanorma-cli/issues/421
+        expect(File.exist?(File.join(export_dir,
+                                     "isodoc/iso/iso.international-standard.xsl"))).to be true
+        expect(File.exist?(File.join(export_dir,
+                                     "isodoc/iso/i18n-en.yaml"))).to be true
+        expect(File.exist?(File.join(export_dir,
+                                     "relaton/render/config.yml"))).to be true
+        FileUtils.rm_rf(export_dir) if Dir.exist?(export_dir)
       end
 
       it "exports configuration files for taste to the export directory" do

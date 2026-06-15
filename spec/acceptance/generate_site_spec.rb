@@ -34,6 +34,24 @@ RSpec.describe "Metanorma" do
       expect(asset_dir.exist?).to be true
     end
 
+    it "generate a mini site with selected output formats" do
+      output_dir = Dir.pwd
+      allow(Metanorma::Cli::SiteGenerator).to receive(:generate!)
+        .and_call_original
+      allow(Metanorma::Cli::Compiler).to receive(:compile)
+      command = %W(site generate #{source_dir} -o #{output_dir} -x rxl)
+
+      output = capture_stdout { Metanorma::Cli.start(command) }
+
+      expect(output).to include("Site has been generated at #{output_dir}")
+      expect(Metanorma::Cli::Compiler).to have_received(:compile)
+        .at_least(:once)
+        .with(
+          kind_of(String),
+          hash_including(format: :asciidoc, extensions: "rxl"),
+        )
+    end
+
     it "usages pwd as default source path" do
       expect do
         Metanorma::Cli.start(%w(site generate --continue-without-fonts))
