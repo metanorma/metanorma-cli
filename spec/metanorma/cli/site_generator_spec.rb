@@ -115,6 +115,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
     end
 
     context "with output format extensions" do
+      let(:output_directory) { tmp_dir.realpath }
       let(:collection_name) { "Ext Collection" }
       let(:collection_org) { "Ext Org" }
 

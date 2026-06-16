@@ -7,8 +7,11 @@ module Metanorma
       FLAVOR_FILE_PATTERNS = [
         "metanorma/*/*.adoc",
         "isodoc/*/html/*",
+        "isodoc/*/*.xsl",
         "isodoc/*/*.yml",
+        "isodoc/*/*.yaml",
         "relaton/render/*.yml",
+        "relaton/render/*.yaml",
       ].freeze
 
       def initialize(type)
