@@ -1,5 +1,6 @@
 require "pathname"
 require "metanorma-utils"
+require_relative "../../config"
 
 # require "metanorma/cli/stringify_all_keys"
 
