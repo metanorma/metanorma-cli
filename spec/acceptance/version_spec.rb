@@ -1,4 +1,3 @@
-
 require "spec_helper"
 
 RSpec.describe "Metanorma" do
@@ -36,4 +35,3 @@ RSpec.describe "Metanorma" do
     end
   end
 end
-

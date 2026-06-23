@@ -8,10 +8,12 @@ module Metanorma
         @options = options
       end
 
+      # rubocop:disable Naming/PredicateMethod
       def remove!
         remove_template
         true
       end
+      # rubocop:enable Naming/PredicateMethod
 
       def download
         remove!

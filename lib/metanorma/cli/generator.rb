@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require "uri"
 require "pathname"
 require "fileutils"
-require "metanorma/cli/ui"
 
 module Metanorma
   module Cli
@@ -28,16 +29,6 @@ module Metanorma
         permission_missing_error
       end
 
-      # Generator.run
-      #
-      # This interface find / downloads the specified template
-      # and then run the generator to create a new metanorma
-      # document.
-      #
-      # By default it usages the default templates but user can
-      # also provide a remote git teplate repo using --template
-      # ooption, and in that case it will use that template.
-      #
       def self.run(name, type:, doctype:, **options)
         new(name, **options, type: type, doctype: doctype).run
       end
@@ -78,7 +69,9 @@ module Metanorma
         ERR
         available = available_template_doctypes
         msg = "Doctype '#{doctype}' not found in templates for type '#{type}'."
-        msg += " Available doctypes: #{available.join(', ')}." unless available.empty?
+        unless available.empty?
+          msg += " Available doctypes: #{available.join(', ')}."
+        end
         msg
       end
 

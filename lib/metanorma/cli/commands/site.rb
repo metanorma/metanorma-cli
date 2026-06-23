@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require "pathname"
-require "metanorma/cli/site_generator"
-require "metanorma/cli/thor_with_config"
 
 module Metanorma
   module Cli
@@ -24,14 +22,14 @@ module Metanorma
 
         option :output_filename_template,
                default: nil,
-               desc: "Liquid template to generate output filenames" \
-                     " (using Relaton model)"
+               desc: "Liquid template to generate output filenames " \
+                     "(using Relaton model)"
 
         option :agree_to_terms,
                type: :boolean,
-               desc: "Agree / Disagree with all third-party licensing" \
-                     " terms presented (WARNING: do know what you are" \
-                     " agreeing with!)"
+               desc: "Agree / Disagree with all third-party licensing " \
+                     "terms presented (WARNING: do know what you are " \
+                     "agreeing with!)"
         option :install_fonts,
                type: :boolean,
                default: true,
@@ -123,21 +121,14 @@ module Metanorma
           config_file = options[:config]
           if manifest_path.nil?
             if config_file.nil?
-              # If no config file is given, use the current working directory
-              # as the base path.
               Pathname.pwd
             else
-              # If a config file is given, use it as the config file
-              # and use its directory as the base path.
               Pathname.new(config_file).dirname
             end
           elsif File.file?(manifest_path) && config_file.nil?
-            # If a file is given, use it as the config file
-            # and use its directory as the base path.
             my_options["config"] = manifest_path
             Pathname.new(manifest_path).dirname
           else
-            # If directory is given, use it as the base path.
             Pathname.new(manifest_path)
           end
         end

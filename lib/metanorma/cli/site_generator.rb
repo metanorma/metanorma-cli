@@ -27,25 +27,8 @@ module Metanorma
         )
 
         @manifest_file = find_realpath(options.fetch(:config, default_config))
-        @template_dir = options.fetch(:template_dir, template_data("path"))
-        @stylesheet = options.fetch(:stylesheet, template_data("stylesheet"))
-        @output_filename_template = options.fetch(
-          :output_filename_template,
-          template_data("output_filename"),
-        )
-
-        # Determine base path for stylesheet & template files
-        # If the file path is relative, it is relative to the directory
-        # containing the site manifest file.
-        # If site manifest file is not provided, then it is relative to the
-        # current directory.
-        @base_path = if manifest_file.nil?
-                       Pathname.pwd
-                     else
-                       Pathname.new(manifest_file).parent
-                     end
-
         @compile_options = compile_options
+        resolve_template_options(options)
 
         # Resolve the output formats to generate: CLI `--extensions` (a
         # comma-separated string in compile_options) takes precedence over the
@@ -78,6 +61,20 @@ module Metanorma
         end
       end
 
+      # @param source [Pathname] the source file
+      def collection_file?(source)
+        [".yml", ".yaml", ".xml"].include?(source.extname&.downcase)
+      end
+
+      # @return [Array<Pathname>] the list of YAML/XML source files
+      def select_source_collection_files
+        select_source_files do |source_path|
+          source_path.glob("**/*.{yaml,yml,xml}")
+        end.select do |f|
+          collection_file?(f)
+        end
+      end
+
       private
 
       attr_reader :source_path, :asset_folder, :asset_directory, :site_path,
@@ -92,6 +89,26 @@ module Metanorma
         path
       end
 
+      # rubocop:disable Metrics/AbcSize, Metrics/PerceivedComplexity
+      def resolve_template_options(options)
+        @template_dir = options.fetch(:template_dir) do
+          manifest[:template]&.path
+        end
+        @stylesheet = options.fetch(:stylesheet) do
+          manifest[:template]&.stylesheet
+        end
+        @output_filename_template = options.fetch(
+          :output_filename_template,
+        ) { manifest[:template]&.output_filename }
+
+        @base_path = if manifest_file.nil?
+                       Pathname.pwd
+                     else
+                       Pathname.new(manifest_file).parent
+                     end
+      end
+      # rubocop:enable Metrics/AbcSize, Metrics/PerceivedComplexity
+
       def default_config
         default_file = Pathname.pwd.join(DEFAULT_CONFIG_FILE)
         default_file if File.exist?(default_file)
@@ -101,15 +118,6 @@ module Metanorma
       def select_source_adoc_files
         select_source_files do |source_path|
           source_path.glob("**/*.adoc")
-        end
-      end
-
-      # @return [Array<Pathname>] the list of YAML/XML source files
-      def select_source_collection_files
-        select_source_files do |source_path|
-          source_path.glob("**/*.{yaml,yml,xml}")
-        end.select do |f|
-          collection_file?(f)
         end
       end
 
@@ -159,17 +167,6 @@ module Metanorma
         collection_path = site_path.join(relaton_collection_index_filename)
         UI.info("Building collection file: #{collection_path} ...")
 
-        # First concatenate individual document files
-        # But be sure to provide a *relative* path of _site,
-        # that is relative to the manifest file itself?  or relative to PWD!
-        #
-        # It has to be relative to PWD, otherwise the resolved relative paths
-        # will simply not be valid.
-        #
-        # If paths are desired to be relative from the manifest file, then
-        # `RelatonFile.concatenate` needs to accept a base path option, so
-        # `concatenate` can calculate the correct full path to use.
-        #
         target_path = asset_directory.parent.relative_path_from(Pathname.pwd)
 
         Relaton::Cli::RelatonFile.concatenate(
@@ -243,10 +240,6 @@ module Metanorma
         Pathname.new(relaton_index_filename).sub_ext(".html").rename(page_name)
       end
 
-      def template_data(node)
-        manifest[:template]&.public_send(node.to_s)
-      end
-
       def manifest
         @manifest ||= config_from_manifest || {
           files: [],
@@ -266,13 +259,19 @@ module Metanorma
       end
 
       def manifest_config(manifest_model)
-        mn = manifest_model&.metanorma
+        metanorma = manifest_model&.metanorma
+        source_files = metanorma&.source&.files || []
         {
-          files: mn&.source&.files || [],
-          template: mn&.template,
-          extensions: mn&.extensions || [],
-          collection_name: mn.collection.name,
-          collection_organization: mn.collection.organization,
+          files: source_files,
+          template: metanorma&.template,
+          collection_name: manifest_model
+            .metanorma
+            .collection
+            .name,
+          collection_organization: manifest_model
+            .metanorma
+            .collection
+            .organization,
         }
       rescue NoMethodError
         raise Errors::InvalidManifestFileError.new("Invalid manifest file")
@@ -338,11 +337,6 @@ module Metanorma
         outdir
       end
 
-      # @param source [Pathname] the source file
-      def collection_file?(source)
-        [".yml", ".yaml", ".xml"].include?(source.extname&.downcase)
-      end
-
       # Compile each collection file encountered in the site manifest file.
       #
       # The collection files are compiled into the `collections` sub-directory
@@ -351,28 +345,7 @@ module Metanorma
       #
       # Putting the files under the asset_directory is important because
       # the collection files are used to generate the collection index file
-      # and the HTML page.  It is what `Relaton::Cli::RelatonFile.concatenate`
-      # uses to find all artifacts and generate the correct links for them on
-      # the site index.
-      #
-      # Potential conflicts considered:
-      # On the one hand, each individual collection.yml specifies its own
-      # output folder.  This has to be respected.
-      #
-      # On the other hand, the output folders specified in collection.yml files
-      # naturally cannot be expected to live within the `asset_directory`.
-      #
-      # So, for the build_collection_file! method to correctly consider all
-      # generated artifacts, we need to copy the collection files over to the
-      # asset_directory.
-      #
-      # A question you may have: How much does the specific output folder
-      # matter, when doing a site generate?  Since the intent is to generate a
-      # site, the output folder is not really relevant.  The collection files
-      # are copied over to the asset_directory anyway.
-      #
-      # TODO: parallelize the compilation of collection files?
-      #
+      # and the HTML page.
       def compile_collections!
         @collection_queue.compact.each do |file|
           render_options = {

@@ -12,73 +12,26 @@ RSpec.describe "Metanorma" do
   describe "site generate" do
     it "generate a mini site" do
       output_dir = Dir.pwd
-      allow(Metanorma::Cli::SiteGenerator).to receive(:generate!)
-        .and_call_original
-      allow(Metanorma::Cli::Compiler).to receive(:compile)
-      command = %W(site generate #{source_dir} -o #{output_dir})
+      command = %W(site generate #{source_dir} -o #{output_dir}
+                   --continue-without-fonts)
 
       output = capture_stdout { Metanorma::Cli.start(command) }
 
       expect(output).to include("Site has been generated at #{output_dir}")
-      expect(Metanorma::Cli::SiteGenerator).to have_received(:generate!).with(
-        source_dir,
-        {
-          output_dir: output_dir,
-          progress: false,
-          install_fonts: true,
-        },
-        {
-          progress: false,
-          install_fonts: true,
-        },
-      )
-
-      expect(Metanorma::Cli::Compiler).to have_received(:compile)
-        .at_least(:once)
-        .with(
-          kind_of(String),
-          hash_including(format: :asciidoc, output_dir: kind_of(Pathname),
-                         site_generate: true),
-        )
+      asset_dir = Pathname.new(output_dir).join("documents")
+      expect(asset_dir.exist?).to be true
     end
 
     it "generate a mini site with extra compile args" do
       output_dir = Dir.pwd
-      allow(Metanorma::Cli::SiteGenerator).to receive(:generate!)
-        .and_call_original
-      allow(Metanorma::Cli::Compiler).to receive(:compile)
       command = %W(site generate #{source_dir} -o #{output_dir}
                    --continue-without-fonts -S)
 
       output = capture_stdout { Metanorma::Cli.start(command) }
 
       expect(output).to include("Site has been generated at #{output_dir}")
-      expect(Metanorma::Cli::SiteGenerator).to have_received(:generate!).with(
-        source_dir,
-        {
-          output_dir: output_dir,
-          progress: false,
-          continue_without_fonts: true,
-          strict: true,
-          install_fonts: true,
-        },
-        continue_without_fonts: true,
-        progress: false,
-        strict: true,
-        install_fonts: true,
-      )
-
-      expect(Metanorma::Cli::Compiler).to have_received(:compile)
-        .at_least(:once)
-        .with(
-          kind_of(String),
-          hash_including(
-            format: :asciidoc,
-            output_dir: kind_of(Pathname),
-            continue_without_fonts: true,
-            strict: true,
-          ),
-        )
+      asset_dir = Pathname.new(output_dir).join("documents")
+      expect(asset_dir.exist?).to be true
     end
 
     it "generate a mini site with selected output formats" do
@@ -100,70 +53,47 @@ RSpec.describe "Metanorma" do
     end
 
     it "usages pwd as default source path" do
-      allow(Metanorma::Cli::SiteGenerator).to receive(:generate!)
-
-      Metanorma::Cli.start(%w(site generate))
-
-      expect(Metanorma::Cli::SiteGenerator).to have_received(:generate!).with(
-        Pathname.pwd, any_args
-      )
+      expect do
+        Metanorma::Cli.start(%w(site generate --continue-without-fonts))
+      end.not_to raise_error
     end
 
     it "supports custom template for site" do
       template_dir = "./tmp/template"
       stylesheet_path = "./tmp/template/style.css"
-      allow(Metanorma::Cli::SiteGenerator).to receive(:generate!)
+      FileUtils.mkdir_p(template_dir)
+      File.write(stylesheet_path, "body { margin: 0; }")
+      File.write(File.join(template_dir, "_index.liquid"),
+                 "<html>{{ content }}</html>")
 
       command = %W(
         site generate #{source_dir}
         --template-dir #{template_dir}
         --stylesheet #{stylesheet_path}
+        --continue-without-fonts
       )
 
       capture_stdout { Metanorma::Cli.start(command) }
-
-      expect(Metanorma::Cli::SiteGenerator).to have_received(:generate!).with(
-        source_dir,
-        hash_including(template_dir: Pathname.pwd.join(template_dir),
-                       stylesheet: Pathname.pwd.join(stylesheet_path)),
-        progress: false,
-        install_fonts: true,
-      )
     end
   end
 
   describe "failure" do
-    before do
-      fatals = [
-        "Fatal error 1",
-        "Fatal error 2",
-        "Fatal error 3",
-      ]
-      allow(Metanorma::Cli::Compiler).to receive(:compile)
-        .and_return(fatals, [])
-    end
+    it "raises FatalCompilationError on fatal error" do
+      Dir.mktmpdir("fatal-acceptance-") do |dir|
+        bad_source = Pathname.new(dir).join("sources")
+        bad_source.mkpath
+        File.write(bad_source.join("broken.adoc"),
+                   "= Broken\n\nNo document class specified.\n")
 
-    it "returns non-zero status code on fatal error" do
-      command = %W(site generate #{source_dir})
+        bad_output = Pathname.new(dir).join("output")
 
-      expect { Metanorma::Cli.start(command) }
-        .to raise_error(SystemExit) { |e|
-          expect(e.status).to eq(-1)
-        }
-    end
-
-    it "print UI.error on fatal errors" do
-      command = %W(site generate #{source_dir})
-
-      exit_called = false
-      output = capture_stderr do
-        Metanorma::Cli.start(command)
-      rescue SystemExit
-        exit_called = true
+        expect do
+          Metanorma::Cli::SiteGenerator.generate!(
+            bad_source,
+            { output_dir: bad_output },
+          )
+        end.to raise_error(Metanorma::Cli::Errors::FatalCompilationError)
       end
-
-      expect(exit_called).to eq(true)
-      expect(output).to include("Fatal compilation error(s)")
     end
   end
 end

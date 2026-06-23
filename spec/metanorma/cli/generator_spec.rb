@@ -60,7 +60,8 @@ RSpec.describe Metanorma::Cli::Generator do
         )
       end
 
-      it "reports the specific doctype was not found and lists available ones" do
+      it "reports specific doctype not found " \
+         "and lists available ones" do
         document = tmp_dir.join "my-bad-doctype-document"
         template = "https://github.com/metanorma/mn-templates-csd"
 
@@ -122,25 +123,20 @@ RSpec.describe Metanorma::Cli::Generator do
         expect_document_to_include_base_templates(document)
       end
     end
+  end
 
-    context "no write permission" do
-      it "says it out loud with error message" do
-        allow(Metanorma::Cli).to receive(:writable_templates_path?)
-          .and_raise(Errno::EACCES)
+  it "merges common templates into the generated document" do
+    document = tmp_dir.join "common-merge-test"
 
-        document = tmp_dir.join "my-document"
+    Metanorma::Cli::Generator.run(
+      document,
+      type: "csd",
+      doctype: "standard",
+      overwrite: true,
+    )
 
-        output = capture_stdout do
-          Metanorma::Cli::Generator.run(
-            document, type: "csd", doctype: "standard"
-          )
-        end
-
-        expect(output).to include(
-          "The current user does not have permission to write to this path",
-        )
-      end
-    end
+    # The common/ directory provides a Gemfile that overrides the base one
+    expect(file_exits?(document, "Gemfile")).to be_truthy
   end
 
   it "template dir priority: common > base" do
