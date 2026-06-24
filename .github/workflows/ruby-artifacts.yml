@@ -123,22 +123,26 @@ jobs:
           echo "Triggering downstream workflows for version ${{ steps.version.outputs.tag }}"
 
           # Trigger metanorma-docker build
+          # NOTE: --field version was dropped because the receiving
+          # workflow_dispatch declares no inputs; GitHub returns HTTP 422
+          # "Unexpected inputs provided: [version]" and the whole step
+          # exits 1. Docker's build-push reads the metanorma-cli version
+          # from VERSION.mak / Gemfile at build time, so it doesn't need
+          # the input. See metanorma/metanorma-cli#426.
           gh workflow run build-push.yml \
             --repo metanorma/metanorma-docker \
-            --ref main \
-            --field version="${{ steps.version.outputs.tag }}"
+            --ref main
 
           # Trigger metanorma-docker Windows build
           gh workflow run build-push-windows.yml \
             --repo metanorma/metanorma-docker \
-            --ref main \
-            --field version="${{ steps.version.outputs.tag }}"
+            --ref main
 
           # Trigger packed-mn build
+          # NOTE: same input-schema mismatch as the docker dispatches above.
           gh workflow run build.yml \
             --repo metanorma/packed-mn \
-            --ref main \
-            --field version="${{ steps.version.outputs.tag }}"
+            --ref main
 
           echo "Downstream workflows triggered successfully"
         env:
