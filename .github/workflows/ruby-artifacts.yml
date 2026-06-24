@@ -138,11 +138,18 @@ jobs:
             --repo metanorma/metanorma-docker \
             --ref main
 
-          # Trigger packed-mn build
-          # NOTE: same input-schema mismatch as the docker dispatches above.
-          gh workflow run build.yml \
-            --repo metanorma/packed-mn \
-            --ref main
+          # packed-mn dispatch removed: the target workflow file
+          # `build.yml` was renamed/split into per-platform workflows
+          # in metanorma/packed-mn `a4938049` (2020-07-30, "Split
+          # workflows per platform"), so this dispatch has been a 404
+          # for ~6 years. Even fixing the filename wouldn't help: 4 of
+          # the 5 per-platform workflows (alpine, ubuntu, windows,
+          # macos) are currently disabled on packed-mn, and the proper
+          # dispatch path appears to be repository_dispatch with
+          # event-type `metanorma/metanorma-cli` (the same shape
+          # metanorma-docker's release-tag.yml listens for). Wiring
+          # that up is tracked separately; see the metanorma-cli /
+          # packed-mn dispatch-chain follow-up issue.
 
           echo "Downstream workflows triggered successfully"
         env:
