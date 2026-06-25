@@ -123,22 +123,33 @@ jobs:
           echo "Triggering downstream workflows for version ${{ steps.version.outputs.tag }}"
 
           # Trigger metanorma-docker build
+          # NOTE: --field version was dropped because the receiving
+          # workflow_dispatch declares no inputs; GitHub returns HTTP 422
+          # "Unexpected inputs provided: [version]" and the whole step
+          # exits 1. Docker's build-push reads the metanorma-cli version
+          # from VERSION.mak / Gemfile at build time, so it doesn't need
+          # the input. See metanorma/metanorma-cli#426.
           gh workflow run build-push.yml \
             --repo metanorma/metanorma-docker \
-            --ref main \
-            --field version="${{ steps.version.outputs.tag }}"
+            --ref main
 
           # Trigger metanorma-docker Windows build
           gh workflow run build-push-windows.yml \
             --repo metanorma/metanorma-docker \
-            --ref main \
-            --field version="${{ steps.version.outputs.tag }}"
+            --ref main
 
-          # Trigger packed-mn build
-          gh workflow run build.yml \
-            --repo metanorma/packed-mn \
-            --ref main \
-            --field version="${{ steps.version.outputs.tag }}"
+          # packed-mn dispatch removed: the target workflow file
+          # `build.yml` was renamed/split into per-platform workflows
+          # in metanorma/packed-mn `a4938049` (2020-07-30, "Split
+          # workflows per platform"), so this dispatch has been a 404
+          # for ~6 years. Even fixing the filename wouldn't help: 4 of
+          # the 5 per-platform workflows (alpine, ubuntu, windows,
+          # macos) are currently disabled on packed-mn, and the proper
+          # dispatch path appears to be repository_dispatch with
+          # event-type `metanorma/metanorma-cli` (the same shape
+          # metanorma-docker's release-tag.yml listens for). Wiring
+          # that up is tracked separately; see the metanorma-cli /
+          # packed-mn dispatch-chain follow-up issue.
 
           echo "Downstream workflows triggered successfully"
         env:
