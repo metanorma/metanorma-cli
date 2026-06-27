@@ -118,7 +118,11 @@ jobs:
           echo "✅ Workflow validation completed successfully"
 
       - name: Trigger downstream workflows
-        if: github.event_name == 'release'
+        # Fires on a real release event AND on manual workflow_dispatch.
+        # workflow_dispatch lets us verify the downstream chain without
+        # producing a new gem release, and gives a permanent escape hatch
+        # for refreshing docker images when they go stale.
+        if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
         run: |
           echo "Triggering downstream workflows for version ${{ steps.version.outputs.tag }}"
 
