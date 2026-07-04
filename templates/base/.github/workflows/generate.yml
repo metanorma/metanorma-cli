@@ -12,6 +12,9 @@ on:
       - .github/workflows/docker.yml
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   test-docker:
     uses: metanorma/ci/.github/workflows/sample-gen.yml@main
