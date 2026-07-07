@@ -27,7 +27,6 @@ group :development do
   gem "webmock"
   gem "xml-c14n"
 end
-
 begin
   eval_gemfile("Gemfile.devel")
 rescue StandardError
