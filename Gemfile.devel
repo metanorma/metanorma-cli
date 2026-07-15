@@ -1,5 +1,5 @@
 # CI-only stack test for html2doc PR #110 (plurimath ~> 0.11.4).
-# Pin html2doc to the PR branch so bundler resolves the whole stack against
-# the proposed plurimath 0.11.x line. DO NOT MERGE.
-# https://github.com/metanorma/html2doc/pull/110
-gem "html2doc", git: "https://github.com/metanorma/html2doc.git", branch: "rt-update-plurimath"
+# Pin html2doc to an isolation branch (1.11.1 baseline + plurimath ~> 0.11.4),
+# so bundler resolves the whole stack against plurimath 0.11.x with no version
+# confound. DO NOT MERGE. https://github.com/metanorma/html2doc/pull/110
+gem "html2doc", git: "https://github.com/metanorma/html2doc.git", branch: "test/plurimath-0.11.4-stackcheck"
