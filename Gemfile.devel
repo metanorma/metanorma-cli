@@ -1,5 +1,8 @@
 # CI-only stack test for html2doc PR #110 (plurimath ~> 0.11.4).
-# Pin html2doc to an isolation branch (1.11.1 baseline + plurimath ~> 0.11.4),
-# so bundler resolves the whole stack against plurimath 0.11.x with no version
-# confound. DO NOT MERGE. https://github.com/metanorma/html2doc/pull/110
+# - html2doc: isolation branch (1.11.1 baseline + plurimath ~> 0.11.4).
+# - metanorma-plugin-lutaml: main (0.7.49), which fixes the lutaml/xmi LoadError
+#   (lutaml 0.11 removed lutaml/xmi; 0.7.49 requires ea/xmi via the `ea` gem).
+#   Unreleased as of this test; must ship before the plurimath work lands.
+# DO NOT MERGE. https://github.com/metanorma/html2doc/pull/110
 gem "html2doc", git: "https://github.com/metanorma/html2doc.git", branch: "test/plurimath-0.11.4-stackcheck"
+gem "metanorma-plugin-lutaml", git: "https://github.com/metanorma/metanorma-plugin-lutaml.git", branch: "main"
