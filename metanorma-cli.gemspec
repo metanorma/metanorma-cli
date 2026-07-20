@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
 
   spec.require_paths = ["lib"]
-  spec.required_ruby_version = ">= 3.1.0"
+  spec.required_ruby_version = Gem::Requirement.new(">= 3.3.0")
 
   spec.add_dependency "metanorma-ietf", "~> 3.7.0"
   spec.add_dependency "metanorma-iso", "~> 3.4.2"
@@ -39,7 +39,7 @@ Gem::Specification.new do |spec|
   # spec.add_dependency 'metanorma-mpfa', "~> 0.9.0"
   spec.add_dependency "git", ">= 3.0"
   spec.add_dependency "lutaml-model"
-  spec.add_dependency "metanorma", "~> 2.4.1"
+  spec.add_dependency "metanorma", "~> 2.5.1"
   spec.add_dependency "metanorma-iho", "~> 1.3.0"
   spec.add_dependency "metanorma-itu", "~> 2.8.0"
   # spec.add_dependency "metanorma-nist", "~> 2.7.0"
@@ -50,7 +50,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "metanorma-plateau", "~> 1.2.0"
   spec.add_dependency "relaton-cli", ">= 0.8.2"
   spec.add_dependency "socksify"
-  spec.add_dependency "suma", "~> 0.2.0"
+  spec.add_dependency "suma", "~> 0.5.0"
   # spec.metadata["rubygems_mfa_required"] = "true"
   # NOBODY UNCOMMENTS THIS WITHOUT EXPLAINING TO ME HOW TO USE MFA
 end
