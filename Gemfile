@@ -20,6 +20,8 @@ group :development do
   gem "rspec-core"
   gem "rubocop"
   gem "rubocop-performance"
+  gem "rubocop-rake"
+  gem "rubocop-rspec"
   # need for dev because locally compiled metanorma-iso does not have css
   gem "sassc-embedded"
   gem "simplecov"
