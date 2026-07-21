@@ -19,21 +19,25 @@ jobs:
       pat_token: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
 
   # Docker rebuild gated on tests-passed. Fires only after the rake test
-  # suite has gone green on a tag push. Fixes metanorma/ci#365: docker was
-  # previously triggered off `release: published` in ruby-artifacts.yml
-  # with no test-status check, shipping untested images to docker users
-  # (the least-technical audience in the metanorma distribution — those
-  # who run the image because they cannot recompile the cli stack).
+  # suite has gone green on a tag push. Fixes metanorma/ci#365 (test
+  # gating for the docker chain) + metanorma/ci#366 (reconciliation onto
+  # release-tag.yml so docker's tag actually corresponds to the released
+  # cli version).
   #
-  # Dispatches match the ones ruby-artifacts.yml formerly fired on
-  # release:published — `gh workflow run build-push.yml` + windows variant
-  # on metanorma-docker main. The ruby-artifacts.yml docker step is now
-  # gated to workflow_dispatch only (the deliberate manual escape hatch).
+  # Dispatches metanorma-docker's release-tag.yml via
+  # `repository_dispatch: [metanorma/metanorma-cli]` — the listener that
+  # workflow already exposes but that nothing else dispatches to.
+  # release-tag.yml parses the cli version from client_payload.ref,
+  # updates VERSION.mak + Gemfile, creates the matching `vX.Y.Z` tag on
+  # metanorma-docker, and the tag push then triggers build-push +
+  # build-push-windows AT the tag with the correct version.
   #
-  # Longer-term reconciliation onto metanorma-docker's unused
-  # release-tag.yml `repository_dispatch: [metanorma/metanorma-cli]`
-  # listener is a follow-up; this fix stays cli-side only, no
-  # docker-side changes required.
+  # Replaces the previous shape (metanorma-cli#438) which dispatched
+  # build-push.yml + build-push-windows.yml directly on metanorma-docker
+  # main. That built the LAST tagged version, not the newly-released cli
+  # version, and required manual `gh workflow run release-tag.yml` every
+  # fortnight to create the matching docker tag. This dispatch does that
+  # automatically per release.
   docker-dispatch:
     needs: rake
     if: |
@@ -43,18 +47,14 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Dispatch docker builds (tests-passed gate)
+      - name: Dispatch metanorma-docker release-tag (tests-passed gate)
         env:
           GH_TOKEN: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
         run: |
-          echo "Rake passed on ${{ github.ref_name }}; dispatching docker builds"
+          echo "Rake passed on ${{ github.ref_name }}; dispatching metanorma-docker release-tag"
 
-          gh workflow run build-push.yml \
-            --repo metanorma/metanorma-docker \
-            --ref main
+          gh api repos/metanorma/metanorma-docker/dispatches \
+            -f event_type=metanorma/metanorma-cli \
+            -f "client_payload[ref]=${{ github.ref }}"
 
-          gh workflow run build-push-windows.yml \
-            --repo metanorma/metanorma-docker \
-            --ref main
-
-          echo "Docker dispatches sent"
+          echo "release-tag.yml dispatch sent for ${{ github.ref_name }}"
