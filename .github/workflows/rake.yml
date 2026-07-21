@@ -17,3 +17,44 @@ jobs:
       templates-matrix-json-file: .github/workflows/templates-smoke-matrix.json
     secrets:
       pat_token: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
+
+  # Docker rebuild gated on tests-passed. Fires only after the rake test
+  # suite has gone green on a tag push. Fixes metanorma/ci#365: docker was
+  # previously triggered off `release: published` in ruby-artifacts.yml
+  # with no test-status check, shipping untested images to docker users
+  # (the least-technical audience in the metanorma distribution — those
+  # who run the image because they cannot recompile the cli stack).
+  #
+  # Dispatches match the ones ruby-artifacts.yml formerly fired on
+  # release:published — `gh workflow run build-push.yml` + windows variant
+  # on metanorma-docker main. The ruby-artifacts.yml docker step is now
+  # gated to workflow_dispatch only (the deliberate manual escape hatch).
+  #
+  # Longer-term reconciliation onto metanorma-docker's unused
+  # release-tag.yml `repository_dispatch: [metanorma/metanorma-cli]`
+  # listener is a follow-up; this fix stays cli-side only, no
+  # docker-side changes required.
+  docker-dispatch:
+    needs: rake
+    if: |
+      startsWith(github.ref, 'refs/tags/v') &&
+      github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Dispatch docker builds (tests-passed gate)
+        env:
+          GH_TOKEN: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
+        run: |
+          echo "Rake passed on ${{ github.ref_name }}; dispatching docker builds"
+
+          gh workflow run build-push.yml \
+            --repo metanorma/metanorma-docker \
+            --ref main
+
+          gh workflow run build-push-windows.yml \
+            --repo metanorma/metanorma-docker \
+            --ref main
+
+          echo "Docker dispatches sent"

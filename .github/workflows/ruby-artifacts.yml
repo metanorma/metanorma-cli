@@ -117,12 +117,16 @@ jobs:
           echo "📦 Test artifacts created for version: ${{ steps.version.outputs.tag }}"
           echo "✅ Workflow validation completed successfully"
 
-      - name: Trigger downstream workflows
-        # Fires on a real release event AND on manual workflow_dispatch.
-        # workflow_dispatch lets us verify the downstream chain without
-        # producing a new gem release, and gives a permanent escape hatch
-        # for refreshing docker images when they go stale.
-        if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+      - name: Trigger downstream workflows (manual escape hatch only)
+        # Manual escape hatch for rebuilding docker without a new release
+        # (e.g. after a dependency-only fix or to refresh a stale image).
+        # Fires ONLY on workflow_dispatch — the automatic release-time
+        # docker dispatch has been moved to rake.yml's docker-dispatch job
+        # so it can be gated on tests-passed. See metanorma/ci#365 for the
+        # rationale: firing docker off `release: published` here shipped
+        # untested images to docker users (metanorma-cli v1.16.9 was the
+        # concrete failure).
+        if: github.event_name == 'workflow_dispatch'
         run: |
           echo "Triggering downstream workflows for version ${{ steps.version.outputs.tag }}"
 
