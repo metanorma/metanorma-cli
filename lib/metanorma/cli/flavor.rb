@@ -108,13 +108,14 @@ module Metanorma
         %w(html2doc isodoc metanorma-utils mn2pdf mn-requirements isodoc-i18n
            metanorma-core metanorma-plugin-glossarist metanorma-plugin-lutaml
            metanorma-taste relaton-cli pubid glossarist fontist
-           plurimath lutaml expressir xmi lutaml-model emf2svg unitsml
+           plurimath expressir xmi lutaml-model emf2svg unitsml
            vectory ogc-gml oscal suma).freeze
 
       def dependencies_versions
         versions = Gem.loaded_specs
         DEPENDENCY_GEMS.sort.each do |k|
-          UI.say("#{k} #{versions[k].version}")
+          spec = versions[k] or next
+          UI.say("#{k} #{spec.version}")
         end
       end
 

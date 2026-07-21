@@ -27,6 +27,16 @@ RSpec.describe "Metanorma" do
         expect(output).to match /html2doc \d\.\d/
       end
 
+      it "reports a version for every listed dependency gem" do
+        command = %w(version)
+        output = capture_stdout { Metanorma::Cli.start(command) }
+
+        Metanorma::Cli::Command::DEPENDENCY_GEMS.each do |gem|
+          expect(output).to match(/^#{Regexp.escape(gem)} \d/)
+        end
+        expect(output).not_to include("undefined method")
+      end
+
       it "not raise error about dependencies" do
         command = %w(version)
         output = capture_stderr { Metanorma::Cli.start(command) }
