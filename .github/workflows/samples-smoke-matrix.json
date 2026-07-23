@@ -216,6 +216,36 @@
           }
         }
       }
+    },
+    {
+      "id": "pdfa",
+      "public": true,
+      "experimental": false,
+      "manifest": {
+        "metanorma": {
+          "source": {
+            "files": [
+              "sources/an-ppm/document.adoc",
+              "sources/spec-pdf-declarations/document.adoc"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "oiml",
+      "public": true,
+      "experimental": false,
+      "manifest": {
+        "metanorma": {
+          "source": {
+            "files": [
+              "sources/b018-e18/document.adoc",
+              "sources/oiml-cs-pd-01/document.adoc"
+            ]
+          }
+        }
+      }
     }
   ]
 }
