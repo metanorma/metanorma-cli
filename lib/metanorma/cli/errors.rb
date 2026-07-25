@@ -7,20 +7,19 @@ module Metanorma
       class InvalidManifestFileError < StandardError; end
 
       class FatalCompilationError < StandardError
-        attr_reader :fatals
-
         def initialize(fatals)
-          super()
           @fatals = fatals
+          super(format_message(fatals))
         end
 
-        def message
-          <<~MSG
-            Fatal compilation error(s):
-            #{fatals.map { |f| "- #{f}" }.join("\n")}
+        attr_reader :fatals
 
-            Look at error.log for more details
-          MSG
+        private
+
+        def format_message(fatals)
+          "Fatal compilation error(s):\n" \
+            "#{fatals.map { |f| "- #{f}" }.join("\n")}\n" \
+            "Look at error.log for more details"
         end
       end
     end

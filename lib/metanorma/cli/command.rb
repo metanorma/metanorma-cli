@@ -1,22 +1,15 @@
 # frozen_string_literal: true
 
-require "metanorma/cli/compiler"
-require "metanorma/cli/generator"
-require "metanorma/cli/collection"
-require "metanorma/cli/git_template"
-require "metanorma/cli/thor_with_config"
-require "metanorma/cli/commands/config"
-require "metanorma/cli/commands/template_repo"
-require "metanorma/cli/commands/site"
 require "mnconvert"
-require_relative "flavor"
 
 module Metanorma
   module Cli
     class Command < ThorWithConfig
+      include FlavorMethods
+
       class_option :progress, aliases: "-s", type: :boolean, default: false,
-                              desc: "Show progress for long running tasks" \
-                                    " (like download)"
+                              desc: "Show progress for long running tasks " \
+                                    "(like download)"
 
       desc "new NAME", "Create new Metanorma document"
       option :type, aliases: "-t", required: true, desc: "Document type"
@@ -40,28 +33,28 @@ module Metanorma
       option :wrapper, aliases: "-w", type: :boolean,
                        desc: "Create wrapper folder for HTML output"
       option :asciimath, aliases: "-a", type: :boolean,
-                         desc: "Keep Asciimath in XML output instead of" \
-                               " converting it to MathM"
+                         desc: "Keep Asciimath in XML output instead of " \
+                               "converting it to MathM"
       option :datauriimage, aliases: "-d", type: :boolean,
                             desc: "Encode HTML output images as data URIs"
       option :relaton, aliases: "-R",
-                       desc: "Export Relaton XML for document to nominated" \
-                             " filename"
+                       desc: "Export Relaton XML for document to nominated " \
+                             "filename"
       option :extract, aliases: "-e",
-                       desc: "Export sourcecode fragments from this document" \
-                             " to nominated directory"
+                       desc: "Export sourcecode fragments from this document " \
+                             "to nominated directory"
       option :version, aliases: "-v",
                        desc: "Print version of code (accompanied with -t)"
       option :log_messages, aliases: "-L",
                             desc: "Display available log messages " \
-                            "(accompanied with -t)"
+                                  "(accompanied with -t)"
       option :output_dir, aliases: "-o",
                           desc: "Directory to save compiled files"
       option :strict, aliases: "-S", type: :boolean,
                       desc: "Strict compilation: abort if there are any errors"
       option :agree_to_terms,
              type: :boolean,
-             desc: "Agree / Disagree with all third-party licensing terms "\
+             desc: "Agree / Disagree with all third-party licensing terms " \
                    "presented (WARNING: do know what you are agreeing with!)"
       option :install_fonts, type: :boolean, default: true,
                              desc: "Install required fonts"
@@ -99,14 +92,14 @@ module Metanorma
       option :coverpage, aliases: "-c", desc: "Liquid template"
       option :agree_to_terms,
              type: :boolean,
-             desc: "Agree / Disagree with all third-party licensing terms "\
+             desc: "Agree / Disagree with all third-party licensing terms " \
                    "presented (WARNING: do know what you are agreeing with!)"
       option :install_fonts, type: :boolean, default: true,
                              desc: "Install required fonts"
       option :continue_without_fonts,
              type: :boolean,
              desc: "Continue processing even when fonts are missing"
-      option :strict, aliases: "-S", type: :boolean, \
+      option :strict, aliases: "-S", type: :boolean,
                       desc: "Strict compilation: abort if there are any errors"
 
       def collection(filename = nil)
@@ -193,7 +186,7 @@ module Metanorma
 
       desc "export-config", "Export flvor configuration"
       def export_config(type = nil)
-        export_config_flavor(type)
+        ConfigExporter.new(type).export
       end
 
       desc "template-repo", "Manage metanorma templates repository"

@@ -16,6 +16,11 @@ module Metanorma
         new(filename, options).render
       end
 
+      def self.parse_formats(formats)
+        formats = formats.split(",") if formats.is_a?(String)
+        (formats || []).map { |extension| extension.strip.to_sym }
+      end
+
       def render
         extract_options_from_file
         collection_file.render(collection_options.compact)
@@ -37,7 +42,7 @@ module Metanorma
           compile: @compile_options,
           output_folder: build_output_folder,
           coverpage: options.fetch(:coverpage, nil),
-          format: collection_output_formats(options.fetch(:format, "")),
+          format: self.class.parse_formats(options.fetch(:format, "")),
           site_generate: options["site_generate"],
         }
       end
@@ -54,17 +59,9 @@ module Metanorma
         end
       end
 
-      def collection_output_formats(formats)
-        if formats.is_a?(String)
-          formats = formats.split(",")
-        end
-
-        (formats || []).map { |extension| extension.strip.to_sym }
-      end
-
       def extract_options_from_file
         yaml_file = if /\.ya?ml$/.match?(file.to_s)
-                      YAML.safe_load(File.read(file.to_s))
+                      YAML.safe_load_file(file.to_s)
                     elsif /\.xml$/.match?(file.to_s)
                       xml_extract_options_from_file
                     end

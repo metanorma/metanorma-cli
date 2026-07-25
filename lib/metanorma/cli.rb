@@ -2,15 +2,25 @@
 
 require "metanorma"
 require "metanorma/flavor"
-
 require "metanorma/site_manifest"
-
-require "metanorma/cli/version"
-require "metanorma/cli/errors"
-require "metanorma/cli/command"
 
 module Metanorma
   module Cli
+    autoload :Collection, "metanorma/cli/collection"
+    autoload :Command, "metanorma/cli/command"
+    autoload :Commands, "metanorma/cli/commands"
+    autoload :Compiler, "metanorma/cli/compiler"
+    autoload :ConfigExporter, "metanorma/cli/config_exporter"
+    autoload :Errors, "metanorma/cli/errors"
+    autoload :FlavorMethods, "metanorma/cli/flavor"
+    autoload :Generator, "metanorma/cli/generator"
+    autoload :GitTemplate, "metanorma/cli/git_template"
+    autoload :SiteGenerator, "metanorma/cli/site_generator"
+    autoload :TemplateRepo, "metanorma/cli/template_repo"
+    autoload :ThorWithConfig, "metanorma/cli/thor_with_config"
+    autoload :UI, "metanorma/cli/ui"
+    autoload :VERSION, "metanorma/cli/version"
+
     CONFIG_DIRNAME = ".metanorma"
     CONFIG_FILENAME = "config.yml"
 
@@ -18,15 +28,6 @@ module Metanorma
       Metanorma::Flavor.load_flavors
     end
 
-    # Invoking commands
-    #
-    # In the Metanorma CLI, we've included some custom behavior,
-    # like exposing the compiation directly from the root command.
-    #
-    # So, for this use case we first check if the user is actually
-    # trying to compile a document or not, and based on that we'll
-    # compile the document or show the help documentation.
-    #
     def self.start(arguments)
       if find_command(arguments).empty?
         arguments.unshift("compile")

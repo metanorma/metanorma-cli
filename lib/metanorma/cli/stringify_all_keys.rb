@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# rubocop:disable Style/OneClassPerFile
 class Array
   def stringify_all_keys
     map do |v|
@@ -49,3 +52,4 @@ class Hash
     result
   end
 end
+# rubocop:enable Style/OneClassPerFile

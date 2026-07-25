@@ -23,15 +23,42 @@
 :smart-quotes: false
 :docfile: mn-samples-ietf-antioch.adoc
 :mn-document-class: ietf
-:mn-output-extensions: xmlrfc2,txt,html,nits
-//:mn-output-extensions: rfc,xml,txt,html,rxl
+:mn-output-extensions: xml,rxl
 :flush-caches: true
 
-include::sections/00-abstract.adoc[]
-include::sections/01-intro.adoc[]
-include::sections/02-conventions.adoc[]
-include::sections/03-supported.adoc[]
-include::sections/10-security.adoc[]
-include::sections/11-iana.adoc[]
-include::sections/99-acknowledgements.adoc[]
-include::sections/98-references.adoc[]
+== Abstract
+
+This document describes the Holy Hand Grenade of Antioch,
+a sacred artifact used in the defense against killer rabbits.
+
+== Introduction
+
+The Holy Hand Grenade of Antioch is a sacred relic.
+Its use requires careful preparation and counting to three.
+
+== Conventions
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+"SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+document are to be interpreted as described in RFC 2119.
+
+== Supported Features
+
+The Holy Hand Grenade supports the following features:
+
+* Counting to three
+* Lobbing
+* Anti-rabbit defense
+
+== Security Considerations
+
+Improper use of the Holy Hand Grenade may result in self-inflicted damage.
+Users MUST count to three before lobbing.
+
+== IANA Considerations
+
+This document has no IANA actions.
+
+== Acknowledgements
+
+The authors acknowledge the contributions of the Knights of the Round Table.

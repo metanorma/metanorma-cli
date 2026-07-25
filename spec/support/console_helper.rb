@@ -1,6 +1,6 @@
 module Metanorma
   module ConsoleHelper
-    def capture_stdout(&_block)
+    def capture_stdout(&)
       original_stdout = $stdout
       $stdout = fake = StringIO.new
 
@@ -13,7 +13,7 @@ module Metanorma
       fake.string
     end
 
-    def capture_stderr(&_block)
+    def capture_stderr(&)
       original_stderr = $stderr
       $stderr = fake = StringIO.new
 

@@ -4,7 +4,6 @@ RSpec.describe "Config" do
     FileUtils.rm_f(@test_config)
 
     allow(Metanorma::Cli).to receive(:config_path).and_return(@test_config)
-    expect(Metanorma::Cli).to receive(:config_path)
   end
 
   it "get creates config if not exists" do

@@ -9,7 +9,9 @@ RSpec.describe "Metanorma" do
       command = %w(template-repo add my-iso -y https://github.com/metanorma/mn-iso)
       output = capture_stdout { Metanorma::Cli.start(command) }
 
-      expect(output).to include("Template repo: my-iso has been added successfully")
+      expect(output).to include(
+        "Template repo: my-iso has been added successfully",
+      )
     end
 
     it "returns error for duplicate template" do

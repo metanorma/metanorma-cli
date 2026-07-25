@@ -1,6 +1,3 @@
-require "metanorma/cli/template_repo"
-require "metanorma/cli/thor_with_config"
-
 module Metanorma
   module Cli
     module Commands
@@ -11,7 +8,7 @@ module Metanorma
                            desc: "Overwrite existing template"
 
         def add(name, source)
-          Metanorma::Cli::TemplateRepo.add(name, source, options)
+          Cli::TemplateRepo.add(name, source, options)
           UI.say("Template repo: #{name} has been added successfully")
         rescue Errors::DuplicateTemplateError
           UI.error("Duplicate metanorma template")

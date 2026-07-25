@@ -5,6 +5,7 @@ require "vcr"
 VCR.configure do |config|
   config.cassette_library_dir = "spec/vcr_cassettes"
   config.hook_into :webmock
+  config.allow_http_connections_when_no_cassette = true
 end
 
 require "simplecov"
@@ -20,19 +21,16 @@ require "mn2pdf"
 require "mnconvert"
 require "xml-c14n"
 
-Dir["./spec/support/**/*.rb"].sort.each { |file| require file }
+Dir["./spec/support/**/*.rb"].each { |file| require file }
 
 RSpec.shared_context "global helpers" do
   let(:tmp_dir) { Pathname.new(Dir.tmpdir) }
 end
 
 RSpec.configure do |config|
-  # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
   config.include Metanorma::ConsoleHelper
   config.include Metanorma::Helper
-
-  # Disable RSpec exposing methods globally on `Module` and `main`
   config.disable_monkey_patching!
 
   config.expect_with :rspec do |c|
@@ -40,14 +38,10 @@ RSpec.configure do |config|
   end
 
   config.before(:suite) do
-    # Disable http authentication
     ENV["GIT_TERMINAL_PROMPT"] = "0"
   end
 
   config.include_context "global helpers"
-
-  config.before(:each) do
-  end
 
   config.after(:suite) do
     ENV["GIT_TERMINAL_PROMPT"] = "1"
@@ -58,20 +52,21 @@ end
 
 # rubocop:disable Layout/LineLength
 def strip_guid(xml)
-  xml.gsub(%r{ id="_[^"]+"}, ' id="_"')
-    .gsub(%r{ target="_[^"]+"}, ' target="_"')
-    .gsub(%r( href="#_?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12,13}"), ' href="#_"')
-    .gsub(%r( id="[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12,13}"), ' id="_"')
-    .gsub(%r( id="ftn[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{13}"), ' id="ftn_"')
-    .gsub(%r( id="fn:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{13}"), ' id="fn:_"')
-    .gsub(%r( reference="[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"), ' reference="_"')
-    .gsub(%r[ src="([^/]+)/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.], ' src="\\1/_.')
-    .gsub(%r{<fetched>[^<]+</fetched>}, "<fetched/>")
-    .gsub(%r{ schema-version="[^"]+"}, "")
+  xml
+    .gsub(/ id="_[^"]+"/, ' id="_"')
+    .gsub(/ target="_[^"]+"/, ' target="_"')
+    .gsub(/ href="#_?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12,13}"/, ' href="#_"')
+    .gsub(/ id="[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12,13}"/, ' id="_"')
+    .gsub(/ id="ftn[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{13}"/, ' id="ftn_"')
+    .gsub(/ id="fn:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{13}"/, ' id="fn:_"')
+    .gsub(/ reference="[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"/, ' reference="_"')
+    .gsub(/ src="([^\/]+)\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\./, ' src="\1/_.')
+    .gsub(/<fetched>[^<]+<\/fetched>/, "<fetched/>")
+    .gsub(/ schema-version="[^"]+"/, "")
 end
 # rubocop:enable Layout/LineLength
 
-ASCIIDOC_BLANK_HDR = <<~"HDR"
+ASCIIDOC_BLANK_HDR = <<~HDR
   = Document title
   Author
   :docfile: test.adoc
@@ -81,7 +76,7 @@ ASCIIDOC_BLANK_HDR = <<~"HDR"
 
 HDR
 
-ASCIIDOC_PREAMBLE_HDR = <<~"HDR"
+ASCIIDOC_PREAMBLE_HDR = <<~HDR
   = Document title
   Author
   :docfile: test.adoc
@@ -93,7 +88,7 @@ ASCIIDOC_PREAMBLE_HDR = <<~"HDR"
 
 HDR
 
-ASCIIDOC_CONFIGURED_HDR = <<~"HDR"
+ASCIIDOC_CONFIGURED_HDR = <<~HDR
   = Document title
   Author
   :docfile: test.adoc
@@ -173,13 +168,13 @@ ISOXML_BLANK_HDR = <<~"HDR".freeze
 HDR
 
 def mock_pdf
-  allow(::Mn2pdf).to receive(:convert) do |url, output, _c, _d|
+  allow(Mn2pdf).to receive(:convert) do |url, output, _c, _d|
     FileUtils.cp(url.delete('"'), output.delete('"'))
   end
 end
 
 def mock_sts
-  allow(::MnConvert).to receive(:convert) do |url, opts|
+  allow(MnConvert).to receive(:convert) do |url, opts|
     output = opts[:output_file] || "fake.xml"
     FileUtils.cp(url.delete('"'), output.delete('"'))
   end

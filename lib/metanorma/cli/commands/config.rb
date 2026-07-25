@@ -1,8 +1,6 @@
 require "pathname"
 require "metanorma-utils"
 
-# require "metanorma/cli/stringify_all_keys"
-
 module Metanorma
   module Cli
     module Commands
@@ -48,17 +46,6 @@ module Metanorma
 
         def self.exit_on_failure?() true end
 
-        # priority:
-        # IDEAL:
-        # thor defaults -> global conf -> local conf
-        #   -> env vars -> passed arguments
-        #
-        # ACTUAL:
-        # all arguments -> global conf -> local conf
-        #
-        # - thor doesn't provide to differentiate default values against passed
-        #   args
-        # - thor doesn't allow to get all args available for current command
         def self.load_configs(options, configs = [
           Metanorma::Cli.global_config_path, Metanorma::Cli.local_config_path
         ])
@@ -108,19 +95,15 @@ module Metanorma
         end
 
         def deep_set(hash, value, *keys)
-          keys[0...-1].reduce(hash) do |acc, h|
-            tmp = acc.public_send(:[], h)
-            if tmp.nil?
-              acc[h] = tmp = Hash.new
-            end
-            tmp
-          end.public_send(:[]=, keys.last, value)
+          leaf = keys[0...-1].reduce(hash) do |acc, k|
+            acc[k] ||= {}
+          end
+          leaf[keys.last] = value
         end
 
         def deep_unset(hash, *keys)
-          keys[0...-1].reduce(hash) do |acc, h|
-            acc.public_send(:[], h)
-          end.delete(keys.last)
+          leaf = keys[0...-1].reduce(hash) { |acc, k| acc[k] }
+          leaf.delete(keys.last)
         end
 
         def try_convert_to_bool(value)

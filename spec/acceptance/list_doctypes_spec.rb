@@ -10,7 +10,9 @@ RSpec.describe "Metanorma" do
 
         expect(output).to include("Type Input Supported output format")
         expect(output).to include("standoc asciidoc xml, presentation, rxl")
-        expect(output).to include("icc asciidoc xml, html, pdf, doc and presentation")
+        expect(output).to include(
+          "icc asciidoc xml, html, pdf, doc and presentation",
+        )
       end
     end
 
@@ -23,15 +25,21 @@ RSpec.describe "Metanorma" do
 
         expect(output).to include("Type Input Supported output format")
         expect(output).to include("iso asciidoc xml, presentation, rxl, html")
-        expect(output).not_to include("icc asciidoc xml, html, pdf, doc and presentation")
+        expect(output).not_to include(
+          "icc asciidoc xml, html, pdf, doc and presentation",
+        )
 
         command = %w(list-doctypes icc)
         output = capture_stdout { Metanorma::Cli.start(command) }
         output.gsub!(/\s+/, " ")
 
         expect(output).to include("Type Input Supported output format")
-        expect(output).not_to include("iso asciidoc xml, presentation, rxl, html")
-        expect(output).to include("icc asciidoc xml, html, pdf, doc and presentation")
+        expect(output).not_to include(
+          "iso asciidoc xml, presentation, rxl, html",
+        )
+        expect(output).to include(
+          "icc asciidoc xml, html, pdf, doc and presentation",
+        )
       end
     end
   end

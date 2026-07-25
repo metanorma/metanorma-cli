@@ -20,8 +20,8 @@ RSpec.describe Metanorma::SiteManifest do
       its(:collection) do
         is_expected.to be_a(Metanorma::SiteManifest::SiteMetadata)
       end
-      its(:'collection.organization') { is_expected.to eq "org" }
-      its(:'collection.name') { is_expected.to eq "name" }
+      its(:"collection.organization") { is_expected.to eq "org" }
+      its(:"collection.name") { is_expected.to eq "name" }
 
       it "raises an error when accessing un-modelled properties" do
         expect { manifest.unmodelled_property }.to raise_error(NoMethodError)
@@ -110,7 +110,7 @@ RSpec.describe Metanorma::SiteManifest do
       end
 
       its(:source) { is_expected.to have_attributes(files: %w[file1 file2]) }
-      its(:'template.path') { is_expected.to eq "path/to/template" }
+      its(:"template.path") { is_expected.to eq "path/to/template" }
     end
 
     context "with a valid input YAML with a minimal template (stylesheet)" do
@@ -136,7 +136,7 @@ RSpec.describe Metanorma::SiteManifest do
       end
 
       its(:source) { is_expected.to have_attributes(files: %w[file1 file2]) }
-      its(:'template.stylesheet') { is_expected.to eq "path/to/stylesheet" }
+      its(:"template.stylesheet") { is_expected.to eq "path/to/stylesheet" }
     end
 
     context "with a valid input YAML with a full template" do
@@ -163,8 +163,8 @@ RSpec.describe Metanorma::SiteManifest do
       end
 
       its(:source) { is_expected.to have_attributes(files: %w[file1 file2]) }
-      its(:'template.path') { is_expected.to eq "path/to/template" }
-      its(:'template.stylesheet') { is_expected.to eq "path/to/stylesheet" }
+      its(:"template.path") { is_expected.to eq "path/to/template" }
+      its(:"template.stylesheet") { is_expected.to eq "path/to/stylesheet" }
     end
 
     context "with a valid input YAML with output extensions" do
