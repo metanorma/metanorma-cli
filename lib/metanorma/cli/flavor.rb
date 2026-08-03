@@ -1,6 +1,23 @@
 module Metanorma
   module Cli
     class Command < ThorWithConfig
+      DEPENDENCY_GEMS =
+        %w(html2doc isodoc metanorma-utils mn2pdf mn-requirements isodoc-i18n
+           metanorma-core metanorma-plugin-glossarist metanorma-plugin-lutaml
+           metanorma-taste relaton-cli pubid glossarist fontist
+           plurimath expressir xmi lutaml-model emf2svg unitsml
+           vectory ogc-gml oscal suma).freeze
+
+      EXPORT_CONFIG_FLAVOR_FILES = [
+        "metanorma/*/*.adoc",
+        "isodoc/*/html/*",
+        "isodoc/*/*.xsl",
+        "isodoc/*/*.yml",
+        "isodoc/*/*.yaml",
+        "relaton/render/*.yml",
+        "relaton/render/*.yaml",
+      ].freeze
+
       private
 
       def print_doctypes_table(type)
@@ -104,18 +121,20 @@ module Metanorma
         end
       end
 
-      DEPENDENCY_GEMS =
-        %w(html2doc isodoc metanorma-utils mn2pdf mn-requirements isodoc-i18n
-           metanorma-core metanorma-plugin-glossarist metanorma-plugin-lutaml
-           metanorma-taste relaton-cli pubid glossarist fontist
-           plurimath lutaml expressir xmi lutaml-model emf2svg unitsml
-           vectory ogc-gml oscal suma).freeze
-
       def dependencies_versions
         versions = Gem.loaded_specs
         DEPENDENCY_GEMS.sort.each do |k|
-          UI.say("#{k} #{versions[k].version}")
+          spec = versions[k] || installed_gem_spec(k) or next
+          UI.say("#{k} #{spec.version}")
         end
+      end
+
+      # gems installed but not loaded by the version command itself
+      # (e.g. emf2svg) are still reported, from the installed specs
+      def installed_gem_spec(name)
+        Gem::Specification.find_by_name(name)
+      rescue Gem::LoadError
+        nil
       end
 
       def join_keys(keys)
@@ -150,16 +169,6 @@ module Metanorma
         abort if errors.any?
       end
 
-      EXPORT_CONFIG_FLAVOR_FILES = [
-        "metanorma/*/*.adoc",
-        "isodoc/*/html/*",
-        "isodoc/*/*.xsl",
-        "isodoc/*/*.yml",
-        "isodoc/*/*.yaml",
-        "relaton/render/*.yml",
-        "relaton/render/*.yaml",
-      ].freeze
-
       def export_config_flavor(type)
         base, taste, dir = export_config_flavor_prep(type)
         base or return
@@ -192,18 +201,21 @@ module Metanorma
       end
 
       def export_config_flavor_prep(type)
-        unless type
-          UI.say("Please specify a standard type")
-          return [nil, nil, nil]
-        end
-        dict = flavor_dictionary
-        unless dict[type.to_sym]
-          UI.say("Couldn't load #{type}, please provide a valid type!")
-          return [nil, nil, nil]
-        end
+        dict = type && flavor_dictionary
+        (dict && dict[type.to_sym]) or
+          return export_config_flavor_invalid(type)
         FileUtils.mkdir_p("export-config-#{type}")
         base = dict[type.to_sym][:base_flavor]
         [base || type, base ? type : nil, "export-config-#{type}"]
+      end
+
+      def export_config_flavor_invalid(type)
+        if type
+          UI.say("Couldn't load #{type}, please provide a valid type!")
+        else
+          UI.say("Please specify a standard type")
+        end
+        [nil, nil, nil]
       end
 
       def export_config_flavor_gem(base)
@@ -221,7 +233,7 @@ module Metanorma
           UI.say("No matching configuration files found in metanorma-#{base}")
         else
           UI.say("Exported #{copied_files.size} configuration file(s) " \
-            "from metanorma-#{base} to #{dir}")
+                 "from metanorma-#{base} to #{dir}")
         end
       end
 
@@ -249,11 +261,9 @@ module Metanorma
       end
 
       def export_config_taste_copy_files(source_path, gem_data_path, dest_path)
-        copied_files = []
         pattern = source_path.join("**", "*")
-        Pathname.glob(pattern).each do |source_file|
-          copied_files << export_config_copy_file(source_file, gem_data_path,
-                                                  dest_path)
+        copied_files = Pathname.glob(pattern).map do |source_file|
+          export_config_copy_file(source_file, gem_data_path, dest_path)
         end
         copied_files.compact
       end
@@ -263,7 +273,7 @@ module Metanorma
           UI.say("No files found in metanorma-taste/taste/#{taste}")
         else
           UI.say("Exported #{copied_files.size} taste configuration file(s) " \
-            "from metanorma-taste to #{dest_path}")
+                 "from metanorma-taste to #{dest_path}")
         end
       end
     end
