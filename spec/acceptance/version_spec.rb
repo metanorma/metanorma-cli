@@ -30,10 +30,10 @@ RSpec.describe "Metanorma" do
       end
       # rubocop:enable RSpec/ExampleLength, RSpec/MultipleExpectations
 
-      it "reports a version for every listed dependency gem" do
+      it "reports a version for every installed dependency gem" do
         output = capture_stdout { Metanorma::Cli.start(%w(version)) }
-        gems = Metanorma::Cli::Command::DEPENDENCY_GEMS
-        missing = gems.reject { |g| output.match?(/^#{Regexp.escape(g)} \d/) }
+        missing = installed_dependency_gems
+          .reject { |g| output.match?(/^#{Regexp.escape(g)} \d/) }
         expect(missing).to be_empty
       end
 
@@ -44,5 +44,20 @@ RSpec.describe "Metanorma" do
         expect(output).not_to include("is not present")
       end
     end
+  end
+
+  # only gems actually present can be expected in the listing: a fresh
+  # resolve may legitimately omit some (e.g. emf2svg platform gems)
+  def installed_dependency_gems
+    Metanorma::Cli::Command::DEPENDENCY_GEMS.select do |g|
+      Gem.loaded_specs.key?(g) || gem_installed?(g)
+    end
+  end
+
+  def gem_installed?(name)
+    Gem::Specification.find_by_name(name)
+    true
+  rescue Gem::LoadError
+    false
   end
 end
