@@ -1,0 +1,115 @@
+# Monthly grammar census over the samples fleet (metanorma-iso#513).
+# Compiles every document in every samples repo's full metanorma.yml manifest
+# to Semantic XML on the released metanorma stack, harvests the jing grammar
+# errors, and lodges the dated report as a new issue each month.
+name: grammar-census
+
+on:
+  schedule:
+    - cron: "0 2 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  census:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { repo: mn-samples-iso, flavor: iso }
+          - { repo: mn-samples-cc, flavor: cc }
+          - { repo: mn-samples-iec, flavor: iec }
+          - { repo: mn-samples-iec-private, flavor: iec, private: true }
+          - { repo: mn-samples-ogc, flavor: ogc }
+          - { repo: mn-samples-iho, flavor: iho }
+          - { repo: mn-samples-ietf, flavor: ietf }
+          - { repo: mn-samples-bipm, flavor: bipm }
+          # jcgm has no gem of its own: its documents declare
+          # mn-document-class: bipm and compile under the bipm flavor
+          - { repo: mn-samples-jcgm, flavor: bipm }
+          # metanorma-bsi is distributed via GitHub Packages, not rubygems
+          - { repo: mn-samples-bsi, flavor: bsi, ghpkg: true }
+          - { repo: mn-samples-itu, flavor: itu }
+          - { repo: mn-samples-ieee, flavor: ieee }
+          - { repo: mn-samples-ieee-private, flavor: ieee, private: true }
+          - { repo: mn-samples-nist, flavor: nist }
+          - { repo: mn-samples-ribose, flavor: ribose }
+          - { repo: mn-samples-pdfa, flavor: pdfa }
+          - { repo: mn-samples-oiml, flavor: oiml }
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/checkout@v4
+        with:
+          repository: metanorma/${{ matrix.repo }}
+          path: samples
+          token: ${{ matrix.private && secrets.METANORMA_CI_PAT_TOKEN || github.token }}
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+
+      - name: Install census environment (released stack)
+        env:
+          BUNDLE_RUBYGEMS__PKG__GITHUB__COM: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
+        run: |
+          mkdir census-env
+          {
+            echo 'source "https://rubygems.org"'
+            echo 'gem "metanorma-cli"'
+            echo 'gem "metanorma-nist"'
+            echo 'gem "benchmark"'
+            echo 'gem "ostruct"'
+            if [ "${{ matrix.ghpkg }}" = "true" ]; then
+              echo 'source "https://rubygems.pkg.github.com/metanorma" do'
+              echo '  gem "metanorma-bsi"'
+              echo 'end'
+            fi
+          } > census-env/Gemfile
+          BUNDLE_GEMFILE="$PWD/census-env/Gemfile" bundle install
+
+      - name: Run census
+        run: >
+          BUNDLE_GEMFILE="$PWD/census-env/Gemfile"
+          ruby .github/scripts/grammar_census.rb
+          samples ${{ matrix.flavor }} fragments/${{ matrix.repo }}.yaml
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: census-${{ matrix.repo }}
+          path: fragments/
+
+  report:
+    needs: census
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: census-*
+          merge-multiple: true
+          path: fragments
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+
+      - name: Build report
+        run: ruby .github/scripts/grammar_census_report.rb fragments report.md
+
+      - name: Lodge report issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >
+          gh issue create --repo "${{ github.repository }}"
+          --title "Grammar census $(date +%Y-%m)"
+          --body-file report.md
