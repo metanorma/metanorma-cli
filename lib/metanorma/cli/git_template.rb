@@ -74,6 +74,9 @@ module Metanorma
       end
 
       def clone_git_template(repo)
+        # git gem >= 5 spawns with a chdir into the target directory, which
+        # must already exist; older versions created it implicitly
+        templates_path.mkpath
         clone = Git.clone(repo, name, path: templates_path)
         template_path unless clone.nil?
       end

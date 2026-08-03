@@ -124,7 +124,14 @@ module Metanorma
       def dependencies_versions
         versions = Gem.loaded_specs
         DEPENDENCY_GEMS.sort.each do |k|
-          spec = versions[k] or next
+          # gems installed but not loaded by the version command itself
+          # (e.g. emf2svg) are still reported, from the installed specs
+          spec = versions[k] || begin
+            Gem::Specification.find_by_name(k)
+          rescue Gem::LoadError
+            nil
+          end
+          spec or next
           UI.say("#{k} #{spec.version}")
         end
       end
