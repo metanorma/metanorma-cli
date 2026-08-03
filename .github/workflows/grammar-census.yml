@@ -9,6 +9,9 @@ on:
     - cron: "0 2 1 * *"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   census:
     strategy:
@@ -84,6 +87,9 @@ jobs:
     needs: census
     if: always()
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
     steps:
       - uses: actions/checkout@v4
 
