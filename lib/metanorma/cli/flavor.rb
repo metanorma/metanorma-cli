@@ -124,16 +124,17 @@ module Metanorma
       def dependencies_versions
         versions = Gem.loaded_specs
         DEPENDENCY_GEMS.sort.each do |k|
-          # gems installed but not loaded by the version command itself
-          # (e.g. emf2svg) are still reported, from the installed specs
-          spec = versions[k] || begin
-            Gem::Specification.find_by_name(k)
-          rescue Gem::LoadError
-            nil
-          end
-          spec or next
+          spec = versions[k] || installed_gem_spec(k) or next
           UI.say("#{k} #{spec.version}")
         end
+      end
+
+      # gems installed but not loaded by the version command itself
+      # (e.g. emf2svg) are still reported, from the installed specs
+      def installed_gem_spec(name)
+        Gem::Specification.find_by_name(name)
+      rescue Gem::LoadError
+        nil
       end
 
       def join_keys(keys)
