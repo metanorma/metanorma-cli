@@ -1,0 +1,7 @@
+# yaml-language-server: $schema=https://www.expresslang.org/schemas/manifest/v1/schema_manifest.yaml
+---
+schemas:
+  doohickey_arm:
+    path: ../../schemas/modules/doohickey/arm.exp
+  doohickey_mim:
+    path: ../../schemas/modules/doohickey/mim.exp

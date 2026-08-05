@@ -1,0 +1,9 @@
+---
+metanorma:
+  source:
+    files:
+      - collection.yml
+
+  collection:
+    organization: "Dummy Standards Consortium, SC0/WG0"
+    name: "Dummy STEP-style collection (suma integration fixture, suma#107)"

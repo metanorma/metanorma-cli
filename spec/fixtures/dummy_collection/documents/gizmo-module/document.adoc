@@ -1,0 +1,31 @@
+= Dummy library -- Part 100002: Application module: Gizmo
+:docnumber: 100002
+:partnumber: 100002
+:edition: 1
+:copyright-year: 2026
+:language: en
+:title-intro-en: Dummy library
+:title-main-en: Gizmo
+:title-part-en: Application module
+:doctype: technical-specification
+:docstage: 60
+:docsubstage: 60
+:technical-committee-number: 0
+:technical-committee: Dummy synthetic committee
+:mn-document-class: iso
+:mn-output-extensions: xml,html,presentation
+:local-cache-only:
+:lutaml-express-index: schemas; schemas.yaml;
+
+== Scope
+
+This synthetic application module exercises the ARM/MIM schema pipeline with
+invented content. It contains no ISO 10303 material.
+
+include::../../templates/modules/schemas.adoc[]
+
+[appendix]
+== EXPRESS-G diagram
+
+.Synthetic EXPRESS-G-style placeholder diagram
+image::../../schemas/modules/gizmo/armexpg1.svg[]

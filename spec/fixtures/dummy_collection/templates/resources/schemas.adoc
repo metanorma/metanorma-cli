@@ -1,0 +1,16 @@
+[[schemas]]
+== Schemas
+
+[lutaml_express_liquid,schemas,context]
+----
+{% for schema in context.schemas %}
+
+=== {{ schema.id }}
+
+The schema {{ schema.id }} declares the following entities:
+
+{% for entity in schema.entities %}
+* {{ entity.id }}
+{% endfor %}
+{% endfor %}
+----

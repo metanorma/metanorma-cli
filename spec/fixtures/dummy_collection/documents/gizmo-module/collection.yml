@@ -1,0 +1,41 @@
+---
+directives:
+  - documents-inline
+bibdata:
+  title:
+    - language: en
+      content: "Dummy library -- Part 100002: Application module: Gizmo"
+  type: collection
+  docid:
+    type: iso
+    id: 100002
+  edition: 1
+  copyright:
+    owner:
+      name: Dummy Standards Consortium
+      abbreviation: DSC
+    from: 2026
+manifest:
+  level: collection
+  title: Dummy Collection
+  docref:
+    - level: document
+      title: Document
+      docref:
+        - fileref: document.adoc
+          identifier: dummy100002
+    - level: attachments
+      title: Attachments
+      docref:
+        - fileref: ../../plain_schemas/modules/gizmo/arm.exp
+          identifier: gizmo_arm.exp
+          attachment: true
+        - fileref: ../../schema_docs/gizmo_arm/doc_gizmo_arm.html
+          identifier: gizmo_arm.html
+          attachment: true
+        - fileref: ../../plain_schemas/modules/gizmo/mim.exp
+          identifier: gizmo_mim.exp
+          attachment: true
+        - fileref: ../../schema_docs/gizmo_mim/doc_gizmo_mim.html
+          identifier: gizmo_mim.html
+          attachment: true

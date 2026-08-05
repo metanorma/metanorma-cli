@@ -1,0 +1,31 @@
+(*
+   Synthetic MIM schema for the suma dummy-collection fixture.
+   Invented content; no ISO 10303 material.
+*)
+SCHEMA gizmo_mim;
+
+ENTITY gizmo_representation;
+  name      : STRING;
+  magnitude : REAL;
+END_ENTITY;
+
+ENTITY gizmo_assignment;
+  assigned : gizmo_representation;
+  role     : STRING;
+END_ENTITY;
+
+END_SCHEMA;
+
+(*"gizmo_mim"
+Synthetic module interpreted model mapping the *gizmo* application concepts to
+representation entities. It contains no ISO 10303 material.
+*)
+
+(*"gizmo_mim.gizmo_representation"
+The interpreted representation of a *gizmo*, carrying a name and a numeric
+magnitude.
+*)
+
+(*"gizmo_mim.gizmo_assignment"
+Associates a *gizmo_representation* with a role.
+*)

@@ -1,0 +1,24 @@
+(*
+   Synthetic ARM schema for the suma dummy-collection fixture.
+   Invented content; no ISO 10303 material.
+*)
+SCHEMA doohickey_arm;
+
+ENTITY doohickey;
+  serial_number : STRING;
+  mass          : REAL;
+WHERE
+  positive_mass : mass > 0.0;
+END_ENTITY;
+
+END_SCHEMA;
+
+(*"doohickey_arm"
+Synthetic application resource model for the *doohickey* concept. It contains
+no ISO 10303 material.
+*)
+
+(*"doohickey_arm.doohickey"
+A synthetic component identified by a serial number and characterised by a
+strictly positive mass.
+*)

@@ -1,0 +1,56 @@
+(*
+   Synthetic ARM schema for the suma dummy-collection fixture.
+   Invented content; no ISO 10303 material.
+*)
+SCHEMA gizmo_arm;
+
+TYPE gizmo_state = ENUMERATION OF
+  (idle,
+   spinning,
+   stopped);
+END_TYPE;
+
+ENTITY gizmo;
+  designation : STRING;
+  state       : gizmo_state;
+END_ENTITY;
+
+ENTITY calibrated_gizmo
+  SUBTYPE OF (gizmo);
+  calibration_factor : REAL;
+WHERE
+  sane_factor : calibration_factor > 0.0;
+END_ENTITY;
+
+END_SCHEMA;
+
+(*"gizmo_arm"
+Synthetic application resource model exercising entity, subtype, enumeration,
+and EXPRESS-G annotations in the suma dummy collection. It contains no
+ISO 10303 material.
+*)
+
+(*"gizmo_arm.gizmo_state"
+The operating state of a *gizmo*: `idle`, `spinning`, or `stopped`.
+*)
+
+(*"gizmo_arm.gizmo"
+A synthetic device identified by a designation and characterised by its
+operating *gizmo_state*.
+*)
+
+(*"gizmo_arm.calibrated_gizmo"
+A *gizmo* that additionally records a calibration factor, constrained to be
+strictly positive.
+*)
+
+(*"gizmo_arm.__expressg"
+[[gizmo_arm_expg1]]
+[.svgmap]
+====
+image::armexpg1.svg[]
+
+* <<express:gizmo>>; 1
+* <<express:calibrated_gizmo>>; 2
+====
+*)

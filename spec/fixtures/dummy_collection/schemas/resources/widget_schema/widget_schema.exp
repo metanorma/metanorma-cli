@@ -1,0 +1,44 @@
+(*
+   Synthetic test schema for the suma dummy-collection fixture.
+   Invented content; no ISO 10303 material.
+*)
+SCHEMA widget_schema;
+
+REFERENCE FROM gadget_schema
+  (gadget);
+
+TYPE widget_identifier = STRING;
+END_TYPE;
+
+ENTITY widget;
+  id          : widget_identifier;
+  components  : LIST [1:?] OF gadget;
+DERIVE
+  component_count : INTEGER := SIZEOF(components);
+END_ENTITY;
+
+ENTITY labelled_widget
+  SUBTYPE OF (widget);
+  label : STRING;
+END_ENTITY;
+
+END_SCHEMA;
+
+(*"widget_schema"
+Synthetic resource schema demonstrating type definitions, aggregation, a
+derived attribute, and a cross-schema reference to *gadget_schema*. It contains
+no ISO 10303 material.
+*)
+
+(*"widget_schema.widget_identifier"
+A string-valued identifier for a *widget*.
+*)
+
+(*"widget_schema.widget"
+A synthetic assembly composed of one or more *gadget* components, with a derived
+count of its components.
+*)
+
+(*"widget_schema.labelled_widget"
+A *widget* that additionally carries a human-readable label.
+*)

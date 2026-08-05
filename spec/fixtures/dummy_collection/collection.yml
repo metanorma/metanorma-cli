@@ -1,0 +1,35 @@
+---
+directives:
+  - documents-inline
+  - flavor: iso
+coverpage: cover-bibdata.html
+bibdata:
+  title:
+    - type: main
+      language: en
+      content: Dummy STEP-style Resource and Module Library
+  type: standard
+  edition: 1
+  docid:
+    - type: DUMMY
+      id: DUMMY-2026
+  date:
+    - type: published
+      value: 2026
+  copyright:
+    owner:
+      name: Dummy Standards Consortium
+      abbreviation: DSC
+    from: 2026
+format:
+  - html
+  - xml
+  - presentation
+manifest:
+  level: collection
+  title: Dummy Resource and Module Library
+  sectionsplit: true
+  docref:
+    - file: documents/widget-resource/collection.yml
+    - file: documents/gizmo-module/collection.yml
+    - file: documents/doohickey-module/collection.yml
