@@ -19,6 +19,14 @@ jobs:
       matrix:
         include:
           - { repo: mn-samples-iso, flavor: iso }
+          # mn-samples-iso-10303 is collection-shaped (metanorma.yml lists
+          # collection.yml, not .adoc files). The current grammar_census.rb
+          # only compiles .adoc files listed in `source.files`, so this row
+          # produces an empty census fragment today; grammar_census.rb needs
+          # extending to recurse collection.yml → docref/fileref → .adoc for
+          # this row to contribute real coverage. Tracked as follow-up for
+          # the grammar-work sibling.
+          - { repo: mn-samples-iso-10303, flavor: iso }
           - { repo: mn-samples-cc, flavor: cc }
           - { repo: mn-samples-iec, flavor: iec }
           - { repo: mn-samples-iec-private, flavor: iec, private: true }
