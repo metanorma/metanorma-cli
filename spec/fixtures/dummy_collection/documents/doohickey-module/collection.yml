@@ -1,0 +1,41 @@
+---
+directives:
+  - documents-inline
+bibdata:
+  title:
+    - language: en
+      content: "Dummy library -- Part 100003: Application module: Doohickey"
+  type: collection
+  docid:
+    type: iso
+    id: 100003
+  edition: 1
+  copyright:
+    owner:
+      name: Dummy Standards Consortium
+      abbreviation: DSC
+    from: 2026
+manifest:
+  level: collection
+  title: Dummy Collection
+  docref:
+    - level: document
+      title: Document
+      docref:
+        - fileref: document.adoc
+          identifier: dummy100003
+    - level: attachments
+      title: Attachments
+      docref:
+        - fileref: ../../plain_schemas/modules/doohickey/arm.exp
+          identifier: doohickey_arm.exp
+          attachment: true
+        - fileref: ../../schema_docs/doohickey_arm/doc_doohickey_arm.html
+          identifier: doohickey_arm.html
+          attachment: true
+        - fileref: ../../plain_schemas/modules/doohickey/mim.exp
+          identifier: doohickey_mim.exp
+          attachment: true
+        - fileref: ../../schema_docs/doohickey_mim/doc_doohickey_mim.html
+          identifier: doohickey_mim.html
+          attachment: true

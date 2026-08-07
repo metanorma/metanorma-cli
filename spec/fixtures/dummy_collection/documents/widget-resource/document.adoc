@@ -1,0 +1,30 @@
+= Dummy library -- Part 100001: Integrated dummy resource: Widgets and gadgets
+:docnumber: 100001
+:partnumber: 100001
+:edition: 1
+:copyright-year: 2026
+:language: en
+:title-intro-en: Dummy library
+:title-main-en: Widgets and gadgets
+:title-part-en: Integrated dummy resource
+:doctype: international-standard
+:docstage: 60
+:docsubstage: 60
+:technical-committee-number: 0
+:technical-committee: Dummy synthetic committee
+:mn-document-class: iso
+:mn-output-extensions: xml,html,presentation
+:local-cache-only:
+:lutaml-express-index: schemas; ../../schemas.yml;
+
+== Scope
+
+This synthetic resource document exercises the EXPRESS schema rendering
+pipeline with invented content. It contains no ISO 10303 material.
+
+include::../../templates/resources/schemas.adoc[]
+
+[appendix]
+== Schema listings
+
+Listings of the synthetic schemas are attached to this collection.

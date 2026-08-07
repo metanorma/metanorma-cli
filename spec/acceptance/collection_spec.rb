@@ -1,4 +1,20 @@
+# frozen_string_literal: true
+
 RESULTS = "spec/results".freeze
+
+# Fixtures required by collection1.{yml,xml} (filerefs + cover + site config).
+# Listed explicitly so the dependency surface is visible; was previously
+# Dir.glob("spec/fixtures/*") (greedy, copied everything).
+COLLECTION_FIXTURES = %w[
+  collection1.yml
+  collection1.xml
+  collection_cover.html
+  metanorma.yml
+  dummy.xml
+  rice-amd.final.xml
+  rice-en.final.xml
+  rice1-en.final.xml
+].freeze
 
 RSpec.describe "Collection" do
   describe "collection" do
@@ -14,10 +30,7 @@ RSpec.describe "Collection" do
   end
 
   around(:each) do |example|
-    Dir.mktmpdir("rspec-") do |temp_directory|
-      FileUtils.cp(Dir.glob("spec/fixtures/*"), temp_directory)
-      Dir.chdir(temp_directory) { example.run }
-    end
+    with_fixture_in_tmpdir(*COLLECTION_FIXTURES) { example.run }
   end
 
   def run_metanorma_collection(filename)
@@ -39,6 +52,6 @@ RSpec.describe "Collection" do
   end
 
   def expected_files
-    %w(index.html rice-amd.final.html rice-en.final.html rice1-en.final.html)
+    %w[index.html rice-amd.final.html rice-en.final.html rice1-en.final.html]
   end
 end
