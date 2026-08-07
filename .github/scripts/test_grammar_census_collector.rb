@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 # frozen_string_literal: true
 
 # Unit tests for the collection-manifest recursion in grammar_census.rb.
@@ -79,7 +78,8 @@ class TestCollector < Minitest::Test
           collection_with_files([{ "fileref" => "document.adoc",
                                    "identifier" => "g1" }]))
     write("collection.yml",
-          collection_with_files([{ "file" => "documents/gizmo/collection.yml" }]))
+          collection_with_files([{ "file" =>
+                                     "documents/gizmo/collection.yml" }]))
     assert_equal %w[documents/gizmo/document.adoc],
                  discover(%w[collection.yml])
   end
@@ -109,7 +109,8 @@ class TestCollector < Minitest::Test
             ],
           } }.to_yaml)
     write("collection.yml",
-          collection_with_files([{ "file" => "documents/gizmo/collection.yml" }]))
+          collection_with_files([{ "file" =>
+                                     "documents/gizmo/collection.yml" }]))
     assert_equal [], discover(%w[collection.yml])
   end
 

@@ -23,7 +23,6 @@
 
 require "yaml"
 require "fileutils"
-require "set"
 
 # Source-file discovery for the census. Split into a module so unit tests
 # can require this file and exercise discovery without invoking the
@@ -60,26 +59,27 @@ module Collector
     abs = File.expand_path(collection_rel, repo_root)
     return unless File.exist?(abs)
     return if visited.include?(abs)
-    visited << abs
 
+    visited << abs
     data = YAML.safe_load_file(abs)
-    docrefs = data.is_a?(Hash) && data["manifest"] &&
-              data["manifest"]["docref"]
+    docrefs = data&.dig("manifest", "docref")
     return unless docrefs.is_a?(Array)
 
     base = File.dirname(collection_rel)
-    docrefs.each do |ref|
-      next unless ref.is_a?(Hash)
+    docrefs.each { |ref| process_ref(ref, base, repo_root, visited, adocs) }
+  end
 
-      if ref["file"]
-        discover_entry(repo_root, ref["file"], base, visited, adocs)
-      elsif ref["fileref"]
-        leaf = normalize_rel(base, ref["fileref"])
-        adocs << leaf if leaf && leaf.end_with?(".adoc")
-      end
+  # Process one manifest.docref entry: descend if it has a sub-collection
+  # `file`, add leaf if it has a `.adoc` `fileref`, recurse if it nests.
+  def process_ref(ref, base, repo_root, visited, adocs)
+    return unless ref.is_a?(Hash)
 
-      walk_nested_docref(ref["docref"], base, repo_root, visited, adocs) if
-        ref["docref"].is_a?(Array)
+    discover_entry(repo_root, ref["file"], base, visited, adocs) if ref["file"]
+    add_adoc_if_leaf(ref["fileref"], base, adocs)
+    return unless ref["docref"].is_a?(Array)
+
+    ref["docref"].each do |inner|
+      process_nested(inner, base, repo_root, visited, adocs)
     end
   end
 
@@ -87,17 +87,30 @@ module Collector
   # (e.g. level: document groupings inside a top-level docref entry).
   def walk_nested_docref(docrefs, base, repo_root, visited, adocs)
     docrefs.each do |inner|
-      next unless inner.is_a?(Hash)
-
-      if inner["fileref"]
-        leaf = normalize_rel(base, inner["fileref"])
-        adocs << leaf if leaf && leaf.end_with?(".adoc")
-      elsif inner["file"]
-        discover_entry(repo_root, inner["file"], base, visited, adocs)
-      end
-      walk_nested_docref(inner["docref"], base, repo_root, visited, adocs) if
-        inner["docref"].is_a?(Array)
+      process_nested(inner, base, repo_root, visited, adocs)
     end
+  end
+
+  def process_nested(inner, base, repo_root, visited, adocs)
+    return unless inner.is_a?(Hash)
+
+    add_adoc_if_leaf(inner["fileref"], base, adocs)
+    if inner["file"]
+      discover_entry(repo_root, inner["file"], base, visited, adocs)
+    end
+    return unless inner["docref"].is_a?(Array)
+
+    inner["docref"].each do |i|
+      process_nested(i, base, repo_root, visited, adocs)
+    end
+  end
+
+  # If the given fileref resolves to a `.adoc` under base, add it to adocs.
+  def add_adoc_if_leaf(fileref, base, adocs)
+    return unless fileref
+
+    leaf = normalize_rel(base, fileref)
+    adocs << leaf if leaf&.end_with?(".adoc")
   end
 
   # Join `base` (a relative dir from repo_root) with `rel` (a path that may
