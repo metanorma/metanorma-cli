@@ -1,0 +1,7 @@
+# yaml-language-server: $schema=https://www.expresslang.org/schemas/manifest/v1/schema_manifest.yaml
+---
+schemas:
+  gadget_schema:
+    path: ../../schemas/resources/gadget_schema/gadget_schema.exp
+  widget_schema:
+    path: ../../schemas/resources/widget_schema/widget_schema.exp

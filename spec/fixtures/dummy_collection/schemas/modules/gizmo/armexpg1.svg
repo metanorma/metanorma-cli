@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="120" viewBox="0 0 240 120">
+  <!-- Synthetic EXPRESS-G-style placeholder diagram for the dummy fixture. -->
+  <a href="1"><rect x="10" y="10" width="100" height="40" fill="none" stroke="black"/></a>
+  <text x="20" y="35" font-size="12">gizmo</text>
+  <a href="2"><rect x="130" y="70" width="100" height="40" fill="none" stroke="black"/></a>
+  <text x="140" y="95" font-size="12">calibrated_gizmo</text>
+  <line x1="60" y1="50" x2="180" y2="70" stroke="black"/>
+</svg>

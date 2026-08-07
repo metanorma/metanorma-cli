@@ -1,0 +1,18 @@
+# suma build outputs — regenerated on every fixture build
+_site/
+schemas.yml
+plain_schemas/
+schema_docs/
+collection-output.yaml
+site/
+*.err.html
+*.presentation.xml
+*.log.txt
+document.xml
+document.*.xml
+document.xml.html.yaml
+*_index.html
+tmp_document*
+documents/*/cover.html
+collection.xml
+collection.presentation.xml

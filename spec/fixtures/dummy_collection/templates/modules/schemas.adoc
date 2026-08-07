@@ -1,0 +1,16 @@
+[[arm_mim_schemas]]
+== ARM and MIM schemas
+
+[lutaml_express_liquid,schemas,context]
+----
+{% for schema in context.schemas %}
+
+=== {{ schema.id }}
+
+Entities declared by {{ schema.id }}:
+
+{% for entity in schema.entities %}
+* {{ entity.id }}
+{% endfor %}
+{% endfor %}
+----

@@ -1,0 +1,41 @@
+---
+directives:
+  - documents-inline
+bibdata:
+  title:
+    - language: en
+      content: "Dummy library -- Part 100001: Integrated dummy resource: Widgets and gadgets"
+  type: collection
+  docid:
+    type: iso
+    id: 100001
+  edition: 1
+  copyright:
+    owner:
+      name: Dummy Standards Consortium
+      abbreviation: DSC
+    from: 2026
+manifest:
+  level: collection
+  title: Dummy Collection
+  docref:
+    - level: document
+      title: Document
+      docref:
+        - fileref: document.adoc
+          identifier: dummy100001
+    - level: attachments
+      title: Attachments
+      docref:
+        - fileref: ../../plain_schemas/resources/widget_schema/widget_schema.exp
+          identifier: widget_schema.exp
+          attachment: true
+        - fileref: ../../schema_docs/widget_schema/doc_widget_schema.html
+          identifier: widget_schema.html
+          attachment: true
+        - fileref: ../../plain_schemas/resources/gadget_schema/gadget_schema.exp
+          identifier: gadget_schema.exp
+          attachment: true
+        - fileref: ../../schema_docs/gadget_schema/doc_gadget_schema.html
+          identifier: gadget_schema.html
+          attachment: true

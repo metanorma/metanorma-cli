@@ -1,0 +1,42 @@
+(*
+   Synthetic test schema for the suma dummy-collection fixture.
+   Invented content; no ISO 10303 material.
+*)
+SCHEMA gadget_schema;
+
+TYPE gadget_name = STRING;
+END_TYPE;
+
+TYPE gadget_grade = ENUMERATION OF
+  (standard,
+   premium,
+   experimental);
+END_TYPE;
+
+ENTITY gadget;
+  name    : gadget_name;
+  grade   : gadget_grade;
+  weight  : REAL;
+WHERE
+  positive_weight : weight > 0.0;
+END_ENTITY;
+
+END_SCHEMA;
+
+(*"gadget_schema"
+Synthetic resource schema defining the *gadget* component and its supporting
+types. It contains no ISO 10303 material.
+*)
+
+(*"gadget_schema.gadget_name"
+A string-valued name for a *gadget*.
+*)
+
+(*"gadget_schema.gadget_grade"
+The quality grade of a *gadget*: `standard`, `premium`, or `experimental`.
+*)
+
+(*"gadget_schema.gadget"
+A synthetic component characterised by a name, a *gadget_grade*, and a strictly
+positive weight.
+*)

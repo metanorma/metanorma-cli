@@ -1,0 +1,25 @@
+= Dummy library -- Part 100003: Application module: Doohickey
+:docnumber: 100003
+:partnumber: 100003
+:edition: 1
+:copyright-year: 2026
+:language: en
+:title-intro-en: Dummy library
+:title-main-en: Doohickey
+:title-part-en: Application module
+:doctype: technical-specification
+:docstage: 60
+:docsubstage: 60
+:technical-committee-number: 0
+:technical-committee: Dummy synthetic committee
+:mn-document-class: iso
+:mn-output-extensions: xml,html,presentation
+:local-cache-only:
+:lutaml-express-index: schemas; schemas.yaml;
+
+== Scope
+
+This second synthetic application module exists so the fixture collection
+sequences more than one module document. It contains no ISO 10303 material.
+
+include::../../templates/modules/schemas.adoc[]

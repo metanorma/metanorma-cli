@@ -1,0 +1,5 @@
+---
+schema: doohickey
+versions:
+  - version: 2
+    description: Synthetic change note for fixture testing; no real change history.

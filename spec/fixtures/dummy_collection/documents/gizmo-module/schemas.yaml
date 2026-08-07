@@ -1,0 +1,7 @@
+# yaml-language-server: $schema=https://www.expresslang.org/schemas/manifest/v1/schema_manifest.yaml
+---
+schemas:
+  gizmo_arm:
+    path: ../../schemas/modules/gizmo/arm.exp
+  gizmo_mim:
+    path: ../../schemas/modules/gizmo/mim.exp
