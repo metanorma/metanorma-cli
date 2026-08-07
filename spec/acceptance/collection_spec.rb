@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RESULTS = "spec/results".freeze
+RESULTS = "spec/results"
 
 # Fixtures required by collection1.{yml,xml} (filerefs + cover + site config).
 # Listed explicitly so the dependency surface is visible; was previously
@@ -17,6 +17,10 @@ COLLECTION_FIXTURES = %w[
 ].freeze
 
 RSpec.describe "Collection" do
+  around do |example|
+    with_fixture_in_tmpdir(*COLLECTION_FIXTURES) { example.run }
+  end
+
   describe "collection" do
     it "render HTML from YAML" do
       run_metanorma_collection("collection1.yml")
@@ -27,10 +31,6 @@ RSpec.describe "Collection" do
       run_metanorma_collection("collection1.xml")
       expect_generated_files_to_match_expectations
     end
-  end
-
-  around(:each) do |example|
-    with_fixture_in_tmpdir(*COLLECTION_FIXTURES) { example.run }
   end
 
   def run_metanorma_collection(filename)
@@ -47,7 +47,7 @@ RSpec.describe "Collection" do
   def expect_generated_files_to_match_expectations
     expected_files.each do |file|
       warn File.join(RESULTS, file)
-      expect(File.exist?(File.join(RESULTS, file))).to be_truthy
+      expect(File).to exist(File.join(RESULTS, file))
     end
   end
 
