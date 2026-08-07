@@ -31,7 +31,6 @@ RSpec.configure do |config|
   config.example_status_persistence_file_path = ".rspec_status"
   config.include Metanorma::ConsoleHelper
   config.include Metanorma::Helper
-  config.include Metanorma::FixtureTmpdir
 
   # Disable RSpec exposing methods globally on `Module` and `main`
   config.disable_monkey_patching!
