@@ -19,6 +19,9 @@ jobs:
       matrix:
         include:
           - { repo: mn-samples-iso, flavor: iso }
+          # collection-shaped: grammar_census.rb recurses collection.yml →
+          # docref/fileref → .adoc (ci#446 + suma#107 arc)
+          - { repo: mn-samples-iso-10303, flavor: iso }
           - { repo: mn-samples-cc, flavor: cc }
           - { repo: mn-samples-iec, flavor: iec }
           - { repo: mn-samples-iec-private, flavor: iec, private: true }
