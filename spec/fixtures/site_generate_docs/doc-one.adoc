@@ -1,0 +1,8 @@
+= Standalone Document One
+:docnumber: 1
+:nodoc:
+:novalid:
+
+Standalone document for the site-generate no-manifest specs. These specs run
+`site generate` with no manifest, which recursively globs `**/*.adoc`; keeping
+them off `spec/fixtures` avoids sweeping in the synced `dummy_collection`.
