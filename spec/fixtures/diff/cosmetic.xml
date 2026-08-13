@@ -1,0 +1,9 @@
+<iso-standard xmlns="https://www.metanorma.org/ns/iso">
+  <sections>
+    <clause type="scope" id="scope">
+      <title>Scope</title>
+      <p id="p1">This document   specifies the widget
+interchange format.</p>
+    </clause>
+  </sections>
+</iso-standard>
