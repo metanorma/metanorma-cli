@@ -13,6 +13,14 @@ module Metanorma
         EXIT_DIFFERENT = 1
         EXIT_ERROR = 2
 
+        # the canon LIBRARY does not auto-detect input format (its CLI
+        # does, from extensions) — detect here, overridable via
+        # --input-format
+        FORMAT_BY_EXT = {
+          ".xml" => :xml, ".html" => :html, ".htm" => :html,
+          ".json" => :json, ".yaml" => :yaml, ".yml" => :yaml
+        }.freeze
+
         def initialize(file1, file2, options = {})
           @file1 = file1
           @file2 = file2
@@ -25,10 +33,11 @@ module Metanorma
           return EXIT_ERROR unless files_exist?
 
           require "canon"
+          format = input_format
+          return reject_format unless format
+
           configure_canon
-          result = compare_documents
-          out.puts render(result)
-          result.equivalent? ? EXIT_EQUIVALENT : EXIT_DIFFERENT
+          report(compare_documents(format), out)
         rescue StandardError => e
           warn "metanorma diff: #{e.class}: #{e.message}"
           EXIT_ERROR
@@ -54,8 +63,28 @@ module Metanorma
 
         # rubocop:disable Naming/PredicateMethod -- verbose: true makes
         # equivalent? return a full ComparisonResult, not a boolean
-        def compare_documents
-          opts = { verbose: true }
+        def report(result, out)
+          out.puts render(result)
+          result.equivalent? ? EXIT_EQUIVALENT : EXIT_DIFFERENT
+        end
+
+        def reject_format
+          warn "metanorma diff: unsupported input format for " \
+               "#{File.extname(@file1)} — semantic diff handles " \
+               "#{FORMAT_BY_EXT.keys.join(', ')} (or pass --input-format)"
+          EXIT_ERROR
+        end
+
+        def input_format
+          if (f = @options[:input_format])
+            return f.to_sym
+          end
+
+          FORMAT_BY_EXT[File.extname(@file1).downcase]
+        end
+
+        def compare_documents(format)
+          opts = { verbose: true, format: format }
           if (mp = @options[:match_profile])
             opts[:match_profile] = mp.to_sym
           end

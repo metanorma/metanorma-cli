@@ -168,6 +168,9 @@ module Metanorma
                              desc: "Context lines around each difference"
       option :color, type: :boolean, default: true,
                      desc: "Colorise the text report"
+      option :input_format, type: :string,
+                            desc: "Input format override: xml|html|json|yaml " \
+                                  "(default: by file extension)"
 
       def diff(file1, file2)
         status = Commands::Diff.new(file1, file2, options).run

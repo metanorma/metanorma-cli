@@ -36,6 +36,15 @@ RSpec.describe Metanorma::Cli::Commands::Diff do
     expect(report["differences"].first).to include("path", "normative")
   end
 
+  it "rejects an input format canon cannot parse" do
+    exp = File.join(fixtures, "sample.exp")
+    File.write(exp, "SCHEMA synthetic;\nEND_SCHEMA;\n")
+    status, = run_diff(exp, exp)
+    expect(status).to eq 2
+  ensure
+    File.delete(exp) if File.exist?(exp)
+  end
+
   it "returns the error status for a missing file" do
     status, = run_diff(base, File.join(fixtures, "nonexistent.xml"))
     expect(status).to eq 2
