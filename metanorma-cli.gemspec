@@ -30,9 +30,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency "mnconvert"
   # spec.add_dependency "thor", "~> 1.0" # inherited from vectory
   # spec.add_dependency "metanorma-gb", "~> 1.5.0"
-  spec.add_dependency "metanorma-bipm", "~> 2.8.0"
+  spec.add_dependency "metanorma-bipm", "~> 2.9.0"
   spec.add_dependency "metanorma-cc", "~> 2.9.0"
-  spec.add_dependency "metanorma-generic", "~> 3.4.0"
+  spec.add_dependency "metanorma-generic", "~> 3.5.0"
   spec.add_dependency "metanorma-iec", "~> 2.9.0"
   spec.add_dependency "metanorma-ribose", "~> 2.9.0"
   spec.add_dependency "metanorma-standoc", "~> 3.5.0"
