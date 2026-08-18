@@ -1,0 +1,8 @@
+<iso-standard xmlns="https://www.metanorma.org/ns/iso">
+  <sections>
+    <clause id="scope" type="scope">
+      <title>Scope</title>
+      <p id="p1">This document specifies the gadget interchange format.</p>
+    </clause>
+  </sections>
+</iso-standard>
