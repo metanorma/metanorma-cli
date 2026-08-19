@@ -9,6 +9,13 @@ gem "metanorma-bsi", github: "metanorma/metanorma-bsi", branch: "main"
 
 gemspec
 
+# TEMPORARY cross-PR branch pins for the flavor-table restructure wave
+# (one PR per gem; revert each once its PR merges):
+#   metanorma-core#18, metanorma-document#45, metanorma#591
+gem "metanorma-core", github: "metanorma/metanorma-core", branch: "feat/flavor-table"
+gem "metanorma-document", github: "metanorma/metanorma-document", branch: "feat/model-validation-l1-declarations"
+gem "metanorma", github: "metanorma/metanorma", branch: "feat/flavors-table"
+
 group :development do
   gem "debug"
   gem "pry"
