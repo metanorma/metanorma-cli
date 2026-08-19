@@ -45,8 +45,13 @@ module Metanorma
       end
 
       def flavor_dictionary_taste(ret)
-        Metanorma::TasteRegister.instance.available_tastes.each do |taste|
+        # Tastes come from the core flavor table (metanorma-core#18) —
+        # the single source of flavor/taste identity. Config details
+        # (output extensions) stay in metanorma-taste's configs.
+        Metanorma::Core::Flavors.available_tastes.each do |taste|
           format_keys, base_flavor = taste_format_keys(taste)
+          next unless ret[base_flavor]
+
           ret[taste] = { format_keys: format_keys, base_flavor: base_flavor,
                          native_keys: ret[base_flavor][:format_keys],
                          input: ret[base_flavor][:input] }
