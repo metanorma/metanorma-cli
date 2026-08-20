@@ -74,3 +74,10 @@ begin
 rescue StandardError
   nil
 end
+
+gem "metanorma-generic",
+    github: "metanorma/metanorma-generic",
+    branch: "main"
+gem "metanorma-bipm",
+    github: "metanorma/metanorma-bipm",
+    branch: "main"
