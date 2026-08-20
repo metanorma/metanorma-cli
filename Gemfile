@@ -9,7 +9,6 @@ gem "metanorma-bsi", github: "metanorma/metanorma-bsi", branch: "main"
 
 gemspec
 
-
 # TEMPORARY cross-PR pins for the flavor-table restructure wave.
 # Revert each once its PR merges (core#18 document#45 metanorma#591
 # iso#1618 standoc#1232 taste#204 itu/iec/ogc migration PRs).
