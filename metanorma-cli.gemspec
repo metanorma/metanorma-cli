@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = Gem::Requirement.new(">= 3.3.0")
 
   spec.add_dependency "metanorma-ietf", "~> 3.7.0"
-  spec.add_dependency "metanorma-iso", "~> 3.5.0"
+  spec.add_dependency "metanorma-iso", ">= 3.4.2" # relaxed until wave releases
   spec.add_dependency "mnconvert"
   # spec.add_dependency "thor", "~> 1.0" # inherited from vectory
   # spec.add_dependency "metanorma-gb", "~> 1.5.0"
@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "metanorma-generic", "~> 3.5.0"
   spec.add_dependency "metanorma-iec", "~> 2.9.0"
   spec.add_dependency "metanorma-ribose", "~> 2.9.0"
-  spec.add_dependency "metanorma-standoc", "~> 3.5.0"
+  spec.add_dependency "metanorma-standoc", ">= 3.4.2" # relaxed until wave releases
   # spec.add_dependency 'metanorma-mpfa', "~> 0.9.0"
   spec.add_dependency "git", ">= 3.0"
   spec.add_dependency "lutaml-model"
