@@ -1,0 +1,6 @@
+= Standalone Document Two
+:docnumber: 2
+:nodoc:
+:novalid:
+
+Second standalone document, so the no-manifest specs detect more than one input.

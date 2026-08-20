@@ -39,6 +39,14 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
       Metanorma::Cli.root_path.join("spec", "fixtures")
     end
 
+    # A directory of standalone documents with no nested collection. The
+    # no-manifest scenarios recursively glob **/*.adoc, so they must run off a
+    # clean directory: pointing them at spec/fixtures would sweep in the synced
+    # dummy_collection fixture as if its modules and templates were loose input.
+    let(:standalone_docs_path) do
+      Metanorma::Cli.root_path.join("spec", "fixtures", "site_generate_docs")
+    end
+
     let(:manifest_file_path) do
       source_path.join("metanorma.yml")
     end
@@ -62,6 +70,8 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
     end
 
     context "without manifest file" do
+      let(:source_path) { standalone_docs_path }
+
       it "detects input documents and generate a complete site" do
         described_class.generate!(
           source_path,
@@ -387,6 +397,8 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
 
     context "custom site template" do
       context "without manifest file" do
+        let(:source_path) { standalone_docs_path }
+
         let(:expected_base_path) { Pathname.pwd }
         let(:expected_stylesheet_path) do
           expected_base_path.join(stylesheet_path)
@@ -449,7 +461,7 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
       allow(Metanorma::Cli::Compiler).to receive(:compile).and_return(fatals)
       expect do
         described_class.generate!(
-          source_path,
+          standalone_docs_path,
           { output_dir: output_directory },
           continue_without_fonts: false,
         )

@@ -6,7 +6,7 @@ module Metanorma
            metanorma-core metanorma-plugin-glossarist metanorma-plugin-lutaml
            metanorma-taste relaton-cli pubid glossarist fontist
            plurimath expressir xmi lutaml-model emf2svg unitsml
-           vectory ogc-gml oscal suma).freeze
+           vectory ogc-gml oscal suma canon).freeze
 
       EXPORT_CONFIG_FLAVOR_FILES = [
         "metanorma/*/*.adoc",
