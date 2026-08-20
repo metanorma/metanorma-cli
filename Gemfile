@@ -42,6 +42,14 @@ gem "metanorma-taste",
     github: "metanorma/metanorma-taste",
     branch: "feat/flavor-registry-integration"
 
+gem "isodoc",
+    github: "metanorma/isodoc",
+    branch: "rt-pubid-2-migration"
+gem "relaton-bib", "~> 2.2.0.pre.alpha.1"
+gem "pubid",
+    github: "pubid/pubid",
+    branch: "main"
+
 group :development do
   gem "debug"
   gem "pry"
