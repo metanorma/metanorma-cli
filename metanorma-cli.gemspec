@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "metanorma-bipm", ">= 0" # relaxed until wave releases
   spec.add_dependency "metanorma-cc", ">= 0" # relaxed until wave releases
   spec.add_dependency "metanorma-generic", ">= 0" # relaxed until wave releases
-  spec.add_dependency "metanorma-iec", "~> 2.9.0"
+  spec.add_dependency "metanorma-iec", ">= 0" # relaxed until wave releases
   spec.add_dependency "metanorma-ribose", ">= 0" # relaxed until wave releases
   spec.add_dependency "metanorma-standoc", ">= 3.4.2" # relaxed until wave releases
   # spec.add_dependency 'metanorma-mpfa', "~> 0.9.0"
