@@ -5,3 +5,14 @@
 # one by one as the offenses are removed from the code base.
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
+
+# Offense count: 2
+# Configuration parameters: CountAsOne.
+Metrics/BlockLength:
+  Exclude:
+    - 'bin/font-test'
+
+# Offense count: 1
+Style/TernaryParentheses:
+  Exclude:
+    - 'bin/font-test'
