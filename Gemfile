@@ -4,11 +4,6 @@ Encoding.default_internal = Encoding::UTF_8
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}" }
 
-source "https://rubygems.pkg.github.com/metanorma" do
-  gem "metanorma-bsi"
-  gem "metanorma-nist"
-end
-
 gemspec
 
 # TEMPORARY cross-PR pins for the flavor-table restructure wave.
@@ -45,6 +40,7 @@ gem "metanorma-taste",
 gem "isodoc",
     github: "metanorma/isodoc",
     branch: "rt-pubid-2-migration"
+gem "relaton-cli", ">= 2.2.0.pre.alpha.1"
 gem "relaton-bib", "~> 2.2.0.pre.alpha.1"
 gem "pubid",
     github: "pubid/pubid",
@@ -75,9 +71,18 @@ rescue StandardError
   nil
 end
 
-gem "metanorma-generic",
-    github: "metanorma/metanorma-generic",
-    branch: "main"
+# Wave-branch pins replacing the private-registry releases (their
+# released versions still require pubid-bsi/nist, incompatible with the
+# pubid monogem pin above).
 gem "metanorma-bipm",
     github: "metanorma/metanorma-bipm",
-    branch: "main"
+    branch: "feat/ocp-adoption"
+gem "metanorma-bsi",
+    github: "metanorma/metanorma-bsi",
+    branch: "feat/ocp-adoption"
+gem "metanorma-generic",
+    github: "metanorma/metanorma-generic",
+    branch: "feat/ocp-adoption"
+gem "metanorma-nist",
+    github: "metanorma/metanorma-nist",
+    branch: "feat/ocp-adoption"
