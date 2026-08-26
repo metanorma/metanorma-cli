@@ -43,6 +43,7 @@ gem "metanorma-taste",
 gem "isodoc",
     github: "metanorma/isodoc",
     branch: "rt-pubid-2-migration"
+gem "relaton-cli", ">= 2.2.0.pre.alpha.1"
 gem "relaton-bib", "~> 2.2.0.pre.alpha.1"
 gem "pubid",
     github: "pubid/pubid",
