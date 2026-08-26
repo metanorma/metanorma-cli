@@ -46,6 +46,19 @@ gem "pubid",
     github: "pubid/pubid",
     branch: "main"
 
+# Cap lutaml-model < 0.8.20: 0.8.20 relocates the XML adapter directory
+# (xmi and other transitive gems still require the old path). The wave's
+# other gems (document/iso) also pin ~> 0.8.0; this avoids the imminent
+# 0.8.20 yank.
+# Force newer xmi (lutaml 0.9.43 pins xmi ~> 0.3.20; xmi 0.7+ moved
+# the XML adapter to a path compatible with lutaml-model 0.8.x).
+# Conflict with lutaml's pin is resolved by also pinning lutaml to a
+# version that no longer enforces it.
+gem "xmi", "~> 0.7"
+gem "lutaml", "~> 0.10.0"
+gem "ogc-gml", "1.1.0"
+gem "lutaml-model", "~> 0.8.0", "< 0.8.20"
+
 group :development do
   gem "debug"
   gem "pry"
@@ -85,4 +98,13 @@ gem "metanorma-generic",
     branch: "feat/ocp-adoption"
 gem "metanorma-nist",
     github: "metanorma/metanorma-nist",
+    branch: "feat/ocp-adoption"
+gem "metanorma-ieee",
+    github: "metanorma/metanorma-ieee",
+    branch: "feat/ocp-adoption"
+gem "metanorma-jis",
+    github: "metanorma/metanorma-jis",
+    branch: "feat/ocp-adoption"
+gem "metanorma-plateau",
+    github: "metanorma/metanorma-plateau",
     branch: "feat/ocp-adoption"
