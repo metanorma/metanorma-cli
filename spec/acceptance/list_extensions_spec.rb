@@ -11,7 +11,7 @@ RSpec.describe "Metanorma" do
       output = capture_stdout { Metanorma::Cli.start(command) }
       expect(output).to include("Supported extensions: xml, html, pdf, doc and presentation")
       expect(output).to include("Base flavor: iso")
-      expect(output).to include("Flavor extensions: xml, presentation, rxl, html")
+      expect(output).to include("Flavor extensions: xml, presentation, rxl, html, html_alt, doc, docx, pdf, sts, isosts and sts_html")
     end
 
     it "lists all extensions if no type specified" do
