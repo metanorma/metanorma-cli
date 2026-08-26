@@ -58,6 +58,9 @@ gem "xmi", "~> 0.7"
 gem "lutaml", "~> 0.10.0"
 gem "ogc-gml", "1.1.0"
 gem "lutaml-model", "~> 0.8.0", "< 0.8.20"
+# Pin glossarist plugin: 0.3.10 freezes its preprocessor after
+# initialization, breaking Asciidoctor compile in the cli suite.
+gem "metanorma-plugin-glossarist", "0.3.9"
 
 group :development do
   gem "debug"
