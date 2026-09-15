@@ -45,8 +45,22 @@ module Metanorma
       end
 
       def flavor_dictionary_taste(ret)
-        Metanorma::TasteRegister.instance.available_tastes.each do |taste|
+        # Tastes come from the core flavor table (metanorma-core#18)
+        # when available; fall back to TasteRegister for contexts where
+        # the table has no taste entries registered yet (load-order or
+        # version-skew). Same output shape either way — the specs are
+        # the contract.
+        tastes = if defined?(Metanorma::Core::Flavors) &&
+                   Metanorma::Core::Flavors.available_tastes.any?
+                   Metanorma::Core::Flavors.available_tastes
+                 else
+                   Metanorma::TasteRegister.instance.available_tastes
+                 end
+
+        tastes.each do |taste|
           format_keys, base_flavor = taste_format_keys(taste)
+          next unless ret[base_flavor]
+
           ret[taste] = { format_keys: format_keys, base_flavor: base_flavor,
                          native_keys: ret[base_flavor][:format_keys],
                          input: ret[base_flavor][:input] }

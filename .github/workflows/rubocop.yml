@@ -43,6 +43,25 @@ jobs:
           #
           # Use the version that matches the one in gemspec & .rubocop.yml
           ruby-version: ${{ env.RUBY_VERSION }}
-      - uses: reclaim-the-stack/rubocop-action@v1.1.0
-        with:
-          gem_versions: rubocop:1.72.2 rubocop-performance:1.24.0 rubocop-rspec:3.10.2 rubocop-rake:0.7.1
+      # Direct rubocop run: the third-party action's JSON parsing dies
+      # with an empty payload whenever rubocop exits abnormally
+      # (observed on feature/diff-canon too), reporting a JSON::ParserError
+      # instead of the real failure. Running rubocop directly surfaces
+      # actual offenses and crashes.
+      - name: Install pinned rubocop gems
+        run: gem install rubocop:1.72.2 rubocop-performance:1.24.0 rubocop-rspec:3.10.2 rubocop-rake:0.7.1
+      # Lint only files changed on the PR — matches the third-party
+      # action's prior behaviour and avoids flooding on pre-existing
+      # offenses the fleet has not yet cleaned up.
+      - name: Rubocop (changed files)
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          mapfile -t files < <(git diff --name-only --diff-filter=ACMR "$BASE"...HEAD | grep -E '\.(rb|rake)$|Gemfile(\.|$)|Rakefile$' || true)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No Ruby files changed; skipping rubocop"
+            exit 0
+          fi
+          echo "Linting ${#files[@]} changed file(s):"
+          printf '  %s\n' "${files[@]}"
+          rubocop --format progress --format github --force-exclusion "${files[@]}"
