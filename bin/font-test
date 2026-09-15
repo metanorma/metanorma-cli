@@ -13,10 +13,33 @@ end
 
 Fontist::Formula.update_formulas_repo
 
+def taste_fonts(flavor)
+  require "metanorma-taste"
+  config = Metanorma::TasteRegister.get_config(flavor.to_sym)
+  fonts = config&.base_override&.value_attributes&.fonts
+  fonts&.split(";")&.map(&:strip)&.reject(&:empty?)
+rescue Metanorma::TasteRegister::UnknownTasteError, LoadError
+  nil
+end
+
 flavors.each do |flavor|
   flavor_name = (flavor == "jcgm") ? "bipm" : flavor
   gem_name = "metanorma-#{flavor_name}"
-  require gem_name
+  begin
+    require gem_name
+  rescue LoadError
+    # A taste has no gem of its own: install the fonts its config declares
+    if (fonts = taste_fonts(flavor_name))
+      puts "Processing fonts for taste '#{flavor_name}' (metanorma-taste)..."
+      fonts.each do |font|
+        Fontist::Font.install(font, confirmation: "yes")
+        puts "- #{font}"
+      end
+      puts "Done."
+      next
+    end
+    raise
+  end
 
   # Determine the processor class based on the flavor
   processor_class = "Metanorma::#{flavor_name.capitalize}::Processor"
