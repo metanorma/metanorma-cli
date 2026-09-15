@@ -25,23 +25,23 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
   spec.required_ruby_version = Gem::Requirement.new(">= 3.3.0")
 
-  spec.add_dependency "metanorma-ietf", ">= 0" # relaxed until wave releases
-  spec.add_dependency "metanorma-iso", ">= 3.4.2" # relaxed until wave releases
+  spec.add_development_dependency "metanorma-ietf" # dev-only until the v3 wave releases
+  spec.add_development_dependency "metanorma-iso" # dev-only until the v3 wave releases
   spec.add_dependency "mnconvert"
   # spec.add_dependency "thor", "~> 1.0" # inherited from vectory
   # spec.add_dependency "metanorma-gb", "~> 1.5.0"
-  spec.add_dependency "metanorma-bipm", ">= 0" # relaxed until wave releases
-  spec.add_dependency "metanorma-cc", ">= 0" # relaxed until wave releases
+  spec.add_development_dependency "metanorma-bipm" # dev-only until the v3 wave releases
+  spec.add_development_dependency "metanorma-cc" # dev-only until the v3 wave releases
   spec.add_dependency "metanorma-generic", ">= 0" # relaxed until wave releases
-  spec.add_dependency "metanorma-iec", ">= 0" # relaxed until wave releases
-  spec.add_dependency "metanorma-ribose", ">= 0" # relaxed until wave releases
+  spec.add_development_dependency "metanorma-iec" # dev-only until the v3 wave releases
+  spec.add_development_dependency "metanorma-ribose" # dev-only until the v3 wave releases
   spec.add_dependency "metanorma-standoc", ">= 3.4.2" # relaxed until wave releases
   # spec.add_dependency 'metanorma-mpfa', "~> 0.9.0"
   spec.add_dependency "git", ">= 3.0"
   spec.add_dependency "lutaml-model"
   spec.add_dependency "metanorma", "~> 2.5.1"
-  spec.add_dependency "metanorma-iho", ">= 0" # relaxed until wave releases
-  spec.add_dependency "metanorma-itu", ">= 0" # relaxed until wave releases
+  spec.add_development_dependency "metanorma-iho" # dev-only until the v3 wave releases
+  spec.add_development_dependency "metanorma-itu" # dev-only until the v3 wave releases
   # spec.add_dependency "metanorma-nist", "~> 2.7.0"
   spec.add_dependency "liquid", "~> 5"
   spec.add_dependency "metanorma-ieee", ">= 0" # relaxed until wave releases
