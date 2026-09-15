@@ -44,10 +44,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "metanorma-itu" # dev-only until the v3 wave releases
   # spec.add_dependency "metanorma-nist", "~> 2.7.0"
   spec.add_dependency "liquid", "~> 5"
-  spec.add_dependency "metanorma-ieee", ">= 0" # relaxed until wave releases
-  spec.add_dependency "metanorma-jis", ">= 0" # relaxed until wave releases
-  spec.add_dependency "metanorma-ogc", ">= 0" # relaxed until wave releases
-  spec.add_dependency "metanorma-plateau", ">= 0" # relaxed until wave releases
+  spec.add_development_dependency "metanorma-ieee" # dev-only until the v3 wave releases
+  spec.add_development_dependency "metanorma-jis" # dev-only until the v3 wave releases
+  spec.add_development_dependency "metanorma-ogc" # dev-only until the v3 wave releases
+  spec.add_development_dependency "metanorma-plateau" # dev-only until the v3 wave releases
   spec.add_dependency "canon", ">= 0.2.12"
   spec.add_dependency "relaton-cli", ">= 0.8.2"
   spec.add_dependency "socksify"
