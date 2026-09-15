@@ -65,11 +65,15 @@ jobs:
         private-fonts-pat: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
 
     - run: |
-        if [ "${{ matrix.flavor }}" = "bsi" ]; then
-          bundle add metanorma-${{ matrix.flavor }} --source "https://rubygems.pkg.github.com/metanorma"
-        else
-          bundle add metanorma-${{ matrix.flavor }}
-        fi
+        case "${{ matrix.flavor }}" in
+          bsi)
+            bundle add metanorma-bsi --source "https://rubygems.pkg.github.com/metanorma" ;;
+          oiml|pdfa|iala|wmo)
+            # tastes live in metanorma-taste; there is no metanorma-<taste> gem
+            bundle add metanorma-taste ;;
+          *)
+            bundle add metanorma-${{ matrix.flavor }} ;;
+        esac
         bundle exec bin/font-test ${{ matrix.flavor }}
 
   create-issue:
