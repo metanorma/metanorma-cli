@@ -9,6 +9,7 @@ require "metanorma/cli/commands/config"
 require "metanorma/cli/commands/template_repo"
 require "metanorma/cli/commands/site"
 require "metanorma/cli/commands/diff"
+require "metanorma/release/cli"
 require "mnconvert"
 require_relative "flavor"
 
@@ -227,6 +228,9 @@ module Metanorma
 
       desc "site", "Manage site for metanorma collections"
       subcommand :site, Metanorma::Cli::Commands::Site
+
+      desc "release SUBCOMMAND ...", "Document registry commands (metanorma-release)"
+      subcommand :release, Metanorma::Release::CLI
 
       desc "config", "Manage configuration file"
       subcommand :config, Metanorma::Cli::Commands::Config
