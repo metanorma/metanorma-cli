@@ -43,13 +43,11 @@ manifest:
       docref:
         fileref: rice-amd.final.xml
         identifier: ISO 17301-1:2016/Amd.1:2017
-prefatory-content: 
-|
+prefatory-content: |
 
   == Clause
   Welcome to our collection
 
-final-content:
-|
+final-content: |
   == Exordium
   Hic explicit
