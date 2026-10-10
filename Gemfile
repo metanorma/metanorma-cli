@@ -35,3 +35,5 @@ begin
 rescue StandardError
   nil
 end
+
+gem "metanorma-oiml", github: "metanorma/metanorma-oiml", branch: "main" # never published to rubygems
