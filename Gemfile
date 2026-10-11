@@ -41,3 +41,4 @@ gem "metanorma-iso", github: "metanorma/metanorma-iso", branch: "main"
 gem "metanorma-document", github: "metanorma/metanorma-document", branch: "main"
 
 gem "metanorma-mirror", github: "metanorma/metanorma-mirror", branch: "main" # the mirror sub-gem is main-only
+gem "metanorma-standoc", github: "metanorma/metanorma-standoc", branch: "main" # released standoc lacks Metanorma::Standoc::Document
