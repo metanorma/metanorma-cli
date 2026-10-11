@@ -37,3 +37,4 @@ rescue StandardError
 end
 gem "metanorma-standoc", github: "metanorma/metanorma-standoc", branch: "main" # released 3.4.2 still caps relaton-cli ~> 2.1
 gem "metanorma-document", github: "metanorma/metanorma-document", branch: "main" # standoc main references Document::Components constants
+gem "metanorma-utils", github: "metanorma/metanorma-utils", branch: "main" # released utils lacks GcBudget/deep_symbolize (main-only)
