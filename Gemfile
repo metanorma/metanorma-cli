@@ -39,3 +39,5 @@ end
 gem "metanorma-oiml", github: "metanorma/metanorma-oiml", branch: "main" # never published to rubygems
 gem "metanorma-iso", github: "metanorma/metanorma-iso", branch: "main"
 gem "metanorma-document", github: "metanorma/metanorma-document", branch: "main"
+
+gem "metanorma-mirror", github: "metanorma/metanorma-mirror", branch: "main" # the mirror sub-gem is main-only
