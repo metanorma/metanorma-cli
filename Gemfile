@@ -39,3 +39,19 @@ gem "metanorma-standoc", github: "metanorma/metanorma-standoc", branch: "main" #
 gem "metanorma-document", github: "metanorma/metanorma-document", branch: "main" # standoc main references Document::Components constants
 gem "metanorma-utils", github: "metanorma/metanorma-utils", branch: "main" # released utils lacks GcBudget/deep_symbolize (main-only)
 gem "isodoc", github: "metanorma/isodoc", branch: "main" # released isodoc caps relaton-render ~> 1.3
+
+# the metagem's flavor zoo on mains: released flavors reference the retired 1.x render API
+gem "metanorma", github: "metanorma/metanorma", branch: "main"
+gem "metanorma-bipm", github: "metanorma/metanorma-bipm", branch: "main"
+gem "metanorma-cc", github: "metanorma/metanorma-cc", branch: "main"
+gem "metanorma-iec", github: "metanorma/metanorma-iec", branch: "main"
+gem "metanorma-ieee", github: "metanorma/metanorma-ieee", branch: "main"
+gem "metanorma-ietf", github: "metanorma/metanorma-ietf", branch: "main"
+gem "metanorma-gb", github: "metanorma/metanorma-gb", branch: "main"
+gem "metanorma-generic", github: "metanorma/metanorma-generic", branch: "main"
+gem "metanorma-iho", github: "metanorma/metanorma-iho", branch: "main"
+gem "metanorma-itu", github: "metanorma/metanorma-itu", branch: "main"
+gem "metanorma-jis", github: "metanorma/metanorma-jis", branch: "main"
+gem "metanorma-ogc", github: "metanorma/metanorma-ogc", branch: "main"
+gem "metanorma-plateau", github: "metanorma/metanorma-plateau", branch: "main"
+gem "metanorma-ribose", github: "metanorma/metanorma-ribose", branch: "main"
