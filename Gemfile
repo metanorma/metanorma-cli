@@ -35,3 +35,4 @@ begin
 rescue StandardError
   nil
 end
+gem "metanorma-standoc", github: "metanorma/metanorma-standoc", branch: "main" # released 3.4.2 still caps relaton-cli ~> 2.1
