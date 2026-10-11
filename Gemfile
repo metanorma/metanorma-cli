@@ -43,3 +43,6 @@ gem "metanorma-document", github: "metanorma/metanorma-document", branch: "main"
 gem "metanorma-mirror", github: "metanorma/metanorma-mirror", branch: "main" # the mirror sub-gem is main-only
 gem "metanorma-standoc", github: "metanorma/metanorma-standoc", branch: "main" # released standoc lacks Metanorma::Standoc::Document
 gem "metanorma-utils", github: "metanorma/metanorma-utils", branch: "main" # released utils lacks GcBudget/deep_symbolize (main-only)
+# flavor CitationStyle facades need the 3.x pre engine; bundler-prefer-stable otherwise resolves 1.3
+gem "relaton-render", ">= 3.0.0.pre.alpha.43"
+gem "relaton-cli", ">= 3.0.0.pre.alpha"
