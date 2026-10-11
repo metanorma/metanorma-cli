@@ -46,3 +46,4 @@ gem "metanorma-utils", github: "metanorma/metanorma-utils", branch: "main" # rel
 # flavor CitationStyle facades need the 3.x pre engine; bundler-prefer-stable otherwise resolves 1.3
 gem "relaton-render", ">= 3.0.0.pre.alpha.43"
 gem "relaton-cli", ">= 3.0.0.pre.alpha"
+gem "isodoc", github: "metanorma/isodoc", branch: "main" # released isodoc caps relaton-render ~> 1.3
