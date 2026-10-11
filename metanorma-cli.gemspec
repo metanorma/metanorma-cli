@@ -49,7 +49,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "metanorma-ogc", ">= 2.10.0"
   spec.add_dependency "metanorma-plateau", ">= 1.3.0"
   spec.add_dependency "canon", ">= 0.2.12"
-  spec.add_dependency "relaton-cli", ">= 0.8.2"
+  spec.add_dependency "relaton-cli", ">= 3.0.0.pre.alpha"
   spec.add_dependency "socksify"
   spec.add_dependency "suma", "~> 0.5.0"
   # spec.metadata["rubygems_mfa_required"] = "true"
