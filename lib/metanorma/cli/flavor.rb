@@ -16,6 +16,8 @@ module Metanorma
         "isodoc/*/*.yaml",
         "relaton/render/*.yml",
         "relaton/render/*.yaml",
+        "relaton/render-isodoc/**/*.yml",
+        "metanorma/*/*-style.yml",
       ].freeze
 
       private

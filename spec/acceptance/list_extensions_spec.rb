@@ -21,7 +21,7 @@ RSpec.describe "Metanorma" do
       expect(output).to include("iso: xml, presentation, rxl, html")
       expect(output).to include("cc: html, doc, xml, presentation, rxl and pdf")
       expect(output).to include("ietf: rxl, xml, rfc, html, txt and pdf")
-      expect(output).to include("icc (base flavor: iso): xml, html, pdf, doc and presentation. (Flavor extensions: xml, presentation, rxl, html, html_alt, doc, pdf, sts and isosts).")
+      expect(output).to include("icc (base flavor: iso): xml, html, pdf, doc and presentation. (Flavor extensions: xml, presentation, rxl, html, html_alt, doc, docx, pdf, sts, isosts and sts_html).")
     end
 
     it "gracefully handles invalid types" do
