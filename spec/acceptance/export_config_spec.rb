@@ -41,7 +41,7 @@ RSpec.describe "Metanorma" do
         expect(File.exist?(File.join(export_dir,
                                      "isodoc/iso/i18n-en.yaml"))).to be true
         expect(File.exist?(File.join(export_dir,
-                                     "relaton/render/config.yml"))).to be true
+                                     "metanorma/iso/iso-style.yml"))).to be true
         FileUtils.rm_rf(export_dir) if Dir.exist?(export_dir)
       end
 
@@ -67,7 +67,7 @@ RSpec.describe "Metanorma" do
         expect(File.exist?(File.join(export_dir,
                                      "isodoc/iso/html/isodoc.scss"))).to be true
         expect(File.exist?(File.join(export_dir,
-                                     "relaton/render/config.yml"))).to be true
+                                     "metanorma/iso/iso-style.yml"))).to be true
 
         # Verify taste export either succeeded or reported no files
         # (depending on whether metanorma-taste gem is installed)

@@ -4,10 +4,8 @@ Encoding.default_internal = Encoding::UTF_8
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}" }
 
-source "https://rubygems.pkg.github.com/metanorma" do
-  gem "metanorma-nist"
-  gem "metanorma-bsi"
-end
+gem "metanorma-nist", github: "metanorma/metanorma-nist", branch: "main"
+gem "metanorma-bsi", github: "metanorma/metanorma-bsi", branch: "main"
 
 gemspec
 
