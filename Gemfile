@@ -4,10 +4,8 @@ Encoding.default_internal = Encoding::UTF_8
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}" }
 
-source "https://rubygems.pkg.github.com/metanorma" do
-  gem "metanorma-nist"
-  gem "metanorma-bsi"
-end
+gem "metanorma-nist", github: "metanorma/metanorma-nist", branch: "main"
+gem "metanorma-bsi", github: "metanorma/metanorma-bsi", branch: "main"
 
 gemspec
 
@@ -35,7 +33,8 @@ begin
 rescue StandardError
   nil
 end
-gem "metanorma-standoc", github: "metanorma/metanorma-standoc", branch: "main" # released 3.4.2 still caps relaton-cli ~> 2.1
+gem "metanorma-standoc", github: "metanorma/metanorma-standoc", branch: "main"
+gem "metanorma-iso", github: "metanorma/metanorma-iso", branch: "main" # released 3.5.0 conflicts with metanorma-document main # released 3.4.2 still caps relaton-cli ~> 2.1
 gem "metanorma-document", github: "metanorma/metanorma-document", branch: "main" # standoc main references Document::Components constants
 gem "metanorma-utils", github: "metanorma/metanorma-utils", branch: "main" # released utils lacks GcBudget/deep_symbolize (main-only)
 gem "isodoc", github: "metanorma/isodoc", branch: "main" # released isodoc caps relaton-render ~> 1.3
