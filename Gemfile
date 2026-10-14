@@ -14,31 +14,31 @@ gemspec
 # iso#1618 standoc#1232 taste#204 itu/iec/ogc migration PRs).
 gem "metanorma",
     github: "metanorma/metanorma",
-    branch: "feat/flavors-table"
+    branch: "main"
 gem "metanorma-core",
     github: "metanorma/metanorma-core",
-    branch: "feat/flavor-table"
+    branch: "main"
 gem "metanorma-document",
     github: "metanorma/metanorma-document",
-    branch: "feat/model-validation-l1-declarations"
+    branch: "main"
 gem "metanorma-iec",
     github: "metanorma/metanorma-iec",
-    branch: "feat/move-iec-document"
+    branch: "main"
 gem "metanorma-iso",
     github: "metanorma/metanorma-iso",
-    branch: "feat/model-validation-migration"
+    branch: "main"
 gem "metanorma-itu",
     github: "metanorma/metanorma-itu",
-    branch: "feat/move-itu-document"
+    branch: "main"
 gem "metanorma-ogc",
     github: "metanorma/metanorma-ogc",
-    branch: "feat/move-ogc-document"
+    branch: "main"
 gem "metanorma-standoc",
     github: "metanorma/metanorma-standoc",
-    branch: "feat/move-standard-document"
+    branch: "main"
 gem "metanorma-taste",
     github: "metanorma/metanorma-taste",
-    branch: "feat/flavor-registry-integration"
+    branch: "main"
 
 gem "isodoc",
     github: "metanorma/isodoc",
@@ -58,12 +58,12 @@ gem "pubid",
 # Conflict with lutaml's pin is resolved by also pinning lutaml to a
 # version that no longer enforces it.
 gem "xmi", "~> 0.7"
-gem "lutaml", "~> 0.10.0"
+gem "lutaml", ">= 0.11.2"
 gem "ogc-gml", "1.1.0"
-gem "lutaml-model", "~> 0.8.0", "< 0.8.20"
+gem "lutaml-model", "0.8.106" # LATEST RELEASE (glossarist 0.5 needs >= 0.8.22)
 # Pin glossarist plugin: 0.3.10 freezes its preprocessor after
 # initialization, breaking Asciidoctor compile in the cli suite.
-gem "metanorma-plugin-glossarist", "0.3.9"
+gem "metanorma-plugin-glossarist", "~> 0.5" # standoc main needs the 0.5 preprocessor
 
 group :development do
   gem "debug"

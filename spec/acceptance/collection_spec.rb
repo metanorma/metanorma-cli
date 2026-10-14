@@ -15,9 +15,6 @@ COLLECTION_FIXTURES = %w[
   rice-en.final.xml
   rice1-en.final.xml
 ].freeze
-=======
-RESULTS = "spec/results".freeze
->>>>>>> c59a457 (spec: dummy ISO 10303 collection fixture (consolidated tmpdir helper))
 
 # Fixtures required by collection1.{yml,xml} (filerefs + cover + site config).
 # Listed explicitly so the dependency surface is visible; was previously

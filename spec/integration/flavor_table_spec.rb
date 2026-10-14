@@ -10,6 +10,9 @@ RSpec.describe "flavor table integration" do
   before do
     require "metanorma/iso/document"
     require "metanorma-taste"
+    # the taste register retries core-table registration on the aliases
+    # boot step; find(:icc) alone does not trigger it
+    Metanorma::TasteRegister.instance.aliases
   end
 
   it "resolves ISO canonically and chains the ICC taste" do
