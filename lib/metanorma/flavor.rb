@@ -50,6 +50,12 @@ module Metanorma
         require(flavor_name)
       rescue LoadError => _e
         gem_loading_error(flavor_name)
+      rescue NameError => _e
+        # Released flavor gems predating the relaton-render 3 line raise
+        # NameError at require time (e.g. metanorma-ogc 2.x subclassing
+        # Relaton::Render::Parse); degrade them like absent flavors
+        # instead of crashing every corpus run that bundles them.
+        gem_loading_error(flavor_name)
       end
     end
 
