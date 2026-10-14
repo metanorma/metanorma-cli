@@ -23,10 +23,12 @@ module Metanorma
       "metanorma-plateau",
     ].freeze
 
+    # Fully private flavors (nist, bsi) are not listed here: they are never
+    # published, and open CLI code must not require or name them. Private
+    # consumers wire their own flavor gems in their bundles.
     PRIVATE_SUPPORTED_GEMS = [
       "metanorma-ribose",
       # "metanorma-mpfa",
-      "metanorma-nist",
     ].freeze
 
     def self.activate

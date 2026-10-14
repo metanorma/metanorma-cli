@@ -92,7 +92,6 @@ module Metanorma
           iho: "https://github.com/metanorma/mn-templates-iho",
           cc: "https://github.com/metanorma/mn-templates-cc",
           un: "https://github.com/metanorma/mn-templates-un",
-          nist: "https://github.com/metanorma/mn-templates-nist",
           m3aawg: "https://github.com/metanorma/mn-templates-m3aawg",
         }
       end
