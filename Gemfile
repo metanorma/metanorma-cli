@@ -38,6 +38,13 @@ gem "metanorma-taste",
     github: "metanorma/metanorma-taste",
     branch: "main"
 
+# Fully private flavors resolve from their GitHub sources (the Packages
+# registry only carries the retired 1.x line); the flavor loader
+# discovers them generically from the bundle and open code never names
+# them outside this dev bundle.
+gem "metanorma-nist", github: "metanorma/metanorma-nist", branch: "main"
+gem "metanorma-bsi", github: "metanorma/metanorma-bsi", branch: "main"
+
 gem "isodoc",
     github: "metanorma/isodoc",
     branch: "rt-pubid-2-migration"
