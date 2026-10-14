@@ -3,6 +3,8 @@ require "metanorma/cli"
 RSpec.describe Metanorma::Flavor do
   describe "#load_flavors" do
     it "degrades a flavor gem that raises NameError at require time" do
+      allow(Bundler).to receive(:load)
+        .and_return(Struct.new(:specs).new([]))
       instance = loader_with_flavors(["metanorma-ogc"])
       allow(instance).to receive(:require)
         .and_raise(NameError, "uninitialized constant Relaton::Render::Parse")
@@ -13,6 +15,8 @@ RSpec.describe Metanorma::Flavor do
     end
 
     it "degrades a flavor gem that raises LoadError at require time" do
+      allow(Bundler).to receive(:load)
+        .and_return(Struct.new(:specs).new([]))
       instance = loader_with_flavors(["metanorma-ietf"])
       allow(instance).to receive(:require).and_raise(LoadError, "cannot load")
       expect(Metanorma::Cli::UI).to receive(:error)
@@ -30,6 +34,31 @@ RSpec.describe Metanorma::Flavor do
       end
       instance.set_test_flavors(gems)
       instance
+    end
+  end
+end
+
+RSpec.describe Metanorma::Flavor do
+  describe "#load_flavors with bundled private flavors" do
+    it "requires bundled metanorma-* flavor gems it does not name" do
+      spec = Struct.new(:name).new("metanorma-nist")
+      plugin = Struct.new(:name).new("metanorma-plugin-lutaml")
+      helper = Struct.new(:name).new("metanorma-utils")
+      engine = Struct.new(:name).new("metanorma")
+      bundler_specs = [spec, plugin, helper, engine]
+      bundler = Struct.new(:specs).new(bundler_specs)
+      allow(Bundler).to receive(:load).and_return(bundler)
+
+      instance = described_class.new
+      required = []
+      allow(instance).to receive(:require) { |name| required << name }
+
+      instance.load_flavors
+
+      expect(required).to include("metanorma-nist")
+      expect(required).not_to include("metanorma-utils")
+      expect(required).not_to include("metanorma-plugin-lutaml")
+      expect(required).not_to include("metanorma")
     end
   end
 end

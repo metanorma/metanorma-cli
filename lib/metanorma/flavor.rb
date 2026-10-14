@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "bundler"
 require "metanorma/cli/ui"
 
 module Metanorma
@@ -23,13 +24,28 @@ module Metanorma
       "metanorma-plateau",
     ].freeze
 
-    # Fully private flavors (nist, bsi) are not listed here: they are never
-    # published, and open CLI code must not require or name them. Private
-    # consumers wire their own flavor gems in their bundles.
     PRIVATE_SUPPORTED_GEMS = [
       "metanorma-ribose",
       # "metanorma-mpfa",
     ].freeze
+
+    # Bundled metanorma-* gems that are not flavors; they are never
+    # require'd by the loader. Everything bundled outside this list and
+    # the flavor lists above loads generically, so fully private flavor
+    # gems (nist, bsi, ...) work by mere presence in the consumer's
+    # bundle — open CLI code never names them.
+    NON_FLAVOR_GEMS = %w(
+      metanorma
+      metanorma-cli
+      metanorma-core
+      metanorma-standoc
+      metanorma-document
+      metanorma-utils
+      metanorma-mirror
+      metanorma-taste
+      metanorma-release
+      metanorma-acme
+    ).freeze
 
     def self.activate
       new.activate
@@ -48,7 +64,7 @@ module Metanorma
     end
 
     def load_flavors
-      flavors.each do |flavor_name|
+      (flavors + bundled_private_flavor_gems).each do |flavor_name|
         require(flavor_name)
       rescue LoadError => _e
         gem_loading_error(flavor_name)
@@ -58,6 +74,26 @@ module Metanorma
         # Relaton::Render::Parse); degrade them like absent flavors
         # instead of crashing every corpus run that bundles them.
         gem_loading_error(flavor_name)
+      end
+    end
+
+    private
+
+    # Bundled metanorma-* gems outside the public flavor lists and the
+    # non-flavor helpers: fully private flavors. Names are discovered
+    # from the bundle, never listed here.
+    def bundled_private_flavor_gems
+      named = flavors + NON_FLAVOR_GEMS
+      specs = begin
+        Bundler.load.specs
+      rescue StandardError
+        Gem::Specification.find_all do |spec|
+          spec.name.start_with?("metanorma-")
+        end
+      end
+      specs.map(&:name).uniq.select do |name|
+        name.start_with?("metanorma-") && !name.start_with?("metanorma-plugin-") &&
+          !named.include?(name)
       end
     end
 
