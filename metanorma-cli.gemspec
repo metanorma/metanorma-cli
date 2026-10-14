@@ -27,8 +27,8 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "metanorma-ietf", ">= 3.7.0"
   spec.add_dependency "metanorma-iso", ">= 3.5.0"
-  spec.add_dependency "mnconvert"
-  spec.add_dependency "metanorma-release"
+  spec.add_dependency "mnconvert", "~> 1.89"
+  spec.add_dependency "metanorma-release", "~> 0.2"
   # spec.add_dependency "thor", "~> 1.0" # inherited from vectory
   # spec.add_dependency "metanorma-gb", "~> 1.5.0"
   spec.add_dependency "metanorma-bipm", ">= 2.9.0"
@@ -39,7 +39,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "metanorma-standoc", ">= 3.5.0"
   # spec.add_dependency 'metanorma-mpfa', "~> 0.9.0"
   spec.add_dependency "git", ">= 3.0"
-  spec.add_dependency "lutaml-model"
+  spec.add_dependency "lutaml-model", "~> 0.8"
   spec.add_dependency "metanorma", ">= 2.5.1"
   spec.add_dependency "metanorma-iho", ">= 1.4.0"
   spec.add_dependency "metanorma-itu", ">= 2.9.0"
