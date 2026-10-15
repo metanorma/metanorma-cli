@@ -1,90 +1,60 @@
 name: rake
 
 on:
+  push:
+    branches: [ master, main ]
+    tags: [ v* ]
+    paths-ignore: [ '**.adoc' ]
+  pull_request:
+    paths-ignore: [ '**.adoc' ]
   workflow_dispatch:
-    inputs:
-      scope:
-        description: Public sample/template coverage (Linux, Ruby 3.3)
-        type: choice
-        options: [all-public, core]
-        default: all-public
-        required: true
-
-permissions:
-  contents: read
 
 jobs:
-  prepare:
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    outputs:
-      matrix: ${{ steps.freeze.outputs.matrix }}
-    steps:
-      - uses: actions/checkout@v4
-      # The CLI development bundle includes private flavor source dependencies,
-      # even when the selected corpus is public. Reuse the existing read setup.
-      - uses: metanorma/ci/gh-rubygems-setup-action@083ae028fa7a8cdaaf5e6152ca07acbec092cf52
-        with:
-          token: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.3'
-          bundler-cache: false
-      - name: Freeze all common dependencies and corpus revisions
-        id: freeze
-        env:
-          COMPARISON_SCOPE: ${{ inputs.scope }}
-        run: python3 .github/scripts/plurimath_compare_prepare.py --scope "$COMPARISON_SCOPE"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: plurimath-comparison-inputs
-          include-hidden-files: true
-          path: |
-            .comparison/manifest.json
-            .comparison/Gemfile
-            .comparison/Gemfile.lock
-            .comparison/resolve.log
+  rake:
+    uses: metanorma/ci/.github/workflows/mn-processor-rake.yml@main
+    with:
+      samples-matrix-json-file: .github/workflows/samples-smoke-matrix.json
+      templates-matrix-json-file: .github/workflows/templates-smoke-matrix.json
+    secrets:
+      pat_token: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
 
-  compare:
-    needs: prepare
+  # Docker rebuild gated on tests-passed. Fires only after the rake test
+  # suite has gone green on a tag push. Fixes metanorma/ci#365 (test
+  # gating for the docker chain) + metanorma/ci#366 (reconciliation onto
+  # release-tag.yml so docker's tag actually corresponds to the released
+  # cli version).
+  #
+  # Dispatches metanorma-docker's release-tag.yml via
+  # `repository_dispatch: [metanorma/metanorma-cli]` — the listener that
+  # workflow already exposes but that nothing else dispatches to.
+  # release-tag.yml parses the cli version from client_payload.ref,
+  # updates VERSION.mak + Gemfile, creates the matching `vX.Y.Z` tag on
+  # metanorma-docker, and the tag push then triggers build-push +
+  # build-push-windows AT the tag with the correct version.
+  #
+  # Replaces the previous shape (metanorma-cli#438) which dispatched
+  # build-push.yml + build-push-windows.yml directly on metanorma-docker
+  # main. That built the LAST tagged version, not the newly-released cli
+  # version, and required manual `gh workflow run release-tag.yml` every
+  # fortnight to create the matching docker tag. This dispatch does that
+  # automatically per release.
+  docker-dispatch:
+    needs: rake
+    if: |
+      startsWith(github.ref, 'refs/tags/v') &&
+      github.event_name == 'push'
     runs-on: ubuntu-latest
-    timeout-minutes: 180
-    strategy:
-      fail-fast: false
-      max-parallel: 2
-      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: plurimath-comparison-inputs
-          path: .comparison
-      - uses: metanorma/ci/gh-rubygems-setup-action@083ae028fa7a8cdaaf5e6152ca07acbec092cf52
-        with:
-          token: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.3'
-          bundler-cache: false
-      - uses: metanorma/ci/tool-setup-action@083ae028fa7a8cdaaf5e6152ca07acbec092cf52
-        with:
-          setup-tools: inkscape,ghostscript,xml2rfc
-      - name: Compare baseline and both exact Plurimath commits
+      - name: Dispatch metanorma-docker release-tag (tests-passed gate)
         env:
-          COMPARISON_CASE: ${{ matrix.case }}
-        run: >-
-          python3 .github/scripts/plurimath_compare_run.py
-          --case "$COMPARISON_CASE"
-          --work-root "$RUNNER_TEMP/plurimath-comparison"
-          --output "$GITHUB_WORKSPACE/comparison-results"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: plurimath-${{ matrix.case }}
-          path: comparison-results
-          if-no-files-found: error
+          GH_TOKEN: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
+        run: |
+          echo "Rake passed on ${{ github.ref_name }}; dispatching metanorma-docker release-tag"
+
+          gh api repos/metanorma/metanorma-docker/dispatches \
+            -f event_type=metanorma/metanorma-cli \
+            -f "client_payload[ref]=${{ github.ref }}"
+
+          echo "release-tag.yml dispatch sent for ${{ github.ref_name }}"
