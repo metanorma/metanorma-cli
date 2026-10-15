@@ -64,17 +64,11 @@ jobs:
       with:
         private-fonts-pat: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
 
-    - run: |
-        case "${{ matrix.flavor }}" in
-          bsi)
-            bundle add metanorma-bsi --source "https://rubygems.pkg.github.com/metanorma" ;;
-          oiml|pdfa|iala|wmo)
-            # tastes live in metanorma-taste; there is no metanorma-<taste> gem
-            bundle add metanorma-taste ;;
-          *)
-            bundle add metanorma-${{ matrix.flavor }} ;;
-        esac
-        bundle exec bin/font-test ${{ matrix.flavor }}
+    # every flavor in the matrix is already pinned in the dev Gemfile
+    # (github mains); `bundle add` here would re-source an already
+    # bundled gem and fail the Gemfile parse with "same gem twice
+    # coming from different sources"
+    - run: bundle exec bin/font-test ${{ matrix.flavor }}
 
   create-issue:
     runs-on: ubuntu-latest

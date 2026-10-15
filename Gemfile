@@ -7,32 +7,12 @@ git_source(:github) { |repo| "https://github.com/#{repo}" }
 
 gemspec
 
-# TEMPORARY cross-PR pins for the flavor-table restructure wave.
-# Revert each once its PR merges (core#18 document#45 metanorma#591
-# iso#1618 standoc#1232 taste#204 itu/iec/ogc migration PRs).
-gem "metanorma",
-    github: "metanorma/metanorma",
-    branch: "main"
+# Remaining cross-PR pins for the flavor-table restructure wave.
+# document#45 metanorma#591 iso#1618 standoc#1232 itu/iec/ogc migration
+# PRs and isodoc#825 all merged: those pins below are carried by the
+# canonical zoo at the foot of this file.
 gem "metanorma-core",
     github: "metanorma/metanorma-core",
-    branch: "main"
-gem "metanorma-document",
-    github: "metanorma/metanorma-document",
-    branch: "main"
-gem "metanorma-iec",
-    github: "metanorma/metanorma-iec",
-    branch: "main"
-gem "metanorma-iso",
-    github: "metanorma/metanorma-iso",
-    branch: "main"
-gem "metanorma-itu",
-    github: "metanorma/metanorma-itu",
-    branch: "main"
-gem "metanorma-ogc",
-    github: "metanorma/metanorma-ogc",
-    branch: "main"
-gem "metanorma-standoc",
-    github: "metanorma/metanorma-standoc",
     branch: "main"
 gem "metanorma-taste",
     github: "metanorma/metanorma-taste",
@@ -45,9 +25,6 @@ gem "metanorma-taste",
 gem "metanorma-nist", github: "metanorma/metanorma-nist", branch: "main"
 gem "metanorma-bsi", github: "metanorma/metanorma-bsi", branch: "main"
 
-gem "isodoc",
-    github: "metanorma/isodoc",
-    branch: "rt-pubid-2-migration"
 gem "relaton-cli", ">= 2.2.0.pre.alpha.1"
 gem "relaton-bib", "~> 2.2.0.pre.alpha.1"
 gem "pubid",
