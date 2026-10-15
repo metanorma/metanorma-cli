@@ -72,9 +72,6 @@ rescue StandardError
   nil
 end
 gem "metanorma-standoc", github: "metanorma/metanorma-standoc", branch: "main"
-# released suma 0.5.4 still pins svg_conform ~> 0.1.0, incompatible with
-# standoc main (suma#127); main carries the fix, pending release
-gem "suma", github: "metanorma/suma", branch: "main"
 gem "metanorma-iso", github: "metanorma/metanorma-iso", branch: "main" # released 3.5.0 conflicts with metanorma-document main # released 3.4.2 still caps relaton-cli ~> 2.1
 gem "metanorma-document", github: "metanorma/metanorma-document", branch: "main" # standoc main references Document::Components constants
 gem "metanorma-utils", github: "metanorma/metanorma-utils", branch: "main" # released utils lacks GcBudget/deep_symbolize (main-only)
