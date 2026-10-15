@@ -1,0 +1,8 @@
+# Dependencies the dev bundle and the ci sample/template smoke bundles
+# both need on the pre-release line. The ci mn-processor-rake sample and
+# template jobs eval this file as ../Gemfile.devel.
+#
+# released suma (every version >= 0.2.6) pins svg_conform ~> 0.1.0,
+# incompatible with standoc main's ~> 0.2 (suma#127); main carries the
+# fix, pending release
+gem "suma", github: "metanorma/suma", branch: "main"
