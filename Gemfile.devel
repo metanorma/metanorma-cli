@@ -1,0 +1,2 @@
+gem "suma", github: "metanorma/suma", ref: "bca133cb830f51be3bca1b6239ab74233c977b86"
+gem "plurimath", github: "plurimath/plurimath", ref: "43550d88cff7f7d62afd0486bf0794f2845b9f8c"
