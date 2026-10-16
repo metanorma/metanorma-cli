@@ -5,4 +5,7 @@
 # released suma (every version >= 0.2.6) pins svg_conform ~> 0.1.0,
 # incompatible with standoc main's ~> 0.2 (suma#127); main carries the
 # fix, pending release
-gem "suma", github: "metanorma/suma", branch: "main"
+gem "suma", github: "metanorma/suma", ref: "bca133cb830f51be3bca1b6239ab74233c977b86"
+
+gem "plurimath", github: "plurimath/plurimath", ref: "58a60dbb5e1f8ea8eea61c29aa56c61abff0b56c"
+gem "unitsml", github: "unitsml/unitsml-ruby", ref: "983491a3eba8b39668c2e1d8542d234c845d30fa"
