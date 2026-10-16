@@ -41,11 +41,13 @@ end
 RSpec.describe Metanorma::Flavor do
   describe "#load_flavors with bundled private flavors" do
     it "requires bundled metanorma-* flavor gems it does not name" do
-      spec = Struct.new(:name).new("metanorma-nist")
+      spec = Struct.new(:name).new("metanorma-private-example")
       plugin = Struct.new(:name).new("metanorma-plugin-lutaml")
       helper = Struct.new(:name).new("metanorma-utils")
       engine = Struct.new(:name).new("metanorma")
-      bundler_specs = [spec, plugin, helper, engine]
+      mko = Struct.new(:name).new("metanorma-mko")
+      ietf_data = Struct.new(:name).new("metanorma-ietf-data")
+      bundler_specs = [spec, plugin, helper, engine, mko, ietf_data]
       bundler = Struct.new(:specs).new(bundler_specs)
       allow(Bundler).to receive(:load).and_return(bundler)
 
@@ -55,7 +57,8 @@ RSpec.describe Metanorma::Flavor do
 
       instance.load_flavors
 
-      expect(required).to include("metanorma-nist")
+      expect(required).to include("metanorma-private-example")
+      expect(required).not_to include("metanorma-mko", "metanorma-ietf-data")
       expect(required).not_to include("metanorma-utils")
       expect(required).not_to include("metanorma-plugin-lutaml")
       expect(required).not_to include("metanorma")
