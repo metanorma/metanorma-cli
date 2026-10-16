@@ -42,6 +42,8 @@ module Metanorma
       metanorma-document
       metanorma-utils
       metanorma-mirror
+      metanorma-mko
+      metanorma-ietf-data
       metanorma-taste
       metanorma-release
       metanorma-acme
