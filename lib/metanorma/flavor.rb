@@ -66,14 +66,21 @@ module Metanorma
     def load_flavors
       (flavors + bundled_private_flavor_gems).each do |flavor_name|
         require(flavor_name)
-      rescue LoadError => _e
-        gem_loading_error(flavor_name)
-      rescue NameError => _e
-        # Released flavor gems predating the relaton-render 3 line raise
-        # NameError at require time (e.g. metanorma-ogc 2.x subclassing
+      rescue LoadError, NameError => _e
+        # NameError: released flavor gems predating the relaton-render 3
+        # line raise at require time (e.g. metanorma-ogc 2.x subclassing
         # Relaton::Render::Parse); degrade them like absent flavors
         # instead of crashing every corpus run that bundles them.
-        gem_loading_error(flavor_name)
+        if SUPPORTED_GEMS.include?(flavor_name)
+          gem_loading_error(flavor_name)
+        else
+          # Bundled-but-not-supported metanorma-* gems load best-effort:
+          # the bundle pulls in data gems with no top-level entry file
+          # (metanorma-ietf-data) and stale releases awaiting their
+          # entry-file fix (metanorma-mko 1.1.1 predates the mko entry).
+          # Their absence is not the user's error, so stay quiet.
+          Metanorma::Cli::UI.debug("#{flavor_name} is not present!")
+        end
       end
     end
 
