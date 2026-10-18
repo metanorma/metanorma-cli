@@ -42,7 +42,7 @@ gem "pubid",
 gem "xmi", "~> 0.7"
 gem "lutaml", ">= 0.11.2"
 gem "ogc-gml", "1.1.0"
-gem "lutaml-model", "0.8.106" # LATEST RELEASE (glossarist 0.5 needs >= 0.8.22)
+gem "lutaml-model", "0.8.114" # relaton a.15 declares singular_tolerance (needs 0.8.113+); glossarist 0.5 needs >= 0.8.22
 # Pin glossarist plugin: 0.3.10 freezes its preprocessor after
 # initialization, breaking Asciidoctor compile in the cli suite.
 gem "metanorma-plugin-glossarist", "~> 0.5" # standoc main needs the 0.5 preprocessor
