@@ -6,3 +6,5 @@
 # incompatible with standoc main's ~> 0.2 (suma#127); main carries the
 # fix, pending release
 gem "suma", github: "metanorma/suma", branch: "main"
+
+gem "plurimath", github: "plurimath/plurimath", ref: "2e39032445520f01721075cca87b5077e7fcada6"
