@@ -64,6 +64,7 @@ module Metanorma
     end
 
     def load_flavors
+      require_tastes
       (flavors + bundled_private_flavor_gems).each do |flavor_name|
         require(flavor_name)
       rescue LoadError, NameError => _e
@@ -85,6 +86,16 @@ module Metanorma
     end
 
     private
+
+    # Tastes register into Metanorma::Core::Flavors at require time; the
+    # registry is the single extension point behind the CLI's taste
+    # lookups (flavor dictionary, export-config, compile). Absence of the
+    # gem degrades silently, like an absent flavor.
+    def require_tastes
+      require "metanorma-taste"
+    rescue LoadError, NameError
+      Metanorma::Cli::UI.debug("metanorma-taste is not present!")
+    end
 
     # Bundled metanorma-* gems outside the public flavor lists and the
     # non-flavor helpers: fully private flavors. Names are discovered
