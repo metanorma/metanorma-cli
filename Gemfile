@@ -18,12 +18,10 @@ gem "metanorma-taste",
     github: "metanorma/metanorma-taste",
     branch: "main"
 
-# Fully private flavors resolve from their GitHub sources (the Packages
-# registry only carries the retired 1.x line); the flavor loader
-# discovers them generically from the bundle and open code never names
-# them outside this dev bundle.
-gem "metanorma-nist", github: "metanorma/metanorma-nist", branch: "main"
-gem "metanorma-bsi", github: "metanorma/metanorma-bsi", branch: "main"
+# Private flavors (nist, bsi) are intentionally absent: their sources are
+# not readable without credentials, so any unauthenticated fresh resolve
+# fails. The flavor loader is still tested against them via stubbed
+# specs, and the grammar census installs them with GitHub Packages auth.
 
 gem "relaton-cli", ">= 2.2.0.pre.alpha.1"
 gem "relaton-bib", "~> 2.2.0.pre.alpha.1"
