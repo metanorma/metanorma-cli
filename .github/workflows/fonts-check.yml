@@ -64,16 +64,23 @@ jobs:
       with:
         private-fonts-pat: ${{ secrets.METANORMA_CI_PAT_TOKEN }}
 
-    # every flavor in the matrix is already pinned in the dev Gemfile
-    # (github mains); `bundle add` here would re-source an already
-    # bundled gem and fail the Gemfile parse with "same gem twice
-    # coming from different sources"
+    # Flavors pinned in the dev Gemfile are already bundled (github mains);
+    # `bundle add` here would re-source an already bundled gem and fail the
+    # Gemfile parse with "same gem twice coming from different sources".
+    # nist and bsi are deliberately absent from the dev Gemfile (their
+    # sources are private, so a credential-less dev resolve would fail);
+    # this job authenticates for them, so bring them in here only.
+    - if: ${{ matrix.flavor == 'bsi' || matrix.flavor == 'nist' }}
+      run: bundle add metanorma-${{ matrix.flavor }} --github metanorma/metanorma-${{ matrix.flavor }} --branch main
+
     - run: bundle exec bin/font-test ${{ matrix.flavor }}
 
   create-issue:
     runs-on: ubuntu-latest
     needs: test-flavor-fonts
-    if: failure()
+    # issue filing is for the nightly; on PRs the assignee is not
+    # assignable and the job fails spuriously
+    if: failure() && github.event_name == 'schedule'
     steps:
     - uses: actions/github-script@v7
       with:
