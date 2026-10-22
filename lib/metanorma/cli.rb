@@ -14,6 +14,8 @@ module Metanorma
     CONFIG_DIRNAME = ".metanorma"
     CONFIG_FILENAME = "config.yml"
 
+    autoload :SchemaSiteDetector, "metanorma/cli/schema_site_detector"
+
     def self.load_flavors
       Metanorma::Flavor.load_flavors
     end
