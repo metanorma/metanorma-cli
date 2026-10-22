@@ -62,6 +62,8 @@ module Metanorma
       end
 
       def generate!
+        return generate_via_suma if schema_site?
+
         ensure_site_asset_directory!
 
         # compile individual document files
@@ -72,10 +74,7 @@ module Metanorma
         # actually compile collection file(s)
         compile_collections!
 
-        Dir.chdir(site_directory) do
-          build_collection_file!(relaton_collection_index)
-          convert_to_html_page!(relaton_collection_index, DEFAULT_SITE_INDEX)
-        end
+        build_site_index(site_directory)
       end
 
       private
@@ -85,6 +84,35 @@ module Metanorma
                   :template_dir,
                   :output_filename_template,
                   :base_path
+
+      # Schema-bearing manifests build through the suma pipeline, which
+      # compiles the schemas the manifests attach as documents.
+      def schema_site?
+        @schema_site ||= !manifest_file.nil? &&
+          SchemaSiteDetector.new(manifest_file.to_s).schema_bearing?
+      end
+
+      def generate_via_suma
+        Dir.chdir(source_path) do
+          ::Suma::Processor.new(
+            metanorma_yaml_path: manifest_file.to_s,
+            schemas_all_path: schemas_all_path,
+            output_directory: site_path.to_s,
+          ).run
+        end
+      end
+
+      def schemas_all_path
+        File.join(File.dirname(manifest_file.to_s),
+                  File.basename(manifest_file.to_s).gsub("metanorma", "schemas"))
+      end
+
+      def build_site_index(site_directory)
+        Dir.chdir(site_directory) do
+          build_collection_file!(relaton_collection_index)
+          convert_to_html_page!(relaton_collection_index, DEFAULT_SITE_INDEX)
+        end
+      end
 
       def find_realpath(path)
         Pathname.new(path).realpath if path
