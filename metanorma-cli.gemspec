@@ -30,7 +30,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency "mnconvert", "~> 1.89"
   spec.add_dependency "metanorma-release", "~> 0.2"
   # spec.add_dependency "thor", "~> 1.0" # inherited from vectory
-  # spec.add_dependency "metanorma-gb", "~> 1.5.0"
+  # revived flavors: floor the candidates that carry the coordinated fixes
+  spec.add_dependency "metanorma-gb", ">= 1.5.9.pre.alpha.3"
+  spec.add_dependency "metanorma-un", ">= 0.12.20.pre.alpha.2"
+  spec.add_dependency "metanorma-m3aawg", ">= 2.2.6.pre.alpha.2"
   spec.add_dependency "metanorma-bipm", ">= 2.9.1"
   spec.add_dependency "metanorma-cc", ">= 2.9.1"
   spec.add_dependency "metanorma-generic", ">= 3.5.1"
