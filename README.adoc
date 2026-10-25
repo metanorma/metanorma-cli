@@ -73,6 +73,16 @@ are installed. Please refer to the following table for them.
 |===
 
 
+== Troubleshooting: `LoadError: cannot load such file -- sassc-embedded`
+
+The metanorma gems ship their stylesheets precompiled, and intentionally do not declare `sassc-embedded`: released-gem consumers never execute a Sass toolchain.
+
+This LoadError appears when the bundle resolves flavor gems **from git or as prereleases that ship `.scss` sources**: isodoc's live-compilation path then runs and needs the toolchain from the consumer side. Add it to your Gemfile for that setup:
+
+[gem "sassc-embedded"]
+
+It is a consumer-side concern: do not declare it in a gem's gemspec.
+
 == Usage
 
 Refer to https://www.metanorma.org/install/usage[Metanorma CLI usage].
