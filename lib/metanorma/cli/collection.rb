@@ -70,9 +70,10 @@ module Metanorma
                     end
 
         old = @options.dup
-        @options = Cli.with_indifferent_access(
-          yaml_file.slice("coverpage", "format", "output_folder"),
-        )
+        # `--help` and invocation without a parsable options file reach
+        # this with yaml_file nil; the option keys are simply absent then.
+        options_from_file = yaml_file&.slice("coverpage", "format", "output_folder") || {}
+        @options = Cli.with_indifferent_access(options_from_file)
         @options.merge!(old)
       end
 
