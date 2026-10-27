@@ -30,6 +30,9 @@ Gem::Specification.new do |spec|
   # resolution with the shim-free generation.
   spec.add_dependency "metanorma-ietf", ">= 3.7.12.pre.alpha.1"
   spec.add_dependency "metanorma-iso", ">= 3.5.1.pre.alpha.1"
+  # The taste-chain-aware FlavorLoader (0.2.4 resolves tastes to
+  # nonexistent metanorma-<taste> gems) - the floor names the line.
+  spec.add_dependency "metanorma-core", ">= 0.2.5.pre.alpha.1"
   spec.add_dependency "mnconvert", "~> 1.89"
   spec.add_dependency "metanorma-release", "~> 0.2"
   # spec.add_dependency "thor", "~> 1.0" # inherited from vectory
