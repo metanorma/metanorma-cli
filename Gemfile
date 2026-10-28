@@ -25,9 +25,7 @@ gem "metanorma-taste",
 
 gem "relaton-cli", ">= 2.2.0.pre.alpha.1"
 gem "relaton-bib", "~> 2.2.0.pre.alpha.1"
-gem "pubid",
-    github: "pubid/pubid",
-    branch: "main"
+gem "pubid", "~> 2.0" # 2.0.0 released; the git source now carries the 2.1 pre line
 
 # Cap lutaml-model < 0.8.20: 0.8.20 relocates the XML adapter directory
 # (xmi and other transitive gems still require the old path). The wave's
