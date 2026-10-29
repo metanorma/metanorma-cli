@@ -77,7 +77,13 @@ module Metanorma
         # git gem >= 5 spawns with a chdir into the target directory, which
         # must already exist; older versions created it implicitly
         templates_path.mkpath
-        clone = Git.clone(repo, name, path: templates_path)
+        clone = if Gem::Version.new(Git::VERSION) >= Gem::Version.new("6")
+          # git 6.0 took the clone target as the second positional argument
+          # and dropped the `:path` option entirely
+          Git.clone(repo, templates_path.join(name.to_s).to_s)
+        else
+          Git.clone(repo, name, path: templates_path)
+        end
         template_path unless clone.nil?
       end
 
