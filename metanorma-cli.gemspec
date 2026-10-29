@@ -59,7 +59,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "metanorma-ogc", ">= 2.10.1.pre.alpha.1"
   spec.add_dependency "metanorma-plateau", ">= 1.3.2.pre.alpha.1"
   spec.add_dependency "canon", ">= 0.2.12"
-  spec.add_dependency "relaton-cli", ">= 3.0.0"
+  spec.add_dependency "relaton-cli", "~> 3.0"
   # the coordinated isodoc candidate carries the bibrender nil-guard (isodoc#852)
   spec.add_dependency "isodoc", ">= 3.7.4.pre.alpha.1"
   spec.add_dependency "socksify"
