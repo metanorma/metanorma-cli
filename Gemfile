@@ -29,6 +29,12 @@ gem "pubid",
     github: "pubid/pubid",
     branch: "main"
 
+# The git gem's 6.0.0 removed clone's `:path` and the Repository#branches
+# collection (template + fontist-repo setup crashes). The template code is
+# ported on this branch; fontist still needs its own port and release, so
+# ride the 5.x line until then.
+gem "git", "~> 5.7"
+
 # Cap lutaml-model < 0.8.20: 0.8.20 relocates the XML adapter directory
 # (xmi and other transitive gems still require the old path). The wave's
 # other gems (document/iso) also pin ~> 0.8.0; this avoids the imminent
