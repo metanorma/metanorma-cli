@@ -58,6 +58,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency "metanorma-jis", ">= 1.2.1.pre.alpha.1"
   spec.add_dependency "metanorma-ogc", ">= 2.10.1.pre.alpha.1"
   spec.add_dependency "metanorma-plateau", ">= 1.3.2.pre.alpha.1"
+  # OIML publications (B/D/G/R/V series): :mn-document-class: oiml
+  spec.add_dependency "metanorma-oiml", ">= 0.1.0"
   spec.add_dependency "canon", ">= 0.2.12"
   spec.add_dependency "relaton-cli", ">= 3.0.0"
   # the coordinated isodoc candidate carries the bibrender nil-guard (isodoc#852)
