@@ -23,6 +23,7 @@ module Metanorma
       "metanorma-ogc",
       "metanorma-itu",
       "metanorma-plateau",
+      "metanorma-oiml",
     ].freeze
 
     PRIVATE_SUPPORTED_GEMS = [

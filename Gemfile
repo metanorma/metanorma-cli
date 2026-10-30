@@ -92,5 +92,7 @@ gem "metanorma-iho", github: "metanorma/metanorma-iho", branch: "main"
 gem "metanorma-itu", github: "metanorma/metanorma-itu", branch: "main"
 gem "metanorma-jis", github: "metanorma/metanorma-jis", branch: "main"
 gem "metanorma-ogc", github: "metanorma/metanorma-ogc", branch: "main"
+# 0.1.0 first cut unreleased; gemspec floors >= 0.1.0 — github pin until then
+gem "metanorma-oiml", github: "metanorma/metanorma-oiml", branch: "main"
 gem "metanorma-plateau", github: "metanorma/metanorma-plateau", branch: "main"
 gem "metanorma-ribose", github: "metanorma/metanorma-ribose", branch: "main"
