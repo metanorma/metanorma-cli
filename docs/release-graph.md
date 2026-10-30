@@ -67,6 +67,27 @@ rubygems (their rubygems stables are the retired 1.x/0.7 lines);
   worktree litter. The canonical set used here is the checkout whose
   origin matches the gem's repo.
 
+## Release infrastructure (the planes around the graph)
+
+- **`metanorma-release`** (W10) — the release-orchestration gem the wave
+  dispatches ride on.
+- **`metanorma-sandbox`** — the rehearsal fleet (`fleet-ops`,
+  `samples-runner`): release waves are rehearsed here against the
+  candidate graph before any dispatch.
+- **`tebako-packages/metanorma`** — the payload feedstock: presses the
+  metanorma-cli payload per ruby line and lands the `tpkg-registry.yaml`
+  entry the packed-metanorma build consumes.
+- **`metanorma/packed-metanorma`** — the binary planes (tebako-pressed
+  packages, the Windows MSI + macOS pkg installers) published to GitHub
+  releases; versions.yaml is its single source of truth.
+- **`metanorma/metanorma-docker`** — the Docker Hub images
+  (`IMAGE_VERSION` tracks the metanorma-cli release via the auto
+  release-tag dispatch).
+- **`metanorma/homebrew-metanorma`** — the Homebrew formula + cask
+  (packed-mn binary based), bumped on the packed-metanorma fan-out.
+- **`actions-mn/setup` + `metanorma/ci`** — the CI setup action and the
+  reusable workflows the sample-repo legs ride.
+
 ## Graph
 
 ![release graph](release-graph.dot.svg)
