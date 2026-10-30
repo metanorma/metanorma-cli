@@ -74,7 +74,7 @@ digraph metanorma_release {
   "lutaml-store" -> "lutaml-hal";
   "lutaml-store" -> "lutaml-model";
   "metanorma" -> "isodoc";
-  "metanorma" -> "metanorma-core+metanorma-taste";
+  "metanorma" -> "metanorma-core";
   "metanorma" -> "metanorma-standoc";
   "metanorma" -> "relaton-cli";
   "metanorma-bipm" -> "metanorma-generic";
@@ -87,7 +87,6 @@ digraph metanorma_release {
   "metanorma-cli" -> "metanorma";
   "metanorma-cli" -> "metanorma-bipm";
   "metanorma-cli" -> "metanorma-cc";
-  "metanorma-cli" -> "metanorma-core+metanorma-taste";
   "metanorma-cli" -> "metanorma-gb";
   "metanorma-cli" -> "metanorma-generic";
   "metanorma-cli" -> "metanorma-iec";
@@ -103,16 +102,16 @@ digraph metanorma_release {
   "metanorma-cli" -> "metanorma-release";
   "metanorma-cli" -> "metanorma-ribose";
   "metanorma-cli" -> "metanorma-standoc";
+  "metanorma-cli" -> "metanorma-taste";
   "metanorma-cli" -> "metanorma-un";
   "metanorma-cli" -> "mnconvert";
   "metanorma-cli" -> "relaton-cli";
-  "metanorma-core+metanorma-taste" -> "isodoc";
-  "metanorma-core+metanorma-taste" -> "lutaml-model";
-  "metanorma-core+metanorma-taste" -> "metanorma-utils";
+  "metanorma-core" -> "isodoc";
+  "metanorma-core" -> "metanorma-taste";
+  "metanorma-core" -> "metanorma-utils";
   "metanorma-document" -> "glossarist";
   "metanorma-document" -> "lutaml-model";
-  "metanorma-document" -> "metanorma-core+metanorma-taste";
-  "metanorma-document" -> "metanorma-mko";
+  "metanorma-document" -> "metanorma-core";
   "metanorma-document" -> "pubid";
   "metanorma-document" -> "relaton";
   "metanorma-gb" -> "isodoc";
@@ -142,6 +141,7 @@ digraph metanorma_release {
   "metanorma-m3aawg" -> "metanorma-generic";
   "metanorma-mirror" -> "lutaml-model";
   "metanorma-mko" -> "lutaml-model";
+  "metanorma-mko" -> "metanorma-document";
   "metanorma-nist" -> "metanorma-standoc";
   "metanorma-nist" -> "pubid";
   "metanorma-ogc" -> "metanorma-iso";
@@ -170,7 +170,7 @@ digraph metanorma_release {
   "metanorma-ribose" -> "metanorma-generic";
   "metanorma-standoc" -> "isodoc";
   "metanorma-standoc" -> "leptris";
-  "metanorma-standoc" -> "metanorma-core+metanorma-taste";
+  "metanorma-standoc" -> "metanorma-core";
   "metanorma-standoc" -> "metanorma-document";
   "metanorma-standoc" -> "metanorma-mirror";
   "metanorma-standoc" -> "metanorma-plugin-asciichem";
@@ -183,6 +183,7 @@ digraph metanorma_release {
   "metanorma-standoc" -> "relaton-iev";
   "metanorma-standoc" -> "svg_conform";
   "metanorma-standoc" -> "vectory";
+  "metanorma-taste" -> "lutaml-model";
   "metanorma-un" -> "metanorma-standoc";
   "metanorma-utils" -> "moxml";
   "pubid" -> "lutaml-model";
@@ -209,14 +210,14 @@ digraph metanorma_release {
   "uniword" -> "lutaml-model";
   {rank=same; "coradoc"; "glossarist"; "leptris"; "metanorma-plugin-plantuml"; "mn-requirements"; "mnconvert"; "moxml"; "relaton-core"; "relaton-logger"; "ukiryu"; "vectory";}
   {rank=same; "lutaml-model"; "metanorma-plugin-asciichem"; "metanorma-utils";}
-  {rank=same; "expressir"; "isodoc-i18n"; "lutaml-hal"; "metanorma-mirror"; "metanorma-mko"; "metanorma-plugin-asyncapi"; "metanorma-plugin-glossarist"; "metanorma-plugin-openapi"; "pubid"; "relaton-bib"; "svg_conform"; "uniword";}
+  {rank=same; "expressir"; "isodoc-i18n"; "lutaml-hal"; "metanorma-mirror"; "metanorma-plugin-asyncapi"; "metanorma-plugin-glossarist"; "metanorma-plugin-openapi"; "metanorma-taste"; "pubid"; "relaton-bib"; "svg_conform"; "uniword";}
   {rank=same; "lutaml-store"; "relaton-render";}
   {rank=same; "relaton";}
   {rank=same; "relaton-cli"; "relaton-iev";}
   {rank=same; "isodoc";}
-  {rank=same; "metanorma-core+metanorma-taste"; "metanorma-plugin-datastruct"; "metanorma-plugin-lutaml";}
+  {rank=same; "metanorma-core"; "metanorma-plugin-datastruct"; "metanorma-plugin-lutaml";}
   {rank=same; "metanorma-document";}
-  {rank=same; "metanorma-release"; "metanorma-standoc";}
+  {rank=same; "metanorma-mko"; "metanorma-release"; "metanorma-standoc";}
   {rank=same; "metanorma"; "metanorma-generic"; "metanorma-ieee"; "metanorma-ietf"; "metanorma-iso"; "metanorma-nist"; "metanorma-oiml"; "metanorma-un";}
   {rank=same; "metanorma-bipm"; "metanorma-bsi"; "metanorma-cc"; "metanorma-gb"; "metanorma-iec"; "metanorma-iho"; "metanorma-itu"; "metanorma-jis"; "metanorma-m3aawg"; "metanorma-ogc"; "metanorma-ribose";}
   {rank=same; "metanorma-plateau";}
