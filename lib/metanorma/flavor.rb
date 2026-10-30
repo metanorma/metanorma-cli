@@ -23,7 +23,6 @@ module Metanorma
       "metanorma-ogc",
       "metanorma-itu",
       "metanorma-plateau",
-      "metanorma-oiml",
     ].freeze
 
     PRIVATE_SUPPORTED_GEMS = [
@@ -47,6 +46,10 @@ module Metanorma
       metanorma-taste
       metanorma-release
       metanorma-acme
+      # OIML publications: the oiml taste's document-transformer hook
+      # lazily requires this gem (OIML STS conversion); it is a
+      # transformer provider, not a Processor flavor
+      metanorma-oiml
     ).freeze
 
     def self.activate
