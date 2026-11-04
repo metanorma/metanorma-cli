@@ -31,6 +31,11 @@ gem "pubid", "~> 2.0" # 2.0.0 released; the git source now carries the 2.1 pre l
 # collection (template + fontist-repo setup crashes). The template code is
 # ported on this branch; fontist still needs its own port and release, so
 # ride the 5.x line until then.
+# Floor fontist at the variable-font indexing fix (fontist#531/#532):
+# google/fira_code and friends went variable-only, and anything below
+# 3.0.31 registers a fresh install under its default instance family
+# only, so Manifest locations lookups miss "Fira Code" and friends.
+gem "fontist", "~> 3.0.32"
 gem "git", "~> 5.7"
 
 # Force newer xmi (lutaml 0.9.43 pins xmi ~> 0.3.20; xmi 0.7+ moved
