@@ -36,7 +36,10 @@ gem "pubid", "~> 2.0" # 2.0.0 released; the git source now carries the 2.1 pre l
 # 3.0.31 registers a fresh install under its default instance family
 # only, so Manifest locations lookups miss "Fira Code" and friends.
 gem "fontist", "~> 3.0.32"
-gem "git", "~> 5.7"
+# git 6: the template clone port landed (git_template.rb gates on
+# Git::VERSION), and fontist 3.0.32+ requires git ~> 6.0 itself, so the
+# 5.x ride-along is over.
+gem "git", "~> 6.0"
 
 # Force newer xmi (lutaml 0.9.43 pins xmi ~> 0.3.20; xmi 0.7+ moved
 # the XML adapter to a path compatible with lutaml-model 0.8.x).
