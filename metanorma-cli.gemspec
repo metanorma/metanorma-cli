@@ -49,7 +49,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "metanorma-taste", "~> 1.1"
   # spec.add_dependency 'metanorma-mpfa', "~> 0.9.0"
   spec.add_dependency "git", ">= 3.0"
-  spec.add_dependency "lutaml-model", "~> 0.8"
+  spec.add_dependency "lutaml-model", "~> 0.8.164"
   spec.add_dependency "metanorma", ">= 2.5.6.pre.alpha.2"
   spec.add_dependency "metanorma-iho", ">= 1.4.1.pre.alpha.1"
   spec.add_dependency "metanorma-itu", ">= 2.9.3.pre.alpha.1"
