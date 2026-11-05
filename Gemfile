@@ -23,7 +23,6 @@ gem "metanorma-taste",
 # fails. The flavor loader is still tested against them via stubbed
 # specs, and the grammar census installs them with GitHub Packages auth.
 
-gem "relaton-cli", "~> 3.0"
 gem "pubid", "~> 2.0" # 2.0.0 released; the git source now carries the 2.1 pre line
 
 # The git gem's 6.0.0 removed clone's `:path` and the Repository#branches
