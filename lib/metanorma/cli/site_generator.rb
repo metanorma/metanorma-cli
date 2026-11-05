@@ -3,6 +3,10 @@
 require "yaml"
 require "pathname"
 require "fileutils"
+# Relaton::Cli lazy-loads in the consolidated relaton gem; require its home
+# before use (the standalone relaton-cli gem loaded everything at boot,
+# which this used to rely on).
+require "relaton/cli"
 
 module Metanorma
   module Cli
