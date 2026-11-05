@@ -33,10 +33,6 @@ gem "pubid", "~> 2.0" # 2.0.0 released; the git source now carries the 2.1 pre l
 # ride the 5.x line until then.
 gem "git", "~> 5.7"
 
-# Cap lutaml-model < 0.8.20: 0.8.20 relocates the XML adapter directory
-# (xmi and other transitive gems still require the old path). The wave's
-# other gems (document/iso) also pin ~> 0.8.0; this avoids the imminent
-# 0.8.20 yank.
 # Force newer xmi (lutaml 0.9.43 pins xmi ~> 0.3.20; xmi 0.7+ moved
 # the XML adapter to a path compatible with lutaml-model 0.8.x).
 # Conflict with lutaml's pin is resolved by also pinning lutaml to a
@@ -44,7 +40,7 @@ gem "git", "~> 5.7"
 gem "xmi", "~> 0.7"
 gem "lutaml", ">= 0.11.2"
 gem "ogc-gml", "1.1.0"
-gem "lutaml-model", "~> 0.8" # the 0.8.114 pin predates ogc's ~> 0.8.122; the lock governs
+gem "lutaml-model", "~> 0.8.164" # the fleet convention: pessimistic floor at the latest patch
 # Pin glossarist plugin: 0.3.10 freezes its preprocessor after
 # initialization, breaking Asciidoctor compile in the cli suite.
 gem "metanorma-plugin-glossarist", "~> 0.5" # standoc main needs the 0.5 preprocessor
