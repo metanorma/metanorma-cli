@@ -62,7 +62,7 @@ Gem::Specification.new do |spec|
   # document-transformer hook lazily requires this gem
   spec.add_dependency "metanorma-oiml", ">= 0.1.0"
   spec.add_dependency "canon", ">= 0.2.12"
-  spec.add_dependency "relaton-cli", ">= 3.0.0"
+  spec.add_dependency "relaton", "~> 3.0"
   # the coordinated isodoc candidate carries the bibrender nil-guard (isodoc#852)
   spec.add_dependency "isodoc", "~> 3.7.9"
   spec.add_dependency "socksify"
