@@ -1,5 +1,5 @@
 module Metanorma
   module Cli
-    VERSION = "1.18.3".freeze
+    VERSION = "1.18.4".freeze
   end
 end
