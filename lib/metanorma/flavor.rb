@@ -88,6 +88,7 @@ module Metanorma
           Metanorma::Cli::UI.debug("#{flavor_name} is not present!")
         end
       end
+      load_bundled_plugins
     end
 
     private
@@ -102,11 +103,35 @@ module Metanorma
       Metanorma::Cli::UI.debug("metanorma-taste is not present!")
     end
 
+    # Bundled metanorma-plugin-* gems register their Asciidoctor
+    # extensions at require time. Names come from the bundle. These
+    # gems were never auto-loaded before, so one that is broken must not
+    # take the CLI down or stop the remaining plugins from loading: a
+    # plugin without a gem-name entry file, or whose require fails for
+    # any reason, is skipped quietly.
+    def load_bundled_plugins
+      bundled_gem_names.grep(/\Ametanorma-plugin-/).each do |plugin_name|
+        require(plugin_name)
+      rescue StandardError, ScriptError => e
+        Metanorma::Cli::UI.debug(
+          "#{plugin_name} not loaded: #{e.class}: #{e.message[/[^\n]*/]}",
+        )
+      end
+    end
+
     # Bundled metanorma-* gems outside the public flavor lists and the
     # non-flavor helpers: fully private flavors. Names are discovered
     # from the bundle, never listed here.
     def bundled_private_flavor_gems
       named = flavors + NON_FLAVOR_GEMS
+      bundled_gem_names.select do |name|
+        name.start_with?("metanorma-") &&
+          !name.start_with?("metanorma-plugin-") &&
+          !named.include?(name)
+      end
+    end
+
+    def bundled_gem_names
       specs = begin
         Bundler.load.specs
       rescue StandardError
@@ -114,10 +139,7 @@ module Metanorma
           spec.name.start_with?("metanorma-")
         end
       end
-      specs.map(&:name).uniq.select do |name|
-        name.start_with?("metanorma-") && !name.start_with?("metanorma-plugin-") &&
-          !named.include?(name)
-      end
+      specs.map(&:name).uniq
     end
 
     private
