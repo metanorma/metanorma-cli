@@ -85,6 +85,11 @@
       "id": "oiml",
       "public": true,
       "experimental": false
+    },
+    {
+      "id": "expressdocs",
+      "public": true,
+      "experimental": false
     }
   ]
 }
