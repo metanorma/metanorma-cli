@@ -2,7 +2,6 @@
 # both need on the pre-release line. The ci mn-processor-rake sample and
 # template jobs eval this file as ../Gemfile.devel.
 #
-# released suma (every version >= 0.2.6) pins svg_conform ~> 0.1.0,
-# incompatible with standoc main's ~> 0.2 (suma#127); main carries the
-# fix, pending release
-gem "suma", github: "metanorma/suma", branch: "main"
+# Empty since the release wave: released suma 0.5.28+ relaxed its
+# svg_conform pin to >= 0.1.0, which overlaps standoc's ~> 0.2, so the
+# dev bundle rides released gems throughout.

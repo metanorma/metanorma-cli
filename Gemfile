@@ -2,21 +2,9 @@ Encoding.default_external = Encoding::UTF_8
 Encoding.default_internal = Encoding::UTF_8
 
 source "https://rubygems.org"
-git_source(:github) { |repo| "https://github.com/#{repo}" }
 
 
 gemspec
-
-# Remaining cross-PR pins for the flavor-table restructure wave.
-# document#45 metanorma#591 iso#1618 standoc#1232 itu/iec/ogc migration
-# PRs and isodoc#825 all merged: those pins below are carried by the
-# canonical zoo at the foot of this file.
-gem "metanorma-core",
-    github: "metanorma/metanorma-core",
-    branch: "main"
-gem "metanorma-taste",
-    github: "metanorma/metanorma-taste",
-    branch: "main"
 
 # Private flavors (nist, bsi) are intentionally absent: their sources are
 # not readable without credentials, so any unauthenticated fresh resolve
@@ -75,26 +63,27 @@ begin
 rescue StandardError
   nil
 end
-gem "metanorma-standoc", github: "metanorma/metanorma-standoc", branch: "main"
-gem "metanorma-iso", github: "metanorma/metanorma-iso", branch: "main" # released 3.5.0 conflicts with metanorma-document main # released 3.4.2 still caps relaton-cli ~> 2.1
-gem "metanorma-document", github: "metanorma/metanorma-document", branch: "main" # standoc main references Document::Components constants
-gem "metanorma-utils", github: "metanorma/metanorma-utils", branch: "main" # released utils lacks GcBudget/deep_symbolize (main-only)
-gem "isodoc", github: "metanorma/isodoc", branch: "main" # released isodoc caps relaton-render ~> 1.3
+gem "metanorma-core", "~> 0.2.7"
+gem "metanorma-taste", "~> 1.1"
+gem "metanorma-standoc", "~> 3.5"
+gem "metanorma-iso", "~> 3.5"
+gem "metanorma-document", "~> 0.5.4"
+gem "metanorma-utils", "~> 2.0"
+gem "isodoc", "~> 3.7"
 
-# the metagem's flavor zoo on mains: released flavors reference the retired 1.x render API
-gem "metanorma", github: "metanorma/metanorma", branch: "main"
-gem "metanorma-bipm", github: "metanorma/metanorma-bipm", branch: "main"
-gem "metanorma-cc", github: "metanorma/metanorma-cc", branch: "main"
-gem "metanorma-iec", github: "metanorma/metanorma-iec", branch: "main"
-gem "metanorma-ieee", github: "metanorma/metanorma-ieee", branch: "main"
-gem "metanorma-ietf", github: "metanorma/metanorma-ietf", branch: "main"
-gem "metanorma-gb", github: "metanorma/metanorma-gb", branch: "main"
-gem "metanorma-generic", github: "metanorma/metanorma-generic", branch: "main"
-gem "metanorma-iho", github: "metanorma/metanorma-iho", branch: "main"
-gem "metanorma-itu", github: "metanorma/metanorma-itu", branch: "main"
-gem "metanorma-jis", github: "metanorma/metanorma-jis", branch: "main"
-gem "metanorma-ogc", github: "metanorma/metanorma-ogc", branch: "main"
-# 0.1.0 first cut unreleased; gemspec floors >= 0.1.0 — github pin until then
-gem "metanorma-oiml", github: "metanorma/metanorma-oiml", branch: "main"
-gem "metanorma-plateau", github: "metanorma/metanorma-plateau", branch: "main"
-gem "metanorma-ribose", github: "metanorma/metanorma-ribose", branch: "main"
+# the metagem's flavor zoo
+gem "metanorma", "~> 2.5"
+gem "metanorma-bipm", "~> 2.9"
+gem "metanorma-cc", "~> 2.9"
+gem "metanorma-iec", "~> 2.9"
+gem "metanorma-ieee", "~> 1.7"
+gem "metanorma-ietf", "~> 3.7"
+gem "metanorma-gb", "~> 1.5"
+gem "metanorma-generic", "~> 3.5"
+gem "metanorma-iho", "~> 1.4"
+gem "metanorma-itu", "~> 2.9"
+gem "metanorma-jis", "~> 1.2"
+gem "metanorma-ogc", "~> 2.10"
+gem "metanorma-oiml", "~> 0.1"
+gem "metanorma-plateau", "~> 1.3"
+gem "metanorma-ribose", "~> 2.9"
