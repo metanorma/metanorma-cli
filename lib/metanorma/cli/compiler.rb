@@ -50,7 +50,17 @@ module Metanorma
       end
 
       def serialize_options
-        serialize(options.merge(customize_options))
+        serialize(options.merge(customize_options).merge(base_dir_option))
+      end
+
+      # Anchor AsciiDoc asset resolution and the include jail at the
+      # docfile's directory, so the compile output does not depend on the
+      # working directory it was invoked from (metanorma#627). An explicit
+      # --base-dir widens the anchor - and with it the include jail - for
+      # documents reaching outside their own directory.
+      def base_dir_option
+        { base_dir: options[:base_dir] ||
+          File.dirname(File.expand_path(file)) }
       end
 
       def customize_options

@@ -58,6 +58,7 @@ RSpec.describe Metanorma::Cli::Compiler do
       extension_keys: [],
       install_fonts: false,
       progress: false,
+      base_dir: File.dirname(sample_asciidoc_file),
     }
   end
 
