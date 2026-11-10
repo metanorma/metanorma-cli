@@ -67,6 +67,8 @@ Gem::Specification.new do |spec|
   spec.add_dependency "isodoc", "~> 3.7.9"
   spec.add_dependency "socksify"
   spec.add_dependency "suma", "~> 0.5"
+  # Bundled gem required directly by lib code: uri in cli/generator.rb (metanorma/metanorma#669)
+  spec.add_dependency "uri"
   # spec.metadata["rubygems_mfa_required"] = "true"
   # NOBODY UNCOMMENTS THIS WITHOUT EXPLAINING TO ME HOW TO USE MFA
 end
