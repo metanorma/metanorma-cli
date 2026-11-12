@@ -72,9 +72,9 @@ module Metanorma
              desc: "Continue processing even when fonts are missing"
       option :base_dir,
              desc: "Anchor AsciiDoc asset resolution and the include " \
-                   "jail at this directory (default: the docfile's " \
-                   "directory; widen it for documents reaching outside " \
-                   "their own directory)"
+                   "jail at this directory (default: the working " \
+                   "directory; set it when compiling from elsewhere or " \
+                   "when the collection lane declares base-dir)"
 
       # rubocop:disable Metrics/PerceivedComplexity
       # rubocop:disable Metrics/AbcSize
