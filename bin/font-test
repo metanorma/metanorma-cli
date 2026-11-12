@@ -24,6 +24,10 @@ end
 
 flavors.each do |flavor|
   flavor_name = (flavor == "jcgm") ? "bipm" : flavor
+  # expressdocs documents compile through the ISO processor (the corpus
+  # is ISO-flavored express annotations; no metanorma-expressdocs gem
+  # exists), so its font needs are the ISO set.
+  flavor_name = "iso" if flavor_name == "expressdocs"
   gem_name = "metanorma-#{flavor_name}"
   # Tastes declare their own font needs, and a taste may carry a bundled
   # transformer gem with no Processor of its own (e.g. metanorma-oiml
