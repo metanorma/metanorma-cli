@@ -54,13 +54,15 @@ module Metanorma
       end
 
       # Anchor AsciiDoc asset resolution and the include jail at the
-      # docfile's directory, so the compile output does not depend on the
-      # working directory it was invoked from (metanorma#627). An explicit
-      # --base-dir widens the anchor - and with it the include jail - for
-      # documents reaching outside their own directory.
+      # working directory - Asciidoctor's own default, and the pre-#489
+      # behavior - so compiles from a repository root keep resolving
+      # includes that reach above the document's directory
+      # (metanorma-cli#490; 656 of iso-10303's 658 document.adoc files
+      # include ../../templates/...). An explicit --base-dir anchors the
+      # jail where the caller wants it: the collection lane declares
+      # `base-dir: collection` there.
       def base_dir_option
-        { base_dir: options[:base_dir] ||
-          File.dirname(File.expand_path(file)) }
+        { base_dir: options[:base_dir] || Dir.pwd }
       end
 
       def customize_options
