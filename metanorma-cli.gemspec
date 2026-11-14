@@ -46,7 +46,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "metanorma-iec", "~> 2.9.1"
   spec.add_dependency "metanorma-ribose", "~> 2.9.1"
   spec.add_dependency "metanorma-standoc", "~> 3.5.7"
-  spec.add_dependency "metanorma-taste", "~> 1.1"
+  spec.add_dependency "metanorma-taste", "~> 1.1.6"
   # spec.add_dependency 'metanorma-mpfa', "~> 0.9.0"
   spec.add_dependency "git", ">= 3.0"
   spec.add_dependency "lutaml-model", "~> 0.8.164"

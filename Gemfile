@@ -64,7 +64,7 @@ rescue StandardError
   nil
 end
 gem "metanorma-core", "~> 0.2.7"
-gem "metanorma-taste", "~> 1.1"
+gem "metanorma-taste", "~> 1.1.6"
 gem "metanorma-standoc", "~> 3.5"
 gem "metanorma-iso", "~> 3.5"
 gem "metanorma-document", "~> 0.5.4"
