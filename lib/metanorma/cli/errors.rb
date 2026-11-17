@@ -6,6 +6,9 @@ module Metanorma
       class FileNotFoundError < StandardError; end
       class InvalidManifestFileError < StandardError; end
 
+      # A collection manifest that exists but cannot be read as one.
+      class CollectionManifestError < StandardError; end
+
       class FatalCompilationError < StandardError
         attr_reader :fatals
 

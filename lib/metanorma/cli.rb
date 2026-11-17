@@ -40,6 +40,9 @@ module Metanorma
     rescue Errors::FileNotFoundError => e
       UI.say("Error: #{e}. \nNot sure what to run? try: metanorma help")
       exit(Errno::ENOENT::Errno)
+    rescue Errors::CollectionManifestError => e
+      UI.say("Error: #{e}")
+      exit(1)
     rescue Errors::FatalCompilationError => e
       print_fatal_summary(e)
     end

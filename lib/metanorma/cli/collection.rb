@@ -1,4 +1,5 @@
 require "yaml"
+require "date"
 
 module Metanorma
   module Cli
@@ -17,6 +18,7 @@ module Metanorma
       end
 
       def render
+        validate_manifest!
         extract_options_from_file
         collection_file.render(collection_options.compact)
         self
@@ -26,7 +28,49 @@ module Metanorma
         @collection_file ||= Metanorma::Collection.parse(file)
       end
 
+      MANIFEST_EXTENSIONS = /\.(ya?ml|xml)$/i
+
       private
+
+      # Fail early, with the reason, when the manifest cannot be loaded.
+      # Without this a missing or unreadable manifest only surfaced later
+      # as an opaque NoMethodError (metanorma-cli#494).
+      def validate_manifest!
+        path = file.to_s
+        unless File.file?(path)
+          raise Errors::FileNotFoundError,
+                manifest_error(path, "file not found#{render_hint(path)}")
+        end
+        unless MANIFEST_EXTENSIONS.match?(path)
+          raise Errors::CollectionManifestError,
+                manifest_error(path, "expected a .yml, .yaml or .xml file")
+        end
+        validate_yaml_manifest!(path) if /\.ya?ml$/i.match?(path)
+      end
+
+      def validate_yaml_manifest!(path)
+        yaml = YAML.safe_load_file(path, permitted_classes: [Date],
+                                         aliases: true)
+        return if yaml.is_a?(Hash)
+
+        got = yaml.nil? ? "an empty document" : yaml.class
+        raise Errors::CollectionManifestError,
+              manifest_error(path, "expected a YAML mapping, got #{got}")
+      rescue Psych::Exception => e
+        raise Errors::CollectionManifestError, manifest_error(path, e.message)
+      end
+
+      def manifest_error(path, reason)
+        "cannot load collection manifest #{path}: #{reason}"
+      end
+
+      # `metanorma collection render x.yml` passes "render" as the manifest.
+      def render_hint(path)
+        return "" unless path == "render"
+
+        " (the manifest path comes straight after `collection`: " \
+          "metanorma collection collection.yml)"
+      end
 
       def source_folder
         @source_folder ||= Pathname.new(file).realpath.parent
@@ -64,7 +108,8 @@ module Metanorma
 
       def extract_options_from_file
         yaml_file = if /\.ya?ml$/.match?(file.to_s)
-                      YAML.safe_load(File.read(file.to_s))
+                      YAML.safe_load_file(file.to_s, permitted_classes: [Date],
+                                                     aliases: true)
                     elsif /\.xml$/.match?(file.to_s)
                       xml_extract_options_from_file
                     end
