@@ -35,6 +35,21 @@ RSpec.describe Metanorma::Cli::Collection do
     expect(collection.options["format"]).to eq("html")
     expect(collection.options.key?("coverpage")).to be(false)
   end
+
+  # metanorma-cli#495: --changed-since reaches the collection parser, and
+  # a normal build calls it without the option.
+  it "passes changed_since to the collection parser only when given" do
+    file = File.join(Dir.mktmpdir, "collection.yml")
+    File.write(file, "manifest:\n  title: T\n")
+    allow(Metanorma::Collection).to receive(:parse)
+
+    described_class.new(file, { changed_since: "ed10" }).collection_file
+    expect(Metanorma::Collection).to have_received(:parse)
+      .with(file, changed_since: "ed10")
+
+    described_class.new(file, {}).collection_file
+    expect(Metanorma::Collection).to have_received(:parse).with(file)
+  end
 end
 
 RSpec.describe Metanorma::Cli::Collection, "#render manifest loading" do

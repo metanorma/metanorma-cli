@@ -11,6 +11,7 @@ module Metanorma
         @options = Cli.with_indifferent_access(options)
         @output_dir = @options.delete(:output_dir)
         @compile_options = @options.delete(:compile)
+        @changed_since = @options.delete(:changed_since)
       end
 
       def self.render(filename, options = {})
@@ -25,7 +26,7 @@ module Metanorma
       end
 
       def collection_file
-        @collection_file ||= Metanorma::Collection.parse(file)
+        @collection_file ||= Metanorma::Collection.parse(file, **parse_options)
       end
 
       MANIFEST_EXTENSIONS = /\.(ya?ml|xml)$/i
@@ -70,6 +71,13 @@ module Metanorma
 
         " (the manifest path comes straight after `collection`: " \
           "metanorma collection collection.yml)"
+      end
+
+      # Change-aware build (#495): the metanorma gem skips unchanged
+      # documents when given the git ref. Passed only when set, so a normal
+      # build calls the gem exactly as before.
+      def parse_options
+        @changed_since ? { changed_since: @changed_since } : {}
       end
 
       def source_folder

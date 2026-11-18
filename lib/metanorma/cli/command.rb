@@ -116,6 +116,10 @@ module Metanorma
              desc: "Continue processing even when fonts are missing"
       option :strict, aliases: "-S", type: :boolean,
                       desc: "Strict compilation: abort if there are any errors"
+      option :changed_since, type: :string,
+                             desc: "Git ref: rebuild only the documents " \
+                                   "whose sources changed since it, keeping " \
+                                   "the existing output of the others"
 
       def collection(filename = nil)
         if filename
