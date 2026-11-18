@@ -9,6 +9,7 @@ require "metanorma/cli/commands/config"
 require "metanorma/cli/commands/template_repo"
 require "metanorma/cli/commands/site"
 require "metanorma/cli/commands/diff"
+require "metanorma/cli/commands/changes"
 require "metanorma/release/cli"
 require "mnconvert"
 require_relative "flavor"
@@ -180,6 +181,28 @@ module Metanorma
 
       def diff(file1, file2)
         status = Commands::Diff.new(file1, file2, options).run
+        exit(status) unless status.zero?
+      end
+
+      desc "changes FROM [TO]",
+           "Report the update units changed between two git refs " \
+           "(loose-leaf publications)"
+      option :units_dir, type: :string, default: "sections",
+                         desc: "Folder whose subfolders are the update units"
+      option :register, type: :string, default: "updates.yaml",
+                        desc: "Amendment register file name in each unit"
+      option :manifest, type: :string,
+                        desc: "Collection manifest: also list the documents " \
+                              "to rebuild"
+      option :format, type: :string, default: "text",
+                      desc: "Output format: text, yaml or json"
+      option :language, type: :string, default: "en",
+                        desc: "Language of record summaries in text output"
+      option :repo, type: :string, default: ".",
+                    desc: "Git repository holding the publication sources"
+
+      def changes(from, to = nil)
+        status = Commands::Changes.new(from, to, options).run
         exit(status) unless status.zero?
       end
 
