@@ -4,7 +4,7 @@ require "open3"
 require "tmpdir"
 require "yaml"
 
-RSpec.describe Metanorma::Cli::Commands::Changes do
+RSpec.describe Metanorma::Cli::Commands::Changes, :aggregate_failures do
   let(:repo) { Dir.mktmpdir("loose-leaf") }
   let(:first) { record(1, "4.9.0", "CL 30/2021", "Editorial corrections") }
   let(:second) { record(2, "4.10.0", "CL 12/2026", "New B-410") }
@@ -44,6 +44,10 @@ RSpec.describe Metanorma::Cli::Commands::Changes do
                           "records" => records })
   end
 
+  def report_between(from, to, options = {})
+    described_class.new(from, to, options.merge(repo: repo)).report
+  end
+
   def run_changes(from, to, options = {})
     out = StringIO.new
     status = described_class.new(from, to, options.merge(repo: repo)).run(out)
@@ -76,23 +80,29 @@ RSpec.describe Metanorma::Cli::Commands::Changes do
       commit_and_tag("ed10-amd1")
     end
 
-    it "reports the changed unit and the record it gained" do
-      report = described_class.new("ed10", "ed10-amd1", repo: repo).report
-      expect(report["units"].map { |u| u["unit"] }).to eq ["b-400"]
-      unit = report["units"].first
-      expect(unit["status"]).to eq "modified"
-      expect(unit["records"].map { |r| r["sequence"] }).to eq [2]
-      expect(unit["records"].first).to include(
-        "anchor" => "B-400", "reference" => "CL 12/2026",
-        "date" => "2026-02-01"
-      )
+    let(:new_record_fields) do
+      { "anchor" => "B-400", "reference" => "CL 12/2026",
+        "date" => "2026-02-01" }
+    end
+    let(:fr_record_line) do
+      "B-400 #2 4.10.0 2026-02-01 CL 12/2026: FR New B-410"
+    end
+
+    it "reports the changed unit, and no rebuild list without a manifest" do
+      report = report_between("ed10", "ed10-amd1")
+      expect(report["units"].map { |u| [u["unit"], u["status"]] })
+        .to eq [%w[b-400 modified]]
       expect(report).not_to have_key("documents")
     end
 
+    it "reports the record the changed unit gained" do
+      records = report_between("ed10", "ed10-amd1")["units"].first["records"]
+      expect(records.map { |r| r["sequence"] }).to eq [2]
+      expect(records.first).to include(new_record_fields)
+    end
+
     it "lists the documents to rebuild from the collection manifest" do
-      report = described_class.new("ed10", "ed10-amd1",
-                                   repo: repo,
-                                   manifest: "collection.yml").report
+      report = report_between("ed10", "ed10-amd1", manifest: "collection.yml")
       expect(report["documents"]).to eq [
         { "file" => "part-b/document.adoc",
           "sources" => ["sections/b-400/en.adoc"] },
@@ -102,10 +112,9 @@ RSpec.describe Metanorma::Cli::Commands::Changes do
     it "writes a text report with summaries in the chosen language" do
       status, output = run_changes("ed10", "ed10-amd1", language: "fr")
       expect(status).to eq 0
-      expect(output).to include("Update units changed: 1")
-      expect(output).to include("b-400 (modified) sections/b-400")
-      expect(output).to include("B-400 #2 4.10.0 2026-02-01 CL 12/2026: " \
-                                "FR New B-410")
+      expect(output).to include("Update units changed: 1",
+                                "b-400 (modified) sections/b-400",
+                                fr_record_line)
     end
 
     it "writes YAML and JSON reports" do
@@ -120,18 +129,22 @@ RSpec.describe Metanorma::Cli::Commands::Changes do
     write("sections/b-500/en.adoc", "== Section 500\n\nFixed.\n")
     commit_and_tag("ed10-amd1")
     _, output = run_changes("ed10", "ed10-amd1")
-    expect(output).to include("b-500 (modified)")
-    expect(output).to include("no new amendment record")
+    expect(output).to include("b-500 (modified)", "no new amendment record")
   end
 
-  it "reports added and removed units" do
-    FileUtils.rm_rf(File.join(repo, "sections/b-500"))
-    write("sections/b-600/en.adoc", "== Section 600\n")
-    write("sections/b-600/updates.yaml", register("B-600", first))
-    commit_and_tag("ed11")
-    report = described_class.new("ed10", "ed11", repo: repo).report
-    expect(report["units"].to_h { |u| [u["unit"], u["status"]] })
-      .to eq("b-500" => "removed", "b-600" => "added")
+  context "with one unit removed and one added" do
+    before do
+      FileUtils.rm_rf(File.join(repo, "sections/b-500"))
+      write("sections/b-600/en.adoc", "== Section 600\n")
+      write("sections/b-600/updates.yaml", register("B-600", first))
+      commit_and_tag("ed11")
+    end
+
+    it "reports added and removed units" do
+      units = report_between("ed10", "ed11")["units"]
+      expect(units.to_h { |u| [u["unit"], u["status"]] })
+        .to eq("b-500" => "removed", "b-600" => "added")
+    end
   end
 
   it "fails on an unknown ref" do
@@ -141,12 +154,17 @@ RSpec.describe Metanorma::Cli::Commands::Changes do
     expect(status).to eq 2
   end
 
-  it "fails on a register not keyed by anchor" do
-    write("sections/b-500/updates.yaml", YAML.dump([first]))
-    commit_and_tag("ed10-amd1")
-    status = nil
-    expect { status, = run_changes("ed10", "ed10-amd1") }
-      .to output(/must be keyed by unit anchor/).to_stderr
-    expect(status).to eq 2
+  context "with a register not keyed by anchor" do
+    before do
+      write("sections/b-500/updates.yaml", YAML.dump([first]))
+      commit_and_tag("ed10-amd1")
+    end
+
+    it "fails with status 2" do
+      status = nil
+      expect { status, = run_changes("ed10", "ed10-amd1") }
+        .to output(/must be keyed by unit anchor/).to_stderr
+      expect(status).to eq 2
+    end
   end
 end

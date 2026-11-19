@@ -6,7 +6,7 @@ require "yaml"
 
 # metanorma-iho#581: states older than the git tags exist only as
 # amendment records; `metanorma amendments` folds them to amendment N.
-RSpec.describe Metanorma::Cli::Commands::Amendments do
+RSpec.describe Metanorma::Cli::Commands::Amendments, :aggregate_failures do
   let(:repo) { Dir.mktmpdir("loose-leaf") }
 
   after { FileUtils.rm_rf(repo) }
@@ -33,9 +33,9 @@ RSpec.describe Metanorma::Cli::Commands::Amendments do
                     { "language" => "fr", "content" => "FR #{summary}" }] }
   end
 
-  def run_amendments(options)
+  def run_amendments(options, ref = "ed9")
     out = StringIO.new
-    status = described_class.new("ed9", options.merge(repo: repo)).run(out)
+    status = described_class.new(ref, options.merge(repo: repo)).run(out)
     [status, out.string]
   end
 
@@ -67,13 +67,14 @@ RSpec.describe Metanorma::Cli::Commands::Amendments do
   end
 
   it "folds the records up to amendment N" do
-    data = report(upto: "2")
-
-    expect(data["anchors"].map { |a| [a["anchor"], a["unit"]] })
+    expect(report(upto: "2")["anchors"].map { |a| [a["anchor"], a["unit"]] })
       .to eq([%w[B-100 b-100], %w[B-200 b-200]])
-    expect(data["anchors"].first["records"].map { |r| r["sequence"] })
-      .to eq([1])
-    expect(data["anchors"].first["records"].first)
+  end
+
+  it "lists each amended anchor's applied records" do
+    records = report(upto: "2")["anchors"].first["records"]
+    expect(records.map { |r| r["sequence"] }).to eq([1])
+    expect(records.first)
       .to include("date" => "2019-01-01", "reference" => "CL 1/2019")
   end
 
@@ -103,23 +104,24 @@ RSpec.describe Metanorma::Cli::Commands::Amendments do
       .to eq(["B-200"])
   end
 
-  it "rejects a bad amendment number with status 2" do
+  it "rejects a non-numeric amendment number with status 2" do
     status = nil
     expect { status, = run_amendments(upto: "two") }
       .to output(/--upto must be an amendment number/).to_stderr
     expect(status).to eq(2)
+  end
 
+  it "rejects --since after --upto with status 2" do
+    status = nil
     expect { status, = run_amendments(since: "3", upto: "1") }
       .to output(/--since 3 is after --upto 1/).to_stderr
     expect(status).to eq(2)
   end
 
   it "rejects an unknown ref with status 2" do
-    out = StringIO.new
     status = nil
-    expect do
-      status = described_class.new("nope", upto: "1", repo: repo).run(out)
-    end.to output(/unknown git ref nope/).to_stderr
+    expect { status, = run_amendments({ upto: "1" }, "nope") }
+      .to output(/unknown git ref nope/).to_stderr
     expect(status).to eq(2)
   end
 end

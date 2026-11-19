@@ -38,29 +38,40 @@ RSpec.describe Metanorma::Cli::Collection do
 
   # metanorma-cli#495: --changed-since reaches the collection parser, and
   # a normal build calls it without the option.
-  it "passes changed_since to the collection parser only when given" do
-    file = File.join(Dir.mktmpdir, "collection.yml")
-    File.write(file, "manifest:\n  title: T\n")
-    allow(Metanorma::Collection).to receive(:parse)
+  context "with --changed-since" do
+    let(:file) do
+      File.join(Dir.mktmpdir, "collection.yml").tap do |path|
+        File.write(path, "manifest:\n  title: T\n")
+      end
+    end
 
-    described_class.new(file, { changed_since: "ed10" }).collection_file
-    expect(Metanorma::Collection).to have_received(:parse)
-      .with(file, changed_since: "ed10")
+    it "passes changed_since to the collection parser" do
+      allow(Metanorma::Collection).to receive(:parse)
+      described_class.new(file, { changed_since: "ed10" }).collection_file
+      expect(Metanorma::Collection).to have_received(:parse)
+        .with(file, changed_since: "ed10")
+    end
 
-    described_class.new(file, {}).collection_file
-    expect(Metanorma::Collection).to have_received(:parse).with(file)
-  end
+    it "calls the collection parser as before without the option" do
+      allow(Metanorma::Collection).to receive(:parse)
+      described_class.new(file, {}).collection_file
+      expect(Metanorma::Collection).to have_received(:parse).with(file)
+    end
 
-  it "explains --changed-since when the metanorma gem lacks it" do
-    file = File.join(Dir.mktmpdir, "collection.yml")
-    File.write(file, "manifest:\n  title: T\n")
-    old_parse = Class.new { def self.parse(file) = file }.method(:parse)
-    allow(Metanorma::Collection).to receive(:method).and_call_original
-    allow(Metanorma::Collection).to receive(:method).with(:parse)
-      .and_return(old_parse)
+    context "when the metanorma gem predates changed_since" do
+      before do
+        old_parse = Class.new { def self.parse(file) = file }.method(:parse)
+        allow(Metanorma::Collection).to receive(:method).and_call_original
+        allow(Metanorma::Collection).to receive(:method).with(:parse)
+          .and_return(old_parse)
+      end
 
-    collection = described_class.new(file, { changed_since: "ed10" })
-    expect { collection.collection_file }.to raise_error(ArgumentError, /--changed-since needs a metanorma gem/)
+      it "explains that the option needs a newer gem" do
+        collection = described_class.new(file, { changed_since: "ed10" })
+        expect { collection.collection_file }
+          .to raise_error(ArgumentError, /--changed-since needs a metanorma/)
+      end
+    end
   end
 end
 

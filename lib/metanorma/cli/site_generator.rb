@@ -50,6 +50,8 @@ module Metanorma
                      end
 
         @compile_options = compile_options
+        # Change-aware collection builds (metanorma-cli#495).
+        @changed_since = options[:changed_since]
 
         # Resolve the output formats to generate: CLI `--extensions` (a
         # comma-separated string in compile_options) takes precedence over the
@@ -417,6 +419,7 @@ module Metanorma
           # requested (CLI or manifest); passed-in options win over the
           # file-extracted ones in Cli::Collection.
           render_options[:format] = @extensions unless @extensions.empty?
+          render_options[:changed_since] = @changed_since if @changed_since
 
           Cli::Collection.render(file.to_s, render_options)
         end
