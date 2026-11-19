@@ -17,16 +17,44 @@ RSpec.describe "Dummy ISO 10303 Collection" do
   # into the module documents the collection attaches.
   # --output-dir is explicit: the command's default resolves against the
   # process start directory, not the fixture tmpdir the example chdirs into.
+  #
+  # The run's own health is asserted, not just its products: a compile
+  # that hits a fatal error (metanorma's clean_abort) prints "FATAL
+  # ERRORS" on stderr and raises SystemExit(1) through the suma Thor
+  # extension -- which used to escape the example while its own
+  # assertions stayed green, leaving CI a bare exit 1 with "0 failures"
+  # (metanorma-plugin-lutaml figure staging regression). Both output
+  # streams are checked for the fatal banner, the exit status is pinned
+  # to zero, and the schema document carrying the fixture's only
+  # EXPRESS-G figure is checked to actually render it.
   # rubocop:disable RSpec/ExampleLength, RSpec/MultipleExpectations
   it "renders the collection via metanorma site generate" do
-    capture_stdout do
-      Metanorma::Cli.start(
-        %w[site generate --no-install-fonts --output-dir _site],
-      )
+    output = errors = nil
+    output = capture_stdout do
+      errors = capture_stderr do
+        begin
+          Metanorma::Cli.start(
+            %w[site generate --no-install-fonts --output-dir _site],
+          )
+        rescue SystemExit => e
+          # The command exits even on success; a nonzero status is the
+          # fatal-error mode this example exists to expose.
+          expect(e.status).to be_zero
+        end
+      end
     end
+
+    expect(output).not_to include("FATAL ERRORS")
+    expect(errors).not_to include("FATAL ERRORS")
 
     expect(File).to exist("_site/index.html")
     expect(rendered_schema_docs).to eq(expected_schema_docs)
+
+    # The gizmo_arm schema is the fixture's only figure carrier
+    # (schemas/modules/gizmo/armexpg1.svg beside its .exp): the compiled
+    # document must embed it, inlined or as a data URI -- never dropped.
+    html = File.read("_site/schema_docs/gizmo_arm/doc_gizmo_arm.html")
+    expect(html).to match(%r{<svg|data:image/svg\+xml})
   end
   # rubocop:enable RSpec/ExampleLength, RSpec/MultipleExpectations
 end
