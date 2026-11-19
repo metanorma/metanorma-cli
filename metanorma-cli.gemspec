@@ -29,12 +29,15 @@ Gem::Specification.new do |spec|
   # at require time (relaton-render#148); the prerelease floors pair every
   # resolution with the shim-free generation.
   spec.add_dependency "metanorma-ietf", "~> 3.7.12"
-  spec.add_dependency "metanorma-iso", "~> 3.5.4"
+  spec.add_dependency "metanorma-iso", "~> 3.5.26"
+  spec.add_dependency "metanorma-plugin-lutaml", "~> 0.7.78"
+  spec.add_dependency "metanorma-document", "~> 0.5.11"
+  spec.add_dependency "expressir", "~> 2.4.70"
   # The taste-chain-aware FlavorLoader (0.2.4 resolves tastes to
   # nonexistent metanorma-<taste> gems) - the floor names the line.
-  spec.add_dependency "metanorma-core", "~> 0.2.7"
+  spec.add_dependency "metanorma-core", "~> 0.2.9"
   spec.add_dependency "mnconvert", "~> 1.89"
-  spec.add_dependency "metanorma-release", "~> 0.2"
+  spec.add_dependency "metanorma-release", "~> 0.2.27"
   # spec.add_dependency "thor", "~> 1.0" # inherited from vectory
   # revived flavors: floor the candidates that carry the coordinated fixes
   spec.add_dependency "metanorma-gb", "~> 1.5.9"
@@ -45,13 +48,13 @@ Gem::Specification.new do |spec|
   spec.add_dependency "metanorma-generic", "~> 3.5.1"
   spec.add_dependency "metanorma-iec", "~> 2.9.1"
   spec.add_dependency "metanorma-ribose", "~> 2.9.1"
-  spec.add_dependency "metanorma-standoc", "~> 3.5.7"
-  spec.add_dependency "metanorma-taste", "~> 1.1.6"
+  spec.add_dependency "metanorma-standoc", "~> 3.5.23"
+  spec.add_dependency "metanorma-taste", "~> 1.1.11"
   # spec.add_dependency 'metanorma-mpfa', "~> 0.9.0"
   spec.add_dependency "git", ">= 3.0"
   spec.add_dependency "lutaml-model", "~> 0.8.164"
-  spec.add_dependency "metanorma", "~> 2.5.14"
-  spec.add_dependency "metanorma-iho", "~> 1.4.1"
+  spec.add_dependency "metanorma", "~> 2.5.24"
+  spec.add_dependency "metanorma-iho", "~> 1.4.6"
   spec.add_dependency "metanorma-itu", "~> 2.9.3"
   spec.add_dependency "liquid", "~> 5"
   spec.add_dependency "metanorma-ieee", "~> 1.7.2"
@@ -62,9 +65,9 @@ Gem::Specification.new do |spec|
   # document-transformer hook lazily requires this gem
   spec.add_dependency "metanorma-oiml", ">= 0.1.0"
   spec.add_dependency "canon", ">= 0.2.12"
-  spec.add_dependency "relaton", "~> 3.1.1"
+  spec.add_dependency "relaton", "~> 3.1.5"
   # the coordinated isodoc candidate carries the bibrender nil-guard (isodoc#852)
-  spec.add_dependency "isodoc", "~> 3.7.9"
+  spec.add_dependency "isodoc", "~> 3.7.17"
   spec.add_dependency "socksify"
   spec.add_dependency "suma", "~> 0.5"
   # Bundled gem required directly by lib code: uri in cli/generator.rb (metanorma/metanorma#669)
