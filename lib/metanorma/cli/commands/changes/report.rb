@@ -32,12 +32,41 @@ module Metanorma
           private
 
           def text
+            return state_text if @data.key?("upto")
+
             units = @data["units"]
             lines = ["Changes from #{@data['from']} to #{@data['to']}",
                      "Update units changed: #{units.size}"]
             units.each { |u| lines.concat(unit_lines(u)) }
             lines.concat(document_lines) if @data.key?("documents")
             lines.join("\n")
+          end
+
+          # `metanorma amendments`: the state at amendment N, or the
+          # changes between two amendment states.
+          def state_text
+            anchors = @data["anchors"]
+            lines = [state_title,
+                     "Last amendment in the registers: " \
+                     "#{@data['last_amendment']}",
+                     "Units amended: #{anchors.size}"]
+            anchors.each { |a| lines.concat(anchor_lines(a)) }
+            lines.join("\n")
+          end
+
+          def anchor_lines(anchor)
+            head = [anchor["anchor"], anchor["unit"]].compact.uniq.join(" ")
+            ["  #{head}"] +
+              anchor["records"].map { |r| "    #{record_line(r)}" }
+          end
+
+          def state_title
+            at = @data["ref"]
+            return "State at amendment #{@data['upto']} (#{at})" unless
+              @data.key?("since")
+
+            "Changes from amendment #{@data['since']} to #{@data['upto']} " \
+              "(#{at})"
           end
 
           def unit_lines(unit)

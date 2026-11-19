@@ -10,6 +10,7 @@ require "metanorma/cli/commands/template_repo"
 require "metanorma/cli/commands/site"
 require "metanorma/cli/commands/diff"
 require "metanorma/cli/commands/changes"
+require "metanorma/cli/commands/amendments"
 require "metanorma/release/cli"
 require "mnconvert"
 require_relative "flavor"
@@ -207,6 +208,30 @@ module Metanorma
 
       def changes(from, to = nil)
         status = Commands::Changes.new(from, to, options).run
+        exit(status) unless status.zero?
+      end
+
+      desc "amendments REF --upto N [--since M]",
+           "Publication state at amendment N, folded from the amendment " \
+           "registers at REF (states older than the git tags)"
+      option :upto, type: :string, required: true,
+                    desc: "Amendment number of the state (0 = base)"
+      option :since, type: :string,
+                     desc: "Earlier amendment number: report only what " \
+                           "changed after it"
+      option :units_dir, type: :string, default: "sections",
+                         desc: "Folder whose subfolders are the update units"
+      option :register, type: :string, default: "updates.yaml",
+                        desc: "Amendment register file name in each unit"
+      option :format, type: :string, default: "text",
+                      desc: "Output format: text, yaml or json"
+      option :language, type: :string, default: "en",
+                        desc: "Language of record summaries in text output"
+      option :repo, type: :string, default: ".",
+                    desc: "Git repository holding the publication sources"
+
+      def amendments(ref)
+        status = Commands::Amendments.new(ref, options).run
         exit(status) unless status.zero?
       end
 
