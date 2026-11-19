@@ -30,6 +30,9 @@ module Metanorma
       end
 
       MANIFEST_EXTENSIONS = /\.(ya?ml|xml)$/i
+      # Parameter kinds through which parse can take changed_since.
+      SPLAT_PARAMS = %i[rest keyrest].freeze
+      KEYWORD_PARAMS = %i[key keyreq].freeze
 
       private
 
@@ -77,7 +80,25 @@ module Metanorma
       # documents when given the git ref. Passed only when set, so a normal
       # build calls the gem exactly as before.
       def parse_options
-        @changed_since ? { changed_since: @changed_since } : {}
+        return {} unless @changed_since
+
+        unless changed_since_supported?
+          raise ArgumentError,
+                "--changed-since needs a metanorma gem whose " \
+                "Metanorma::Collection.parse accepts changed_since; " \
+                "the installed metanorma #{Metanorma::VERSION} does not"
+        end
+
+        { changed_since: @changed_since }
+      end
+
+      # Older metanorma gems define parse(file) only: calling it with the
+      # option would fail with a bare "wrong number of arguments".
+      def changed_since_supported?
+        Metanorma::Collection.method(:parse).parameters.any? do |type, name|
+          SPLAT_PARAMS.include?(type) ||
+            (KEYWORD_PARAMS.include?(type) && name == :changed_since)
+        end
       end
 
       def source_folder

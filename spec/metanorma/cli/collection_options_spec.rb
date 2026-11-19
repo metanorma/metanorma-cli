@@ -50,6 +50,18 @@ RSpec.describe Metanorma::Cli::Collection do
     described_class.new(file, {}).collection_file
     expect(Metanorma::Collection).to have_received(:parse).with(file)
   end
+
+  it "explains --changed-since when the metanorma gem lacks it" do
+    file = File.join(Dir.mktmpdir, "collection.yml")
+    File.write(file, "manifest:\n  title: T\n")
+    old_parse = Class.new { def self.parse(file) = file }.method(:parse)
+    allow(Metanorma::Collection).to receive(:method).and_call_original
+    allow(Metanorma::Collection).to receive(:method).with(:parse)
+      .and_return(old_parse)
+
+    collection = described_class.new(file, { changed_since: "ed10" })
+    expect { collection.collection_file }.to raise_error(ArgumentError, /--changed-since needs a metanorma gem/)
+  end
 end
 
 RSpec.describe Metanorma::Cli::Collection, "#render manifest loading" do
