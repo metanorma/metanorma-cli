@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   # at require time (relaton-render#148); the prerelease floors pair every
   # resolution with the shim-free generation.
   spec.add_dependency "metanorma-ietf", "~> 3.7.12"
-  spec.add_dependency "metanorma-iso", "~> 3.5.27"
+  spec.add_dependency "metanorma-iso", "~> 3.5.28"
   spec.add_dependency "metanorma-plugin-lutaml", "~> 0.7.79"
   spec.add_dependency "metanorma-document", "~> 0.5.11"
   spec.add_dependency "expressir", "~> 2.4.70"
