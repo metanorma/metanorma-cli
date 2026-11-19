@@ -30,9 +30,9 @@ Gem::Specification.new do |spec|
   # resolution with the shim-free generation.
   spec.add_dependency "metanorma-ietf", "~> 3.7.12"
   spec.add_dependency "metanorma-iso", "~> 3.5.28"
-  spec.add_dependency "metanorma-plugin-lutaml", "~> 0.7.79"
+  spec.add_dependency "metanorma-plugin-lutaml", "~> 0.7.80"
   spec.add_dependency "metanorma-document", "~> 0.5.11"
-  spec.add_dependency "expressir", "~> 2.4.70"
+  spec.add_dependency "expressir", "~> 2.4.73"
   # The taste-chain-aware FlavorLoader (0.2.4 resolves tastes to
   # nonexistent metanorma-<taste> gems) - the floor names the line.
   spec.add_dependency "metanorma-core", "~> 0.2.9"
@@ -52,7 +52,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "metanorma-taste", "~> 1.1.11"
   # spec.add_dependency 'metanorma-mpfa', "~> 0.9.0"
   spec.add_dependency "git", ">= 3.0"
-  spec.add_dependency "lutaml-model", "~> 0.8.164"
+  spec.add_dependency "lutaml-model", "~> 0.8.176"
   spec.add_dependency "metanorma", "~> 2.5.25"
   spec.add_dependency "metanorma-iho", "~> 1.4.7"
   spec.add_dependency "metanorma-itu", "~> 2.9.3"
