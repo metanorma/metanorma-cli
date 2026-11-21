@@ -382,6 +382,29 @@ RSpec.describe Metanorma::Cli::SiteGenerator do
         ).at_least(:once)
       end
 
+      # metanorma-cli#495: change-aware builds of the site's collections.
+      def generate_site(**options)
+        described_class.generate!(
+          source_path,
+          { output_dir: output_directory,
+            config: source_path.join("metanorma.yml") }.merge(options),
+        )
+      end
+
+      it "passes --changed-since to each collection render" do
+        generate_site(changed_since: "ed10")
+        expect(Metanorma::Cli::Collection).to have_received(:render).with(
+          source_path.join("collection_with_options.yml").to_s,
+          hash_including(changed_since: "ed10"),
+        ).at_least(:once)
+      end
+
+      it "renders collections without changed_since by default" do
+        generate_site
+        expect(Metanorma::Cli::Collection).not_to have_received(:render)
+          .with(kind_of(String), hash_including(:changed_since))
+      end
+
       it "does not set extensions when none are requested" do
         described_class.generate!(
           source_path,

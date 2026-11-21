@@ -35,6 +35,44 @@ RSpec.describe Metanorma::Cli::Collection do
     expect(collection.options["format"]).to eq("html")
     expect(collection.options.key?("coverpage")).to be(false)
   end
+
+  # metanorma-cli#495: --changed-since reaches the collection parser, and
+  # a normal build calls it without the option.
+  context "with --changed-since" do
+    let(:file) do
+      File.join(Dir.mktmpdir, "collection.yml").tap do |path|
+        File.write(path, "manifest:\n  title: T\n")
+      end
+    end
+
+    it "passes changed_since to the collection parser" do
+      allow(Metanorma::Collection).to receive(:parse)
+      described_class.new(file, { changed_since: "ed10" }).collection_file
+      expect(Metanorma::Collection).to have_received(:parse)
+        .with(file, changed_since: "ed10")
+    end
+
+    it "calls the collection parser as before without the option" do
+      allow(Metanorma::Collection).to receive(:parse)
+      described_class.new(file, {}).collection_file
+      expect(Metanorma::Collection).to have_received(:parse).with(file)
+    end
+
+    context "when the metanorma gem predates changed_since" do
+      before do
+        old_parse = Class.new { def self.parse(file) = file }.method(:parse)
+        allow(Metanorma::Collection).to receive(:method).and_call_original
+        allow(Metanorma::Collection).to receive(:method).with(:parse)
+          .and_return(old_parse)
+      end
+
+      it "explains that the option needs a newer gem" do
+        collection = described_class.new(file, { changed_since: "ed10" })
+        expect { collection.collection_file }
+          .to raise_error(ArgumentError, /--changed-since needs a metanorma/)
+      end
+    end
+  end
 end
 
 RSpec.describe Metanorma::Cli::Collection, "#render manifest loading" do
