@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   # The newest STABLE of these seven still subclasses the removed Relaton::Render::Parse
   # at require time (relaton-render#148); the prerelease floors pair every
   # resolution with the shim-free generation.
-  spec.add_dependency "metanorma-ietf", "~> 3.7.12"
+  spec.add_dependency "metanorma-ietf", "~> 3.7.16"
   spec.add_dependency "metanorma-iso", "~> 3.5.29"
   spec.add_dependency "metanorma-plugin-lutaml", "~> 0.7.80"
   spec.add_dependency "metanorma-document", "~> 0.5.11"
@@ -45,16 +45,16 @@ Gem::Specification.new do |spec|
   spec.add_dependency "metanorma-m3aawg", "~> 2.2.6"
   spec.add_dependency "metanorma-bipm", "~> 2.9.1"
   spec.add_dependency "metanorma-cc", "~> 2.9.1"
-  spec.add_dependency "metanorma-generic", "~> 3.5.1"
+  spec.add_dependency "metanorma-generic", "~> 3.5.3"
   spec.add_dependency "metanorma-iec", "~> 2.9.1"
   spec.add_dependency "metanorma-ribose", "~> 2.9.1"
   spec.add_dependency "metanorma-standoc", "~> 3.5.23"
-  spec.add_dependency "metanorma-taste", "~> 1.1.11"
+  spec.add_dependency "metanorma-taste", "~> 1.1.12"
   # spec.add_dependency 'metanorma-mpfa', "~> 0.9.0"
   spec.add_dependency "git", ">= 3.0"
   spec.add_dependency "lutaml-model", "~> 0.8.176"
   spec.add_dependency "metanorma", "~> 2.5.25"
-  spec.add_dependency "metanorma-iho", "~> 1.4.7"
+  spec.add_dependency "metanorma-iho", "~> 1.4.8"
   spec.add_dependency "metanorma-itu", "~> 2.9.3"
   spec.add_dependency "liquid", "~> 5"
   spec.add_dependency "metanorma-ieee", "~> 1.7.2"
@@ -65,9 +65,9 @@ Gem::Specification.new do |spec|
   # document-transformer hook lazily requires this gem
   spec.add_dependency "metanorma-oiml", ">= 0.1.0"
   spec.add_dependency "canon", ">= 0.2.12"
-  spec.add_dependency "relaton", "~> 3.1.5"
+  spec.add_dependency "relaton", "~> 3.1.8"
   # the coordinated isodoc candidate carries the bibrender nil-guard (isodoc#852)
-  spec.add_dependency "isodoc", "~> 3.7.17"
+  spec.add_dependency "isodoc", "~> 3.7.18"
   spec.add_dependency "socksify"
   spec.add_dependency "suma", "~> 0.5"
   # Bundled gem required directly by lib code: uri in cli/generator.rb (metanorma/metanorma#669)
