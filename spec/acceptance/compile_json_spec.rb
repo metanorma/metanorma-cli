@@ -33,10 +33,13 @@ RSpec.describe "Metanorma" do
         source = File.join(dir, "sample.adoc")
         File.write(source, adoc)
 
-        capture_stdout do
-          Metanorma::Cli.start(["compile", "-t", "iso", "-x", "json",
-                                "--no-install-fonts", "-o", dir, source])
-        end
+        # a failed compile exits the process; surface that as a failure
+        expect do
+          capture_stdout do
+            Metanorma::Cli.start(["compile", "-t", "iso", "-x", "json",
+                                  "--no-install-fonts", "-o", dir, source])
+          end
+        end.not_to raise_error
 
         doc = JSON.parse(File.read(File.join(dir, "sample.json")))
         expect(doc["attrs"]).to include("flavor" => "iso")
