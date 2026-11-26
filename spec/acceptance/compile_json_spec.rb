@@ -15,6 +15,7 @@ RSpec.describe "Metanorma" do
 
         Hello world.
 
+        [bibliography]
         == Normative references
 
         Some reference text.
