@@ -8,6 +8,13 @@ RSpec.describe "Metanorma" do
       expect(output).to include("metanorma compile -t iso -x json")
     end
 
+    it "lists json in the iso format table, from the core harness formats" do
+      output = capture_stdout { Metanorma::Cli.start(%w(list-doctypes iso)) }
+      output.gsub!(/\s+/, " ")
+
+      expect(output).to match(/\band json\b/)
+    end
+
     context "when the registry exposes a json output format" do
       let(:processor) do
         Struct.new(:input_format, :output_formats)
@@ -23,7 +30,7 @@ RSpec.describe "Metanorma" do
         output = capture_stdout { Metanorma::Cli.start(%w(list-doctypes iso)) }
         output.gsub!(/\s+/, " ")
 
-        expect(output).to include("iso asciidoc xml and json")
+        expect(output).to include("iso asciidoc xml, json and mko")
       end
     end
   end

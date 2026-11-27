@@ -39,11 +39,18 @@ module Metanorma
         Metanorma::Cli.load_flavors
         ret = {}
         Metanorma::Registry.instance.processors.each do |type_sym, processor|
-          ret[type_sym] = { format_keys: processor.output_formats.keys,
+          formats = processor.output_formats.keys | harness_format_keys
+          ret[type_sym] = { format_keys: formats,
                             input: processor.input_format }
         end
         flavor_dictionary_taste(ret)
         ret
+      end
+
+      # Core offers these to every flavor (json, mko) outside the flavor's
+      # own output_formats, so the table reads them from the core.
+      def harness_format_keys
+        Metanorma::Compile::CompileOptions::HARNESS_OUTPUT_FORMATS.keys
       end
 
       def flavor_dictionary_taste(ret)
