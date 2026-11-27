@@ -4,7 +4,7 @@ require "tmpdir"
 
 RSpec.describe "Metanorma" do
   describe "compile -x json" do
-    before { skip_without_json_iso }
+    before { skip_without_json_format }
 
     let(:adoc) do
       <<~ADOC
@@ -24,28 +24,32 @@ RSpec.describe "Metanorma" do
       ADOC
     end
 
-    # A failed compile exits the process (SystemExit), which fails the example.
     let(:doc) do
-      Dir.mktmpdir("rspec-json-") do |dir|
+      Dir.mktmpdir("rspec-json-src-") do |dir|
         source = File.join(dir, "sample.adoc")
         File.write(source, adoc)
-
-        capture_stdout do
-          Metanorma::Cli.start(["compile", "-t", "iso", "-x", "json",
-                                "--no-install-fonts", "-o", dir, source])
-        end
-
-        JSON.parse(File.read(File.join(dir, "sample.json")))
+        compile_json("iso", source)
       end
     end
 
-    # Skips (not passes) when the installed metanorma has no json format.
-    def skip_without_json_iso
-      Metanorma::Cli.load_flavors
-      processor = Metanorma::Registry.instance.processors[:iso]
-      return if processor&.output_formats&.key?(:json)
+    # Skips (not passes) when the installed metanorma has no json output format.
+    def skip_without_json_format
+      return if Metanorma::Compile::CompileOptions::HARNESS_OUTPUT_FORMATS.key?(:json)
 
-      skip "installed metanorma has no json output format for iso"
+      skip "installed metanorma has no json output format"
+    end
+
+    # A failed compile exits the process (SystemExit), which fails the example.
+    def compile_json(type, source)
+      Dir.mktmpdir("rspec-json-out-") do |out|
+        capture_stdout do
+          Metanorma::Cli.start(["compile", "-t", type, "-x", "json",
+                                "--no-install-fonts", "-o", out, source])
+        end
+
+        json = File.join(out, "#{File.basename(source, '.adoc')}.json")
+        JSON.parse(File.read(json))
+      end
     end
 
     def clause_titles(node)
@@ -61,6 +65,19 @@ RSpec.describe "Metanorma" do
 
     it "keeps the clause titles in the emitted model" do
       expect(clause_titles(doc)).to include("Scope")
+    end
+
+    {
+      "sample-file.adoc" => "iso",
+      "sample-itu.adoc" => "itu",
+    }.each do |name, type|
+      it "emits a valid JSON document model for #{name}" do
+        model = with_fixture_in_tmpdir(name) { compile_json(type, name) }
+
+        expect(model).to include("type" => "doc",
+                                 "attrs" => include("flavor" => type),
+                                 "content" => be_an(Array))
+      end
     end
   end
 end
