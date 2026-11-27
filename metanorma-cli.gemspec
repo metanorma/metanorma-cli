@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "metanorma-iso", "~> 3.5.29"
   spec.add_dependency "metanorma-plugin-lutaml", "~> 0.7.80"
   spec.add_dependency "metanorma-document", "~> 0.5.11"
-  spec.add_dependency "expressir", "~> 2.4.73"
+  spec.add_dependency "expressir", "~> 2.5.0"
   # The taste-chain-aware FlavorLoader (0.2.4 resolves tastes to
   # nonexistent metanorma-<taste> gems) - the floor names the line.
   spec.add_dependency "metanorma-core", "~> 0.2.9"
