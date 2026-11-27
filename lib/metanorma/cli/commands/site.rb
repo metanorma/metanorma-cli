@@ -58,6 +58,12 @@ module Metanorma
                type: :boolean,
                desc: "Strict compilation: abort if there are any errors"
 
+        option :changed_since,
+               type: :string,
+               desc: "Git ref: in each collection, rebuild only the " \
+                     "documents whose sources changed since it, keeping " \
+                     "the existing output of the others"
+
         option :extensions,
                aliases: "-x",
                desc: "Comma-separated list of output formats to generate " \
