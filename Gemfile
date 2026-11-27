@@ -39,6 +39,7 @@ gem "lutaml-model", "~> 0.8.164" # the fleet convention: pessimistic floor at th
 # initialization, breaking Asciidoctor compile in the cli suite.
 gem "metanorma-plugin-glossarist", "~> 0.5" # standoc main needs the 0.5 preprocessor
 
+
 group :development do
   gem "debug"
   gem "pry"
@@ -72,7 +73,10 @@ gem "metanorma-utils", "~> 2.0"
 gem "isodoc", "~> 3.7"
 
 # the metagem's flavor zoo
-gem "metanorma", "~> 2.5"
+# TEMPORARY dev pin to metanorma main, which carries the json output format
+# (HARNESS_OUTPUT_FORMATS json, metanorma #728/#731/#753). Restore
+# `gem "metanorma", "~> 2.5"` once a metanorma release ships json.
+gem "metanorma", github: "metanorma/metanorma", branch: "main"
 gem "metanorma-bipm", "~> 2.9"
 gem "metanorma-cc", "~> 2.9"
 gem "metanorma-iec", "~> 2.9"

@@ -33,6 +33,13 @@ module Metanorma
       end
 
       desc "compile FILENAME", "Compile to a metanorma document"
+      long_desc <<~DESC
+        Compile FILENAME to the output formats of its flavor.
+
+        Example: metanorma compile -t iso -x json document.adoc
+
+        Run `metanorma list-doctypes` to see the formats each type supports.
+      DESC
       option :type, aliases: "-t", desc: "Type of standard to generate"
       option :extensions, aliases: "-x", type: :string,
                           desc: "Type of extension to generate per type"
